@@ -23,7 +23,7 @@
     "@wagmi/cli": "^2.0.0",
     "wagmi": "^2.0.0",
     "tsx": "^4.7.0",
-    "@types/node": "^20.0.0"
+    "@types/node": "^20.19.14"
   },
   "peerDependencies": {
     "viem": "^2.37.5"
