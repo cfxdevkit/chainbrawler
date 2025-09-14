@@ -1,0 +1,131 @@
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                           CHAINBRAWLER PACKAGE ARCHITECTURE                     │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+                    ┌─────────────────────────────────────┐
+                    │            CONTRACT                 │
+                    │         (Solidity)                  │
+                    │  • Character creation               │
+                    │  • Combat mechanics                 │
+                    │  • Equipment & inventory            │
+                    │  • Rewards & claims                 │
+                    │  • Game state persistence           │
+                    └─────────────────┬───────────────────┘
+                                      │
+                    ┌─────────────────▼───────────────────┐
+                    │              CORE                   │
+                    │         (Business Logic)            │
+                    │  • CharacterData                    │
+                    │  • EquipmentData                    │
+                    │  • ChainBrawlerSDK                  │
+                    │  • ContractClient                   │
+                    │  • UXStore                          │
+                    │  • Data normalization               │
+                    └─────────────────┬───────────────────┘
+                                      │
+                    ┌─────────────────▼───────────────────┐
+                    │             REACT                   │
+                    │        (React Integration)          │
+                    │  • WebChainBrawlerProvider          │
+                    │  • useWebChainBrawlerContext        │
+                    │  • useWalletManager                 │
+                    │  • ReactAdapter                     │
+                    └─────────────────┬───────────────────┘
+                                      │
+                    ┌─────────────────▼───────────────────┐
+                    │           REACT-UI                  │
+                    │      (Reactive Logic)               │
+                    │  • useCharacterStats                │
+                    │  • useMobileOptimization            │
+                    │  • usePerformance                   │
+                    │  • useGameColors                    │
+                    │  • useGameTheme                     │
+                    │  • Mobile utilities                 │
+                    │  • Formatting utilities             │
+                    └─────────────────┬───────────────────┘
+                                      │
+                    ┌─────────────────▼───────────────────┐
+                    │            MANTINE                  │
+                    │        (UI Components)              │
+                    │  • ChainBrawlerApp                  │
+                    │  • CharacterCard                    │
+                    │  • CombatArena                      │
+                    │  • GameButton                       │
+                    │  • GameHeader/Footer                │
+                    │  • DamageNumber                     │
+                    └─────────────────┬───────────────────┘
+                                      │
+                    ┌─────────────────▼───────────────────┐
+                    │              UI                     │
+                    │        (Game Orchestration)         │
+                    │  • GameApp                          │
+                    │  • GameProvider                     │
+                    │  • CharacterCreationScreen          │
+                    │  • MainMenuScreen                   │
+                    │  • CharacterScreen                  │
+                    │  • CombatScreen                     │
+                    │  • SettingsScreen                   │
+                    └─────────────────┬───────────────────┘
+                                      │
+                    ┌─────────────────▼───────────────────┐
+                    │            WEB-UI                   │
+                    │       (Presentation Layer)          │
+                    │  • App.tsx                          │
+                    │  • AppHeader                        │
+                    │  • AppFooter                        │
+                    │  • WelcomeScreen                    │
+                    │  • LoadingScreen                    │
+                    │  • ErrorBoundary                    │
+                    │  • ConnectKit integration           │
+                    └─────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                              DATA FLOW                                         │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+CONTRACT ──→ CORE ──→ REACT ──→ REACT-UI ──→ MANTINE ──→ UI ──→ WEB-UI
+    │           │        │         │           │         │        │
+    │           │        │         │           │         │        │
+    ▼           ▼        ▼         ▼           ▼         ▼        ▼
+Blockchain   Data     Hooks    Reactive    UI        Game     Web
+  Logic   Normal.    Logic     Logic    Components    App      App
+
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                            DEPENDENCY RULES                                    │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+✅ ALLOWED:
+WEB-UI → UI, MANTINE, REACT-UI, REACT, CORE
+UI → MANTINE, REACT-UI, REACT, CORE
+MANTINE → REACT-UI, REACT, CORE
+REACT-UI → REACT, CORE
+REACT → CORE
+CORE → (none)
+
+❌ FORBIDDEN:
+CORE → Any UI package
+REACT → UI packages (REACT-UI, MANTINE, UI, WEB-UI)
+REACT-UI → MANTINE, UI, WEB-UI
+MANTINE → UI, WEB-UI
+UI → WEB-UI
+
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                              CURRENT STATUS                                    │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+✅ CONTRACT    - Smart contracts implemented
+✅ CORE        - Business logic and data normalization complete
+✅ REACT       - React integration hooks complete
+✅ REACT-UI    - Reactive logic and mobile optimization complete
+✅ MANTINE     - UI components complete
+✅ UI          - Game orchestration complete
+✅ WEB-UI      - Presentation layer complete
+🔧 INTEGRATION - Module resolution issues being resolved
+
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                              CURRENT ISSUES                                    │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+1. Module Resolution: formatDamage export error in web-ui
+2. Dependency Linking: React-UI package linking issues
+3. Build Optimization: Vite configuration needs tuning

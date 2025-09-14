@@ -1,0 +1,49 @@
+{
+  "name": "@chainbrawler/cli-ink",
+  "version": "1.0.0",
+  "description": "ChainBrawler CLI interface built with Ink React",
+  "main": "dist/index.js",
+  "bin": {
+    "chainbrawler-cli": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli.tsx",
+    "start": "node dist/cli.js",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "cli",
+    "terminal",
+    "ink",
+    "react",
+    "chainbrawler",
+    "blockchain",
+    "game"
+  ],
+  "author": "ChainBrawler Team",
+  "license": "MIT",
+  "dependencies": {
+    "@chainbrawler/core": "workspace:*",
+    "@chainbrawler/react": "workspace:*",
+    "ink": "^4.4.1",
+    "react": "^18.2.0",
+    "chalk": "^5.3.0",
+    "figlet": "^1.7.0",
+    "ora": "^8.0.1",
+    "inquirer": "^9.2.12",
+    "boxen": "^7.1.1",
+    "gradient-string": "^3.0.0",
+    "terminal-link": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/inquirer": "^9.0.0",
+    "@types/figlet": "^1.5.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
