@@ -42,9 +42,9 @@ describe("Deployment", () => {
     const healingFee = await clean.read.getHealingFee();
     const resurrectionFee = await clean.read.getResurrectionFee();
 
-    expect(creationFee).to.equal(15000000000000000000n); // 15 ETH
-    expect(healingFee).to.equal(5000000000000000000n); // 5 ETH
-    expect(resurrectionFee).to.equal(10000000000000000000n); // 10 ETH
+    expect(creationFee).to.equal(15000000000000000000n); // 15 CFX
+    expect(healingFee).to.equal(5000000000000000000n); // 5 CFX
+    expect(resurrectionFee).to.equal(10000000000000000000n); // 10 CFX
   });
 });
 

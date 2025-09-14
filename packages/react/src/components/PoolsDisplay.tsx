@@ -72,7 +72,7 @@ export function PoolsDisplay() {
 
           <div className="pools-summary">
             <h4>Total Value</h4>
-            <p className="total-amount">{pools.totalValue.toString()} ETH</p>
+            <p className="total-amount">{pools.totalValue.toString()} CFX</p>
             <p className="last-updated">
               Last updated: {new Date(pools.lastUpdated).toLocaleString()}
             </p>

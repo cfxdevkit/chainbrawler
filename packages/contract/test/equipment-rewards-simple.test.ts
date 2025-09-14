@@ -23,7 +23,7 @@ describe("EQUIPMENT REWARDS BASIC TEST", () => {
     const { chainBrawler, player1, publicClient } = await loadFixture(deployFixture);
 
     // 1. Create character
-    const creationFee = 15000000000000000000n; // 15 ETH
+    const creationFee = 15000000000000000000n; // 15 CFX
     let hash = await chainBrawler.write.createCharacter([0n], {
       account: player1.account,
       value: creationFee,
@@ -32,8 +32,8 @@ describe("EQUIPMENT REWARDS BASIC TEST", () => {
 
     // 2. Check equipment pool is funded
     const equipmentPool = await chainBrawler.read.equipmentRewardPool();
-    expect(equipmentPool).to.equal(1200000000000000000n); // 1.2 ETH
-    console.log(`✅ Equipment pool funded: ${Number(equipmentPool) / 1e18} ETH`);
+    expect(equipmentPool).to.equal(1200000000000000000n); // 1.2 CFX
+    console.log(`✅ Equipment pool funded: ${Number(equipmentPool) / 1e18} CFX`);
 
     // 3. Check character is alive
     console.log("Character created successfully");
@@ -49,8 +49,8 @@ describe("EQUIPMENT REWARDS BASIC TEST", () => {
       // 5. Check if equipment pool was used
       const poolAfter = await chainBrawler.read.equipmentRewardPool();
       const poolUsed = equipmentPool - poolAfter;
-      console.log(`Equipment pool after fight: ${Number(poolAfter) / 1e18} ETH`);
-      console.log(`Pool used for rewards: ${Number(poolUsed) / 1e18} ETH`);
+      console.log(`Equipment pool after fight: ${Number(poolAfter) / 1e18} CFX`);
+      console.log(`Pool used for rewards: ${Number(poolUsed) / 1e18} CFX`);
 
       if (poolUsed > 0) {
         console.log("🎉 Equipment token rewards were distributed!");
@@ -73,7 +73,7 @@ describe("EQUIPMENT REWARDS BASIC TEST", () => {
     await publicClient.waitForTransactionReceipt({ hash });
 
     const initialPool = await chainBrawler.read.equipmentRewardPool();
-    console.log(`Initial equipment pool: ${Number(initialPool) / 1e18} ETH`);
+    console.log(`Initial equipment pool: ${Number(initialPool) / 1e18} CFX`);
 
     // Test multiple fights to see if any equipment drops occur
     let successfulFights = 0;
@@ -96,8 +96,8 @@ describe("EQUIPMENT REWARDS BASIC TEST", () => {
     totalPoolUsed = initialPool - finalPool;
 
     console.log(`Successful fights: ${successfulFights}`);
-    console.log(`Total pool used: ${Number(totalPoolUsed) / 1e18} ETH`);
-    console.log(`Final pool: ${Number(finalPool) / 1e18} ETH`);
+    console.log(`Total pool used: ${Number(totalPoolUsed) / 1e18} CFX`);
+    console.log(`Final pool: ${Number(finalPool) / 1e18} CFX`);
 
     if (totalPoolUsed > 0) {
       console.log("🎉 Equipment token reward system is working!");

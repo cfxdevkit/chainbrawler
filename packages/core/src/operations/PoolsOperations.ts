@@ -97,7 +97,7 @@ export class PoolsOperations extends BaseOperation {
   private formatEther(value: bigint): string {
     // Convert wei to ether and format
     const ether = Number(value) / 1e18;
-    return `${ether.toFixed(4)} ETH`;
+    return `${ether.toFixed(4)} CFX`;
   }
 
   // Calculate pool percentages

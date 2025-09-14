@@ -41,7 +41,7 @@ export function ClaimsDisplay() {
           <div className="claims-summary">
             <h4>Available Claims</h4>
             <p>
-              <strong>Total Claimable:</strong> {claims.totalClaimable.toString()} ETH
+              <strong>Total Claimable:</strong> {claims.totalClaimable.toString()} CFX
             </p>
             <p>
               <strong>Available Rewards:</strong> {claims.available.length}
@@ -55,7 +55,7 @@ export function ClaimsDisplay() {
                   <div className="claim-info">
                     <h5>{reward.description}</h5>
                     <p>
-                      <strong>Amount:</strong> {reward.amount.toString()} ETH
+                      <strong>Amount:</strong> {reward.amount.toString()} CFX
                     </p>
                     <p>
                       <strong>Type:</strong> {reward.type}

@@ -15,7 +15,7 @@ describe("LeaderboardTreasury & Manager flows (unit)", function () {
     const manager = await hre.viem.deployContract("LeaderboardManager", [treasuryAddr]);
     const m = manager as any;
 
-    // Admin deposits 1 ETH into treasury
+    // Admin deposits 1 CFX into treasury
     const depositAmount = 1n * 10n ** 18n;
     await t.write.deposit([], { value: depositAmount, account: admin.account });
 
@@ -35,7 +35,7 @@ describe("LeaderboardTreasury & Manager flows (unit)", function () {
 
     // Prepare winners and amounts
     const winners = [player1.account.address, player2.account.address];
-    const amounts = [300000000000000000n, 200000000000000000n]; // 0.3 ETH & 0.2 ETH
+    const amounts = [300000000000000000n, 200000000000000000n]; // 0.3 CFX & 0.2 CFX
 
     // Publisher calls publishAndDistribute on manager
     const dummyRoot = "0x" + "11".repeat(32);

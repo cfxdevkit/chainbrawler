@@ -24,7 +24,7 @@ describe("LeaderboardTreasury Merkle claim flow", function () {
     const treasury = await hre.viem.deployContract("LeaderboardTreasury", []);
     const t = treasury as any;
 
-    // Fund treasury for epoch 1 with 1 ETH (use depositForEpoch)
+    // Fund treasury for epoch 1 with 1 CFX (use depositForEpoch)
     const depositAmount = 1n * 10n ** 18n;
     await t.write.depositForEpoch([1n], { value: depositAmount, account: admin.account });
 
@@ -35,7 +35,7 @@ describe("LeaderboardTreasury Merkle claim flow", function () {
     // Prepare a tiny merkle tree with two leaves (player1 index 0)
     // For simplicity build tree off-chain using ethers utilities
     const ethers = require("ethers");
-    const amt1 = 100000000000000000n; // 0.1 ETH
+    const amt1 = 100000000000000000n; // 0.1 CFX
     const leaf1 = ethers.utils.solidityKeccak256(
       ["uint256", "uint256", "address", "uint256"],
       [1, 0, player1.account.address, amt1.toString()]

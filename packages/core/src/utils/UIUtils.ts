@@ -58,7 +58,7 @@ export function getFightOutcome(fightSummary: FightSummaryData): FightOutcome {
 
 export function formatEthAmount(amount: bigint | number): string {
   const value = typeof amount === "bigint" ? Number(amount) : amount;
-  return `${(value / 1e18).toFixed(4)} ETH`;
+  return `${(value / 1e18).toFixed(4)} CFX`;
 }
 
 export function formatTimeRemaining(seconds: bigint): string {

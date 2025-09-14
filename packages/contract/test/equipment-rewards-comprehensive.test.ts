@@ -24,7 +24,7 @@ describe("EQUIPMENT REWARDS COMPREHENSIVE TEST", () => {
     const { chainBrawler, player1, publicClient } = await loadFixture(deployFixture);
 
     // 1. Create character to fund equipment pool
-    const creationFee = 15000000000000000000n; // 15 ETH
+    const creationFee = 15000000000000000000n; // 15 CFX
     let hash = await chainBrawler.write.createCharacter([0n], {
       account: player1.account,
       value: creationFee,
@@ -32,8 +32,8 @@ describe("EQUIPMENT REWARDS COMPREHENSIVE TEST", () => {
     await publicClient.waitForTransactionReceipt({ hash });
 
     const initialPool = await chainBrawler.read.equipmentRewardPool();
-    expect(initialPool).to.equal(1200000000000000000n); // 1.2 ETH
-    console.log(`Equipment pool funded: ${Number(initialPool) / 1e18} ETH`);
+    expect(initialPool).to.equal(1200000000000000000n); // 1.2 CFX
+    console.log(`Equipment pool funded: ${Number(initialPool) / 1e18} CFX`);
 
     // 2. Get player balance before rewards
     const playerBalanceBefore = await publicClient.getBalance({ address: player1.account.address });
@@ -61,7 +61,7 @@ describe("EQUIPMENT REWARDS COMPREHENSIVE TEST", () => {
     const poolUsed = initialPool - poolAfter;
 
     console.log(`Completed ${fightsCount} fights`);
-    console.log(`Pool used: ${Number(poolUsed) / 1e18} ETH`);
+    console.log(`Pool used: ${Number(poolUsed) / 1e18} CFX`);
 
     if (poolUsed > 0) {
       console.log("🎉 Equipment token rewards distributed during fights!");
@@ -72,7 +72,7 @@ describe("EQUIPMENT REWARDS COMPREHENSIVE TEST", () => {
         address: player1.account.address,
       });
       console.log(
-        `Player balance change: ${Number(playerBalanceAfter - playerBalanceBefore) / 1e18} ETH (including gas costs)`
+        `Player balance change: ${Number(playerBalanceAfter - playerBalanceBefore) / 1e18} CFX (including gas costs)`
       );
     } else {
       console.log(
@@ -88,13 +88,13 @@ describe("EQUIPMENT REWARDS COMPREHENSIVE TEST", () => {
     console.log("Creating character and funding equipment pool...");
     const hash = await chainBrawler.write.createCharacter([0n], {
       account: player1.account,
-      value: 15000000000000000000n, // 15 ETH
+      value: 15000000000000000000n, // 15 CFX
     });
     await publicClient.waitForTransactionReceipt({ hash });
 
     const initialPool = await chainBrawler.read.equipmentRewardPool();
-    console.log(`Equipment pool funded: ${Number(initialPool) / 1e18} ETH`);
-    expect(initialPool).to.equal(1200000000000000000n); // 1.2 ETH
+    console.log(`Equipment pool funded: ${Number(initialPool) / 1e18} CFX`);
+    expect(initialPool).to.equal(1200000000000000000n); // 1.2 CFX
 
     // Fight many battles to maximize drop chances
     let totalFights = 0;
@@ -132,7 +132,7 @@ describe("EQUIPMENT REWARDS COMPREHENSIVE TEST", () => {
 
       if (poolUsedAtLevel > poolUsedTotal) {
         const newRewards = poolUsedAtLevel - poolUsedTotal;
-        console.log(`🎉 Equipment rewards distributed: ${Number(newRewards) / 1e18} ETH`);
+        console.log(`🎉 Equipment rewards distributed: ${Number(newRewards) / 1e18} CFX`);
         poolUsedTotal = poolUsedAtLevel;
       }
 
@@ -148,8 +148,8 @@ describe("EQUIPMENT REWARDS COMPREHENSIVE TEST", () => {
 
     console.log(`\n=== FINAL COMBAT RESULTS ===`);
     console.log(`Total fights completed: ${totalFights}`);
-    console.log(`Total pool used for rewards: ${Number(totalPoolUsed) / 1e18} ETH`);
-    console.log(`Remaining pool: ${Number(finalPool) / 1e18} ETH`);
+    console.log(`Total pool used for rewards: ${Number(totalPoolUsed) / 1e18} CFX`);
+    console.log(`Remaining pool: ${Number(finalPool) / 1e18} CFX`);
 
     if (totalPoolUsed > 0) {
       console.log("🎉 Equipment reward system successfully distributed tokens!");

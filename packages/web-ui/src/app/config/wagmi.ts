@@ -13,7 +13,7 @@ export const chainBrawlerLocal = defineChain({
   name: "ChainBrawler Local",
   nativeCurrency: {
     name: "Ethereum",
-    symbol: "ETH",
+    symbol: "CFX",
     decimals: 18,
   },
   rpcUrls: {

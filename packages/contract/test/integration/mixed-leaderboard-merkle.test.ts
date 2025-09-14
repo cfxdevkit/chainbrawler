@@ -23,11 +23,11 @@ describe("Mixed flow: atomic leaderboard payout + merkle refund epoch", function
     const managerAddr = (manager as any).target || (manager as any).address;
     await t.write.grantRole([MANAGER_ROLE, managerAddr], { account: admin.account });
 
-    // Fund treasury with 2 ETH
+    // Fund treasury with 2 CFX
     const fund = 2n * 10n ** 18n;
     await t.write.deposit([], { value: fund, account: admin.account });
 
-    // Atomic leaderboard payout to player1 & player2 (0.4 + 0.3 ETH)
+    // Atomic leaderboard payout to player1 & player2 (0.4 + 0.3 CFX)
     const winners = [player1.account.address, player2.account.address];
     const amounts = [400000000000000000n, 300000000000000000n];
     const dummyRoot = "0x" + "aa".repeat(32);
@@ -41,9 +41,9 @@ describe("Mixed flow: atomic leaderboard payout + merkle refund epoch", function
 
     // Now prepare a merkle-based refund epoch (epoch 2) with 3 entries
     const ethers = require("ethers");
-    const amt1 = 100000000000000000n; // 0.1 ETH to player1 (index 0)
-    const amt2 = 50000000000000000n; // 0.05 ETH to player2 (index 1)
-    const amt3 = 200000000000000000n; // 0.2 ETH to player3 (index 2)
+    const amt1 = 100000000000000000n; // 0.1 CFX to player1 (index 0)
+    const amt2 = 50000000000000000n; // 0.05 CFX to player2 (index 1)
+    const amt3 = 200000000000000000n; // 0.2 CFX to player3 (index 2)
 
     const leaf1 = ethers.utils.solidityKeccak256(
       ["uint256", "uint256", "address", "uint256"],

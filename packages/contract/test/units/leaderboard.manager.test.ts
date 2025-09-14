@@ -23,7 +23,7 @@ describe("LeaderboardManager publishAndFund", function () {
     const managerAddr = (manager as any).target || (manager as any).address;
     await t.write.grantRole([MANAGER_ROLE, managerAddr], { account: admin.account });
 
-    // Call publishAndFund with 0.5 ETH
+    // Call publishAndFund with 0.5 CFX
     const fund = 500000000000000000n;
     const dummyRoot = "0x" + "22".repeat(32);
     await m.write.publishAndFund([dummyRoot, 1n], { value: fund, account: publisher.account });

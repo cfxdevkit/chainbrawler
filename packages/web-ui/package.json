@@ -8,9 +8,6 @@
     "dev-simple": "vite --config vite.config-simple.ts",
     "build": "tsc && vite build",
     "clean": "rm -rf dist",
-    "test": "playwright test",
-    "test:ui": "playwright test --ui",
-    "test:headed": "playwright test --headed",
     "preview": "vite preview",
     "format": "biome format --write .",
     "format:check": "biome format .",
@@ -37,11 +34,9 @@
     "wagmi": "^2.0.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.55.0",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
     "@vitejs/plugin-react": "^4.1.1",
-    "playwright": "^1.55.0",
     "typescript": "^5.2.2",
     "vite": "^5.0.0"
   },

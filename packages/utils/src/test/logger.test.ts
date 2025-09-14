@@ -16,19 +16,33 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+// Mock fs to avoid file system operations during tests
+vi.mock("fs", () => ({
+  promises: {
+    mkdir: vi.fn().mockResolvedValue(undefined),
+  },
+}));
+
 // Mock pino to avoid actual logging during tests
 vi.mock("pino", () => {
+  const mockInfo = vi.fn();
+  const mockWarn = vi.fn();
+  const mockError = vi.fn();
+  const mockDebug = vi.fn();
+
+  const mockChild = vi.fn(() => ({
+    info: mockInfo,
+    warn: mockWarn,
+    error: mockError,
+    debug: mockDebug,
+  }));
+
   const mockPino = vi.fn(() => ({
-    child: vi.fn(() => ({
-      info: vi.fn(),
-      warn: vi.fn(),
-      error: vi.fn(),
-      debug: vi.fn(),
-    })),
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-    debug: vi.fn(),
+    child: mockChild,
+    info: mockInfo,
+    warn: mockWarn,
+    error: mockError,
+    debug: mockDebug,
   }));
 
   // Add stdTimeFunctions to the mock
@@ -44,14 +58,8 @@ vi.mock("pino", () => {
   };
 });
 
-// Mock fs to avoid file system operations during tests
-vi.mock("fs", () => ({
-  promises: {
-    mkdir: vi.fn().mockResolvedValue(undefined),
-  },
-}));
-
 import { type ChainBrawlerLogger, createLogger, logger } from "../logging/logger";
+import pino from "pino";
 
 describe("Logger", () => {
   let testLogger: ChainBrawlerLogger;
@@ -136,8 +144,10 @@ describe("Logger", () => {
     });
 
     it("should throttle repeated messages", () => {
-      const mockInfo = vi.fn();
-      testLogger.info = mockInfo;
+      // Get the mocked pino instance
+      const pinoInstance = pino();
+      const mockInfo = vi.mocked(pinoInstance.info);
+      mockInfo.mockClear();
 
       // Call throttled method multiple times quickly
       testLogger.infoThrottled("test-key", "test message", {}, 1000);
@@ -149,8 +159,10 @@ describe("Logger", () => {
     });
 
     it("should allow different keys to bypass throttling", () => {
-      const mockInfo = vi.fn();
-      testLogger.info = mockInfo;
+      // Get the mocked pino instance
+      const pinoInstance = pino();
+      const mockInfo = vi.mocked(pinoInstance.info);
+      mockInfo.mockClear();
 
       testLogger.infoThrottled("key1", "message 1", {}, 1000);
       testLogger.infoThrottled("key2", "message 2", {}, 1000);
@@ -162,9 +174,12 @@ describe("Logger", () => {
 
   describe("operation logger functionality", () => {
     it("should track operation duration", async () => {
+      // Get the mocked pino instance
+      const pinoInstance = pino();
+      const mockInfo = vi.mocked(pinoInstance.info);
+      mockInfo.mockClear();
+
       const operationLogger = testLogger.logOperation("test-operation");
-      const mockInfo = vi.fn();
-      testLogger.info = mockInfo;
 
       // Simulate some work
       await new Promise((resolve) => setTimeout(resolve, 10));
@@ -182,9 +197,12 @@ describe("Logger", () => {
     });
 
     it("should handle error logging", () => {
+      // Get the mocked pino instance
+      const pinoInstance = pino();
+      const mockError = vi.mocked(pinoInstance.error);
+      mockError.mockClear();
+
       const operationLogger = testLogger.logOperation("test-operation");
-      const mockError = vi.fn();
-      testLogger.error = mockError;
 
       const testError = new Error("Test error");
       operationLogger.error(testError, { additional: "data" });
@@ -204,9 +222,12 @@ describe("Logger", () => {
     });
 
     it("should handle string error logging", () => {
+      // Get the mocked pino instance
+      const pinoInstance = pino();
+      const mockError = vi.mocked(pinoInstance.error);
+      mockError.mockClear();
+
       const operationLogger = testLogger.logOperation("test-operation");
-      const mockError = vi.fn();
-      testLogger.error = mockError;
 
       operationLogger.error("String error", { additional: "data" });
 
@@ -224,9 +245,12 @@ describe("Logger", () => {
     });
 
     it("should handle progress logging", () => {
+      // Get the mocked pino instance
+      const pinoInstance = pino();
+      const mockInfo = vi.mocked(pinoInstance.info);
+      mockInfo.mockClear();
+
       const operationLogger = testLogger.logOperation("test-operation");
-      const mockInfo = vi.fn();
-      testLogger.info = mockInfo;
 
       operationLogger.progress("Processing step 1", { step: 1 });
 

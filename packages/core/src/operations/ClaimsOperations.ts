@@ -261,6 +261,6 @@ export class ClaimsOperations extends BaseOperation {
   // Format ether value
   private formatEther(value: bigint): string {
     const ether = Number(value) / 1e18;
-    return `${ether.toFixed(4)} ETH`;
+    return `${ether.toFixed(4)} CFX`;
   }
 }

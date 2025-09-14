@@ -138,37 +138,37 @@ describe("UXStore", () => {
       const pools: PoolsData = {
         prizePool: {
           value: 1000n,
-          formatted: "1.0000 ETH",
+          formatted: "1.0000 CFX",
           description: "Prize pool",
           percentage: 50,
         },
         equipmentPool: {
           value: 500n,
-          formatted: "0.5000 ETH",
+          formatted: "0.5000 CFX",
           description: "Equipment pool",
           percentage: 25,
         },
         gasRefundPool: {
           value: 300n,
-          formatted: "0.3000 ETH",
+          formatted: "0.3000 CFX",
           description: "Gas refund pool",
           percentage: 15,
         },
         developerPool: {
           value: 200n,
-          formatted: "0.2000 ETH",
+          formatted: "0.2000 CFX",
           description: "Developer pool",
           percentage: 10,
         },
         nextEpochPool: {
           value: 0n,
-          formatted: "0.0000 ETH",
+          formatted: "0.0000 CFX",
           description: "Next epoch pool",
           percentage: 0,
         },
         emergencyPool: {
           value: 0n,
-          formatted: "0.0000 ETH",
+          formatted: "0.0000 CFX",
           description: "Emergency pool",
           percentage: 0,
         },

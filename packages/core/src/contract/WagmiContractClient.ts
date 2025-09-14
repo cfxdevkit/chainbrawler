@@ -946,7 +946,7 @@ export class WagmiContractClient implements ContractClient {
   private formatEther(value: bigint): string {
     // Simple ether formatting - in production, use a proper library
     const ether = Number(value) / 1e18;
-    return `${ether.toFixed(4)} ETH`;
+    return `${ether.toFixed(4)} CFX`;
   }
 
   // Transaction status handling for UX orchestration

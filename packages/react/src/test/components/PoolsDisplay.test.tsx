@@ -17,37 +17,37 @@ describe("PoolsDisplay", () => {
       pools: {
         prizePool: {
           value: 1000n,
-          formatted: "1000 ETH",
+          formatted: "1000 CFX",
           description: "Prize pool",
           percentage: 50,
         },
         equipmentPool: {
           value: 500n,
-          formatted: "500 ETH",
+          formatted: "500 CFX",
           description: "Equipment pool",
           percentage: 25,
         },
         gasRefundPool: {
           value: 200n,
-          formatted: "200 ETH",
+          formatted: "200 CFX",
           description: "Gas refund pool",
           percentage: 10,
         },
         developerPool: {
           value: 100n,
-          formatted: "100 ETH",
+          formatted: "100 CFX",
           description: "Developer pool",
           percentage: 5,
         },
         nextEpochPool: {
           value: 300n,
-          formatted: "300 ETH",
+          formatted: "300 CFX",
           description: "Next epoch pool",
           percentage: 15,
         },
         emergencyPool: {
           value: 50n,
-          formatted: "50 ETH",
+          formatted: "50 CFX",
           description: "Emergency pool",
           percentage: 2.5,
         },
@@ -81,15 +81,15 @@ describe("PoolsDisplay", () => {
 
     expect(screen.getByText("Treasury Pools")).toBeInTheDocument();
     expect(screen.getByText("Prize Pool")).toBeInTheDocument();
-    expect(screen.getByText("1000 ETH")).toBeInTheDocument();
+    expect(screen.getByText("1000 CFX")).toBeInTheDocument();
     expect(screen.getByText("50.00%")).toBeInTheDocument();
 
     expect(screen.getByText("Equipment Pool")).toBeInTheDocument();
-    expect(screen.getByText("500 ETH")).toBeInTheDocument();
+    expect(screen.getByText("500 CFX")).toBeInTheDocument();
     expect(screen.getByText("25.00%")).toBeInTheDocument();
 
     expect(screen.getByText("Gas Refund Pool")).toBeInTheDocument();
-    expect(screen.getByText("200 ETH")).toBeInTheDocument();
+    expect(screen.getByText("200 CFX")).toBeInTheDocument();
     expect(screen.getByText("10.00%")).toBeInTheDocument();
   });
 
@@ -100,37 +100,37 @@ describe("PoolsDisplay", () => {
       pools: {
         prizePool: {
           value: 1000n,
-          formatted: "1000 ETH",
+          formatted: "1000 CFX",
           description: "Prize pool",
           percentage: 50,
         },
         equipmentPool: {
           value: 500n,
-          formatted: "500 ETH",
+          formatted: "500 CFX",
           description: "Equipment pool",
           percentage: 25,
         },
         gasRefundPool: {
           value: 200n,
-          formatted: "200 ETH",
+          formatted: "200 CFX",
           description: "Gas refund pool",
           percentage: 10,
         },
         developerPool: {
           value: 100n,
-          formatted: "100 ETH",
+          formatted: "100 CFX",
           description: "Developer pool",
           percentage: 5,
         },
         nextEpochPool: {
           value: 300n,
-          formatted: "300 ETH",
+          formatted: "300 CFX",
           description: "Next epoch pool",
           percentage: 15,
         },
         emergencyPool: {
           value: 50n,
-          formatted: "50 ETH",
+          formatted: "50 CFX",
           description: "Emergency pool",
           percentage: 2.5,
         },

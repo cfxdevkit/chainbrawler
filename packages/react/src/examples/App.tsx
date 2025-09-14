@@ -61,8 +61,8 @@ function MyComponent() {
       {pools.pools && (
         <div>
           <h3>Pools</h3>
-          <div>Prize Pool: {pools.pools.prizePool?.formatted} ETH</div>
-          <div>Equipment Pool: {pools.pools.equipmentPool?.formatted} ETH</div>
+          <div>Prize Pool: {pools.pools.prizePool?.formatted} CFX</div>
+          <div>Equipment Pool: {pools.pools.equipmentPool?.formatted} CFX</div>
         </div>
       )}
 
@@ -80,7 +80,7 @@ function MyComponent() {
           {claims.claims.available.map((reward: any, index: number) => (
             <div key={index}>
               <div>
-                {reward.description}: {reward.amount} ETH
+                {reward.description}: {reward.amount} CFX
               </div>
               <button onClick={() => handleClaimPrize(reward)} disabled={!reward.canClaim}>
                 Claim

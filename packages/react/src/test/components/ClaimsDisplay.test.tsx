@@ -70,7 +70,7 @@ describe("ClaimsDisplay", () => {
     expect(screen.getByText("Prize Claims")).toBeInTheDocument();
     expect(screen.getByText("Available Claims")).toBeInTheDocument();
     expect(screen.getByText("Total Claimable:")).toBeInTheDocument();
-    expect(screen.getByText("1500 ETH")).toBeInTheDocument();
+    expect(screen.getByText("1500 CFX")).toBeInTheDocument();
     expect(screen.getByText("Available Rewards:")).toBeInTheDocument();
   });
 
@@ -95,7 +95,7 @@ describe("ClaimsDisplay", () => {
     // Check first reward
     expect(screen.getByText("Prize Pool Reward - Epoch 3")).toBeInTheDocument();
     expect(screen.getAllByText("Amount:")).toHaveLength(3); // There are 3 rewards
-    expect(screen.getByText("1000 ETH")).toBeInTheDocument();
+    expect(screen.getByText("1000 CFX")).toBeInTheDocument();
     expect(screen.getAllByText("Type:")).toHaveLength(3); // There are 3 rewards
     expect(screen.getAllByText("PRIZE_POOL")).toHaveLength(2); // There are 2 PRIZE_POOL rewards
     expect(screen.getAllByText("Epoch:")).toHaveLength(3); // There are 3 rewards

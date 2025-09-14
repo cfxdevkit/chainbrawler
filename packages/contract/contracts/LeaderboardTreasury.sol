@@ -86,7 +86,7 @@ contract LeaderboardTreasury is AccessControl, ReentrancyGuard {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
-    /// @notice Receive function for direct ETH deposits
+    /// @notice Receive function for direct CFX deposits
     receive() external payable {
         emit Deposited(msg.sender, msg.value);
     }

@@ -110,28 +110,28 @@ export function PoolsDisplay({
           >
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
               <div>
-                <strong>Prize Pool:</strong> {pools.prizePool?.formatted || "0 ETH"}
+                <strong>Prize Pool:</strong> {pools.prizePool?.formatted || "0 CFX"}
               </div>
               <div>
-                <strong>Equipment Pool:</strong> {pools.equipmentPool?.formatted || "0 ETH"}
+                <strong>Equipment Pool:</strong> {pools.equipmentPool?.formatted || "0 CFX"}
               </div>
               <div>
-                <strong>Gas Refund Pool:</strong> {pools.gasRefundPool?.formatted || "0 ETH"}
+                <strong>Gas Refund Pool:</strong> {pools.gasRefundPool?.formatted || "0 CFX"}
               </div>
               <div>
-                <strong>Developer Pool:</strong> {pools.developerPool?.formatted || "0 ETH"}
+                <strong>Developer Pool:</strong> {pools.developerPool?.formatted || "0 CFX"}
               </div>
               <div>
-                <strong>Next Epoch Pool:</strong> {pools.nextEpochPool?.formatted || "0 ETH"}
+                <strong>Next Epoch Pool:</strong> {pools.nextEpochPool?.formatted || "0 CFX"}
               </div>
               <div>
-                <strong>Emergency Pool:</strong> {pools.emergencyPool?.formatted || "0 ETH"}
+                <strong>Emergency Pool:</strong> {pools.emergencyPool?.formatted || "0 CFX"}
               </div>
             </div>
 
             <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid #ddd" }}>
               <strong>Total Value:</strong>{" "}
-              {pools.totalValue ? `${(Number(pools.totalValue) / 1e18).toFixed(2)} ETH` : "0 ETH"}
+              {pools.totalValue ? `${(Number(pools.totalValue) / 1e18).toFixed(2)} CFX` : "0 CFX"}
             </div>
 
             {pools.lastUpdated && (

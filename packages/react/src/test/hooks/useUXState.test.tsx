@@ -115,7 +115,7 @@ describe("useUXState", () => {
         pools: {
           prizePool: {
             value: 1000n,
-            formatted: "1000 ETH",
+            formatted: "1000 CFX",
             description: "Prize pool",
             percentage: 50,
           },

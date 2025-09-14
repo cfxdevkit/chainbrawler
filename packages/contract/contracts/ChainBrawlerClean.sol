@@ -103,7 +103,7 @@ contract ChainBrawlerClean is
         epochState.currentEpoch = 1;
         epochState.epochDuration = 7 days; // Production: 7 days per epoch
         epochState.epochStartTime = block.timestamp; // Initialize current epoch start time
-        gasRefundConfig.capPerFight = 300000000000000; // 0.0003 ETH
+        gasRefundConfig.capPerFight = 300000000000000; // 0.0003 CFX
         gasRefundConfig.perEpochRefundCapPerAccount = gasRefundConfig.capPerFight * 10;
         gasRefundConfig.lowLevelThreshold = 5;
     }

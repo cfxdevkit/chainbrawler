@@ -65,9 +65,9 @@ export function PoolsDisplay({
   };
 
   const formatAmount = (amount: bigint | number | undefined) => {
-    if (!amount) return "0 ETH";
+    if (!amount) return "0 CFX";
     const value = typeof amount === "bigint" ? Number(amount) : amount;
-    return `${(value / 1e18).toFixed(4)} ETH`;
+    return `${(value / 1e18).toFixed(4)} CFX`;
   };
 
   const poolItems = [
@@ -77,7 +77,7 @@ export function PoolsDisplay({
       description: "Rewards for top players each epoch",
       icon: IconCoins,
       color: "yellow",
-      value: pools?.prizePool?.formatted || "0 ETH",
+      value: pools?.prizePool?.formatted || "0 CFX",
       rawValue: pools?.prizePool?.value,
     },
     {
@@ -86,7 +86,7 @@ export function PoolsDisplay({
       description: "Funding for equipment drops",
       icon: IconShield,
       color: "blue",
-      value: pools?.equipmentPool?.formatted || "0 ETH",
+      value: pools?.equipmentPool?.formatted || "0 CFX",
       rawValue: pools?.equipmentPool?.value,
     },
     {
@@ -95,7 +95,7 @@ export function PoolsDisplay({
       description: "Gas fee reimbursements",
       icon: IconGasStation,
       color: "green",
-      value: pools?.gasRefundPool?.formatted || "0 ETH",
+      value: pools?.gasRefundPool?.formatted || "0 CFX",
       rawValue: pools?.gasRefundPool?.value,
     },
     {
@@ -104,7 +104,7 @@ export function PoolsDisplay({
       description: "Development funding",
       icon: IconCode,
       color: "purple",
-      value: pools?.developerPool?.formatted || "0 ETH",
+      value: pools?.developerPool?.formatted || "0 CFX",
       rawValue: pools?.developerPool?.value,
     },
     {
@@ -113,7 +113,7 @@ export function PoolsDisplay({
       description: "Reserved for next epoch rewards",
       icon: IconClock,
       color: "cyan",
-      value: pools?.nextEpochPool?.formatted || "0 ETH",
+      value: pools?.nextEpochPool?.formatted || "0 CFX",
       rawValue: pools?.nextEpochPool?.value,
     },
     {
@@ -122,7 +122,7 @@ export function PoolsDisplay({
       description: "Emergency funds and contingency",
       icon: IconAlertTriangle,
       color: "red",
-      value: pools?.emergencyPool?.formatted || "0 ETH",
+      value: pools?.emergencyPool?.formatted || "0 CFX",
       rawValue: pools?.emergencyPool?.value,
     },
   ];
@@ -198,7 +198,7 @@ export function PoolsDisplay({
                 Total Treasury Value
               </Text>
               <Badge size="lg" variant="gradient" gradient={{ from: "blue", to: "purple" }}>
-                {pools.totalValue ? formatAmount(pools.totalValue) : "0 ETH"}
+                {pools.totalValue ? formatAmount(pools.totalValue) : "0 CFX"}
               </Badge>
             </Group>
           </Card>

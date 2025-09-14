@@ -24,7 +24,7 @@ describe("Leaderboard Prize System Integration", function () {
     console.log("📋 Testing leaderboard system integration");
 
     // Phase 1: Test fund exposure after character creation
-    const creationFee = 15n * 10n ** 18n; // 15 ETH
+    const creationFee = 15n * 10n ** 18n; // 15 CFX
 
     await chainBrawler.write.createCharacter([1n], {
       value: creationFee,
@@ -100,7 +100,7 @@ describe("Leaderboard Prize System Integration", function () {
     const epochReserve = await treasury.read.epochReserve([currentEpoch]);
 
     // Fund treasury for testing
-    const prizeAmount = 5n * 10n ** 18n; // 5 ETH
+    const prizeAmount = 5n * 10n ** 18n; // 5 CFX
     await treasury.write.depositForEpoch([currentEpoch], {
       value: prizeAmount,
       account: admin.account,
@@ -269,7 +269,7 @@ describe("Leaderboard Prize System Integration", function () {
     console.log(`Available Prize Pool: ${prizePool} wei`);
 
     // Fund treasury with prize money for current epoch
-    const epochPrizes = 5n * 10n ** 18n; // 5 ETH for prizes
+    const epochPrizes = 5n * 10n ** 18n; // 5 CFX for prizes
     await treasury.write.depositForEpoch([currentEpoch], {
       value: epochPrizes,
       account: admin.account,
@@ -278,10 +278,10 @@ describe("Leaderboard Prize System Integration", function () {
     // Create merkle tree for top 10 winners (simulating off-chain leaderboard calculation)
     const ethers = require("ethers");
 
-    // Prize distribution: Player1 gets 1st place (2 ETH), Player2 gets 2nd place (1 ETH)
+    // Prize distribution: Player1 gets 1st place (2 CFX), Player2 gets 2nd place (1 CFX)
     const epoch = currentEpoch;
-    const player1Amount = 2n * 10n ** 18n; // 2 ETH for 1st place
-    const player2Amount = 1n * 10n ** 18n; // 1 ETH for 2nd place
+    const player1Amount = 2n * 10n ** 18n; // 2 CFX for 1st place
+    const player2Amount = 1n * 10n ** 18n; // 1 CFX for 2nd place
 
     const leaf1 = ethers.utils.solidityKeccak256(
       ["uint256", "uint256", "address", "uint256"],
@@ -311,7 +311,7 @@ describe("Leaderboard Prize System Integration", function () {
 
     console.log("📊 Leaderboard published with merkle root for top 10 prizes");
 
-    // Test Player 1 claiming 1st place prize (2 ETH)
+    // Test Player 1 claiming 1st place prize (2 CFX)
     const proof1 = [leaf2]; // Proof for player1 in 2-leaf tree
 
     await treasury.write.claim(
@@ -328,9 +328,9 @@ describe("Leaderboard Prize System Integration", function () {
     const player1Claimed = await treasury.read.isClaimed([epoch, 0n]);
     expect(player1Claimed).to.equal(true);
 
-    console.log("✅ Player 1 successfully claimed 1st place prize (2 ETH)");
+    console.log("✅ Player 1 successfully claimed 1st place prize (2 CFX)");
 
-    // Test Player 2 claiming 2nd place prize (1 ETH)
+    // Test Player 2 claiming 2nd place prize (1 CFX)
     const proof2 = [leaf1]; // Proof for player2 in 2-leaf tree
 
     await treasury.write.claim(
@@ -347,7 +347,7 @@ describe("Leaderboard Prize System Integration", function () {
     const player2Claimed = await treasury.read.isClaimed([epoch, 1n]);
     expect(player2Claimed).to.equal(true);
 
-    console.log("✅ Player 2 successfully claimed 2nd place prize (1 ETH)");
+    console.log("✅ Player 2 successfully claimed 2nd place prize (1 CFX)");
 
     // Test preventing duplicate claims
     let duplicateClaimFailed = false;
@@ -366,7 +366,7 @@ describe("Leaderboard Prize System Integration", function () {
     // Test invalid proof rejection
     let invalidProofFailed = false;
     try {
-      const fakeAmount = 10n * 10n ** 18n; // Try to claim 10 ETH instead of allocated amount
+      const fakeAmount = 10n * 10n ** 18n; // Try to claim 10 CFX instead of allocated amount
       await treasury.write.claim(
         [
           epoch,
