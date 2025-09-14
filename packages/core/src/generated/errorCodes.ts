@@ -54,7 +54,7 @@ export const ERROR_CODES = {
   2103: "BitPackedEnemyLib: baseDefense overflow",
   2104: "BitPackedEnemyLib: baseLuck overflow",
   2105: "BitPackedEnemyLib: xpReward overflow",
-  2106: "BitPackedEnemyLib: dropRate overflow",
+  2106: "BitPackedEnemyLib: dropRate overflow"
 } as const;
 
 export type ErrorCode = keyof typeof ERROR_CODES;
@@ -68,7 +68,7 @@ export function getErrorMessage(errorCode: number): string {
 }
 
 export function extractErrorCode(error: any): number | null {
-  if (typeof error === "number") return error;
+  if (typeof error === 'number') return error;
   if (error?.code) return error.code;
   if (error?.error?.code) return error.error.code;
   if (error?.message) {
@@ -85,6 +85,6 @@ export function isRetryableError(errorCode: number): boolean {
     1503, // Transfer failed (network issue)
     1718, // Transfer failed (network issue)
   ];
-
+  
   return retryableCodes.includes(errorCode);
 }

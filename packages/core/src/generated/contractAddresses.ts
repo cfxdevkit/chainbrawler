@@ -8,11 +8,16 @@ export interface ContractAddresses {
 }
 
 export const CONTRACT_ADDRESSES = {
-  "2030": {
-    chainBrawler: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-    leaderboardTreasury: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-    leaderboardManager: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+  "71": {
+    "chainBrawler": "0x479f1e400007e338Ac1aD302509B4ad6F73B3Aae",
+    "leaderboardTreasury": "0xf86Ca3768439a975E4A51262fC839Ed9a2b67Bf2",
+    "leaderboardManager": "0x20574fFEeC708D08aF964CcE1aF5C6a8C85aB953"
   },
+  "2030": {
+    "chainBrawler": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+    "leaderboardTreasury": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+    "leaderboardManager": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
+  }
 } as const;
 
 export function getContractAddresses(chainId: number): ContractAddresses {

@@ -17,8 +17,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock pino to avoid actual logging during tests
-vi.mock("pino", () => ({
-  default: vi.fn(() => ({
+vi.mock("pino", () => {
+  const mockPino = vi.fn(() => ({
     child: vi.fn(() => ({
       info: vi.fn(),
       warn: vi.fn(),
@@ -29,11 +29,20 @@ vi.mock("pino", () => ({
     warn: vi.fn(),
     error: vi.fn(),
     debug: vi.fn(),
-  })),
-  stdTimeFunctions: {
+  }));
+
+  // Add stdTimeFunctions to the mock
+  mockPino.stdTimeFunctions = {
     isoTime: vi.fn(() => "2023-01-01T00:00:00.000Z"),
-  },
-}));
+  };
+
+  return {
+    default: mockPino,
+    stdTimeFunctions: {
+      isoTime: vi.fn(() => "2023-01-01T00:00:00.000Z"),
+    },
+  };
+});
 
 // Mock fs to avoid file system operations during tests
 vi.mock("fs", () => ({

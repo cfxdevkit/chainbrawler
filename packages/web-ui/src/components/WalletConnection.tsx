@@ -20,6 +20,7 @@ import {
   IconWallet,
   IconX,
 } from "@tabler/icons-react";
+import { ConnectKitButton } from "connectkit";
 import React, { useState } from "react";
 import { confluxESpace, confluxESpaceTestnet } from "viem/chains";
 import { useAccount, useConnect, useDisconnect, useSwitchChain } from "wagmi";
@@ -227,21 +228,24 @@ export function WalletConnection() {
                               {chainInfo.description}
                             </Text>
                           </Stack>
-                          <Button
-                            size="lg"
-                            color={chainInfo.color}
-                            variant="filled"
-                            onClick={() => handleConnect(chainInfo.chainId)}
-                            loading={isAddingChain || isPending}
-                            leftSection={<IconWallet size={20} />}
-                            style={{
-                              background: `linear-gradient(135deg, ${chainInfo.color === "blue" ? "#3b82f6 0%, #1d4ed8 100%" : "#10b981 0%, #059669 100%"})`,
-                              border: "none",
-                              minWidth: "180px",
-                            }}
-                          >
-                            {isAddingChain ? "Connecting..." : `Connect to ${chainInfo.name}`}
-                          </Button>
+                          <Group gap="sm">
+                            <Button
+                              size="lg"
+                              color={chainInfo.color}
+                              variant="filled"
+                              onClick={() => handleConnect(chainInfo.chainId)}
+                              loading={isAddingChain || isPending}
+                              leftSection={<IconWallet size={20} />}
+                              style={{
+                                background: `linear-gradient(135deg, ${chainInfo.color === "blue" ? "#3b82f6 0%, #1d4ed8 100%" : "#10b981 0%, #059669 100%"})`,
+                                border: "none",
+                                minWidth: "180px",
+                              }}
+                            >
+                              {isAddingChain ? "Connecting..." : `Connect to ${chainInfo.name}`}
+                            </Button>
+                            <ConnectKitButton />
+                          </Group>
                         </Group>
                       </Stack>
                     </Card>
@@ -324,6 +328,12 @@ export function WalletConnection() {
                     Switch to {chainInfo.name}
                   </Button>
                 ))}
+              </Group>
+              <Group justify="center" gap="md" mt="md">
+                <Text size="sm" c="dimmed">
+                  Or use ConnectKit:
+                </Text>
+                <ConnectKitButton />
               </Group>
             </Stack>
 
