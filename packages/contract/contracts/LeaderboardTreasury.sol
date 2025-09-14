@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.28;
 
-import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
-import {BitMaps} from "@openzeppelin/contracts/utils/structs/BitMaps.sol";
-import {GameError} from "./Errors.sol";
+import { AccessControl } from "@openzeppelin/contracts/access/AccessControl.sol";
+import { ReentrancyGuard } from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import { MerkleProof } from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import { BitMaps } from "@openzeppelin/contracts/utils/structs/BitMaps.sol";
+import { GameError } from "./Errors.sol";
 
 /**
  * @title LeaderboardTreasury
@@ -31,7 +31,7 @@ contract LeaderboardTreasury is AccessControl, ReentrancyGuard {
 
     /// @notice Configurable dispute window before claims allowed (seconds)
     uint256 public disputeWindow = 3 days;
-    
+
     /// @notice Configurable claim window - claims must be made within this period after publication
     uint256 public claimWindow = 60 days;
 
@@ -109,7 +109,10 @@ contract LeaderboardTreasury is AccessControl, ReentrancyGuard {
     /// @notice Distribute rewards to multiple winners. Callable by authorized manager.
     /// @param winners Array of winner addresses
     /// @param amounts Array of reward amounts
-    function distribute(address[] calldata winners, uint256[] calldata amounts) external onlyRole(MANAGER_ROLE) nonReentrant {
+    function distribute(
+        address[] calldata winners,
+        uint256[] calldata amounts
+    ) external onlyRole(MANAGER_ROLE) nonReentrant {
         if (winners.length != amounts.length) revert GameError(1703);
         uint256 total = 0;
         for (uint256 i = 0; i < amounts.length; ++i) total += amounts[i];
@@ -118,7 +121,7 @@ contract LeaderboardTreasury is AccessControl, ReentrancyGuard {
         for (uint256 i = 0; i < winners.length; ++i) {
             address payable to = payable(winners[i]);
             uint256 amt = amounts[i];
-            (bool ok, ) = to.call{value: amt}("");
+            (bool ok, ) = to.call{ value: amt }("");
             if (!ok) revert GameError(1718);
             emit RewardDistributed(to, amt);
         }
@@ -147,14 +150,20 @@ contract LeaderboardTreasury is AccessControl, ReentrancyGuard {
     /// @param account The account to claim for
     /// @param amount The amount to claim
     /// @param proof The merkle proof
-    function claim(uint256 epoch, uint256 index, address account, uint256 amount, bytes32[] calldata proof) external nonReentrant {
+    function claim(
+        uint256 epoch,
+        uint256 index,
+        address account,
+        uint256 amount,
+        bytes32[] calldata proof
+    ) external nonReentrant {
         bytes32 root = epochRoot[epoch];
         if (root == bytes32(0)) revert GameError(1708);
-        
+
         uint256 publishedAt = epochPublishedAt[epoch];
         // Enforce dispute window: claims allowed only after publish + disputeWindow
         if (block.timestamp < publishedAt + disputeWindow) revert GameError(1709);
-        
+
         // Enforce claim deadline: claims must be made within claimWindow after publication
         if (block.timestamp > publishedAt + claimWindow) revert GameError(1710);
 
@@ -168,14 +177,14 @@ contract LeaderboardTreasury is AccessControl, ReentrancyGuard {
         // Mark claimed
         _setClaimed(epoch, index);
 
-    // Ensure epoch reserve can cover the claim, then deduct and transfer
-    if (epochReserve[epoch] < amount) revert GameError(1712);
-    epochReserve[epoch] -= amount;
-    emit EpochReserveConsumed(epoch, account, amount);
+        // Ensure epoch reserve can cover the claim, then deduct and transfer
+        if (epochReserve[epoch] < amount) revert GameError(1712);
+        epochReserve[epoch] -= amount;
+        emit EpochReserveConsumed(epoch, account, amount);
 
-    (bool sent, ) = payable(account).call{value: amount}("");
-    if (!sent) revert GameError(1718);
-    emit Claimed(epoch, index, account, amount);
+        (bool sent, ) = payable(account).call{ value: amount }("");
+        if (!sent) revert GameError(1718);
+        emit Claimed(epoch, index, account, amount);
     }
 
     /// @notice Check if a claim has been made
@@ -213,21 +222,21 @@ contract LeaderboardTreasury is AccessControl, ReentrancyGuard {
     function rollUnclaimedFunds(uint256 epoch) external onlyRole(MANAGER_ROLE) {
         bytes32 root = epochRoot[epoch];
         if (root == bytes32(0)) revert GameError(1708);
-        
+
         uint256 publishedAt = epochPublishedAt[epoch];
         if (publishedAt == 0) revert GameError(1713);
-        
+
         // Require claim window to have expired
         if (block.timestamp < publishedAt + claimWindow + 1) revert GameError(1714);
-        
+
         uint256 unclaimedAmount = epochReserve[epoch];
         if (unclaimedAmount == 0) revert GameError(1715);
-        
+
         // Transfer unclaimed funds back to general treasury balance
         epochReserve[epoch] = 0;
-        
+
         emit UnclaimedFundsRolled(epoch, unclaimedAmount);
-        
+
         // Funds are now available for future epoch funding or distributions
         // They remain in the contract's balance but are no longer earmarked for the specific epoch
     }
@@ -237,7 +246,7 @@ contract LeaderboardTreasury is AccessControl, ReentrancyGuard {
     /// @param amount The amount to withdraw
     function emergencyWithdraw(address payable to, uint256 amount) external onlyRole(DEFAULT_ADMIN_ROLE) nonReentrant {
         if (to == address(0)) revert GameError(1716);
-        (bool ok, ) = to.call{value: amount}("");
+        (bool ok, ) = to.call{ value: amount }("");
         if (!ok) revert GameError(1720);
         emit EmergencyWithdrawal(to, amount);
     }

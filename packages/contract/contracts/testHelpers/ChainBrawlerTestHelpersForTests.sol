@@ -8,7 +8,11 @@ import "../ChainBrawlerClean.sol";
 // will compile it and produce artifacts for tests.
 contract ChainBrawlerTestHelpersForTests is ChainBrawlerClean {
     // Allow test runner (admin) to set packed character storage directly
-    function setPackedCharacter(address player, uint256 coreStats, uint256 progressionStats) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setPackedCharacter(
+        address player,
+        uint256 coreStats,
+        uint256 progressionStats
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         packedCharacters[player].coreStats = coreStats;
         packedCharacters[player].progressionStats = progressionStats;
     }
@@ -21,7 +25,15 @@ contract ChainBrawlerTestHelpersForTests is ChainBrawlerClean {
     }
 
     // Expose enemy base setter for tests (mirrors earlier test helpers)
-    function setEnemyBase(uint256 id, uint256 baseCombat, uint256 baseEndurance, uint256 baseDefense, uint256 baseLuck, uint256 xpReward, uint256 dropRate) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setEnemyBase(
+        uint256 id,
+        uint256 baseCombat,
+        uint256 baseEndurance,
+        uint256 baseDefense,
+        uint256 baseLuck,
+        uint256 xpReward,
+        uint256 dropRate
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         gameDataStorage.enemyBaseStorage[id][0] = baseCombat;
         gameDataStorage.enemyBaseStorage[id][1] = baseEndurance;
         gameDataStorage.enemyBaseStorage[id][2] = baseDefense;

@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.28;
 
-import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import {GameError} from "./Errors.sol";
+import { AccessControl } from "@openzeppelin/contracts/access/AccessControl.sol";
+import { ReentrancyGuard } from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import { GameError } from "./Errors.sol";
 
 /**
  * @title ILeaderboardTreasury
@@ -67,9 +67,9 @@ contract LeaderboardManager is AccessControl, ReentrancyGuard {
     /// @param winners Array of winner addresses
     /// @param amounts Array of reward amounts
     function publishAndDistribute(
-        bytes32 root, 
-        uint256 epoch, 
-        address[] calldata winners, 
+        bytes32 root,
+        uint256 epoch,
+        address[] calldata winners,
         uint256[] calldata amounts
     ) external onlyRole(PUBLISHER_ROLE) nonReentrant {
         // For simplicity we trust the publisher role; real implementations should verify merkle proofs off-chain
@@ -85,10 +85,10 @@ contract LeaderboardManager is AccessControl, ReentrancyGuard {
     function publishAndFund(bytes32 root, uint256 epoch) external payable onlyRole(PUBLISHER_ROLE) nonReentrant {
         if (msg.value == 0) revert GameError(1702);
         // Forward funds to treasury
-    // Deposit funds earmarked for the epoch and then publish the root
-    // Use depositForEpoch to ensure epochReserve is credited
-    treasury.depositForEpoch{value: msg.value}(epoch);
-    treasury.publishEpochRoot(epoch, root);
+        // Deposit funds earmarked for the epoch and then publish the root
+        // Use depositForEpoch to ensure epochReserve is credited
+        treasury.depositForEpoch{ value: msg.value }(epoch);
+        treasury.publishEpochRoot(epoch, root);
         emit Published(root, epoch, msg.value);
     }
 }

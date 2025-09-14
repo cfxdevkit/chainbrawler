@@ -1,18 +1,18 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { CharacterDisplay } from '../../components/CharacterDisplay';
+import { fireEvent, render, screen } from "@testing-library/react";
+import { CharacterDisplay } from "../../components/CharacterDisplay";
 
 // Mock the context provider
-vi.mock('../../providers/ChainBrawlerProvider', () => ({
+vi.mock("../../providers/ChainBrawlerProvider", () => ({
   useChainBrawlerContext: vi.fn(),
 }));
 
-describe('CharacterDisplay', () => {
+describe("CharacterDisplay", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should render character creation when no character exists', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should render character creation when no character exists", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       character: null,
       menu: {
@@ -27,12 +27,12 @@ describe('CharacterDisplay', () => {
         canViewLeaderboard: true,
         canViewClaims: true,
         canClaimPrize: false,
-        availableActions: ['createCharacter'],
+        availableActions: ["createCharacter"],
         disabledActions: [],
         disabledReasons: {},
       },
       operation: null,
-      statusMessage: 'Ready to create character',
+      statusMessage: "Ready to create character",
       actions: {
         createCharacter: vi.fn(),
       },
@@ -40,13 +40,13 @@ describe('CharacterDisplay', () => {
 
     render(<CharacterDisplay />);
 
-    expect(screen.getByText('No Character')).toBeInTheDocument();
-    expect(screen.getByText('Ready to create character')).toBeInTheDocument();
-    expect(screen.getByText('Create Character')).toBeInTheDocument();
+    expect(screen.getByText("No Character")).toBeInTheDocument();
+    expect(screen.getByText("Ready to create character")).toBeInTheDocument();
+    expect(screen.getByText("Create Character")).toBeInTheDocument();
   });
 
-  it('should render character classes for selection', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should render character classes for selection", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       character: null,
       menu: {
@@ -61,12 +61,12 @@ describe('CharacterDisplay', () => {
         canViewLeaderboard: true,
         canViewClaims: true,
         canClaimPrize: false,
-        availableActions: ['createCharacter'],
+        availableActions: ["createCharacter"],
         disabledActions: [],
         disabledReasons: {},
       },
       operation: null,
-      statusMessage: 'Ready to create character',
+      statusMessage: "Ready to create character",
       actions: {
         createCharacter: vi.fn(),
       },
@@ -74,15 +74,15 @@ describe('CharacterDisplay', () => {
 
     render(<CharacterDisplay />);
 
-    expect(screen.getByText('Class 0')).toBeInTheDocument();
-    expect(screen.getByText('Class 1')).toBeInTheDocument();
-    expect(screen.getByText('Class 2')).toBeInTheDocument();
-    expect(screen.getByText('Class 3')).toBeInTheDocument();
+    expect(screen.getByText("Class 0")).toBeInTheDocument();
+    expect(screen.getByText("Class 1")).toBeInTheDocument();
+    expect(screen.getByText("Class 2")).toBeInTheDocument();
+    expect(screen.getByText("Class 3")).toBeInTheDocument();
   });
 
-  it('should call createCharacter when class button is clicked', async () => {
+  it("should call createCharacter when class button is clicked", async () => {
     const mockCreateCharacter = vi.fn();
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       character: null,
       menu: {
@@ -97,12 +97,12 @@ describe('CharacterDisplay', () => {
         canViewLeaderboard: true,
         canViewClaims: true,
         canClaimPrize: false,
-        availableActions: ['createCharacter'],
+        availableActions: ["createCharacter"],
         disabledActions: [],
         disabledReasons: {},
       },
       operation: null,
-      statusMessage: 'Ready to create character',
+      statusMessage: "Ready to create character",
       actions: {
         createCharacter: mockCreateCharacter,
       },
@@ -110,20 +110,20 @@ describe('CharacterDisplay', () => {
 
     render(<CharacterDisplay />);
 
-    const classButton = screen.getByText('Class 0');
+    const classButton = screen.getByText("Class 0");
     fireEvent.click(classButton);
 
     expect(mockCreateCharacter).toHaveBeenCalledWith(0);
   });
 
-  it('should render character data when character exists', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should render character data when character exists", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       character: {
         exists: true,
         isAlive: true,
         class: 0,
-        className: 'Warrior',
+        className: "Warrior",
         level: 5,
         experience: 1000,
         endurance: {
@@ -155,12 +155,12 @@ describe('CharacterDisplay', () => {
         canViewLeaderboard: true,
         canViewClaims: true,
         canClaimPrize: false,
-        availableActions: ['act', 'fight', 'heal'],
+        availableActions: ["act", "fight", "heal"],
         disabledActions: [],
         disabledReasons: {},
       },
       operation: null,
-      statusMessage: 'Character ready',
+      statusMessage: "Character ready",
       actions: {
         createCharacter: vi.fn(),
       },
@@ -168,22 +168,22 @@ describe('CharacterDisplay', () => {
 
     render(<CharacterDisplay />);
 
-    expect(screen.getByText('Character')).toBeInTheDocument();
-    expect(screen.getByText('Class:')).toBeInTheDocument();
-    expect(screen.getByText('Warrior')).toBeInTheDocument();
-    expect(screen.getByText('Level:')).toBeInTheDocument();
-    expect(screen.getByText('5')).toBeInTheDocument();
-    expect(screen.getByText('Experience:')).toBeInTheDocument();
-    expect(screen.getByText('1000')).toBeInTheDocument();
-    expect(screen.getByText('Endurance:')).toBeInTheDocument();
-    expect(screen.getByText('80/100')).toBeInTheDocument();
-    expect(screen.getByText('Combat:')).toBeInTheDocument();
-    expect(screen.getByText('15')).toBeInTheDocument();
-    expect(screen.getByText('Defense:')).toBeInTheDocument();
-    expect(screen.getByText('12')).toBeInTheDocument();
-    expect(screen.getByText('Luck:')).toBeInTheDocument();
-    expect(screen.getByText('8')).toBeInTheDocument();
-    expect(screen.getByText('Equipment Count:')).toBeInTheDocument();
-    expect(screen.getByText('2')).toBeInTheDocument();
+    expect(screen.getByText("Character")).toBeInTheDocument();
+    expect(screen.getByText("Class:")).toBeInTheDocument();
+    expect(screen.getByText("Warrior")).toBeInTheDocument();
+    expect(screen.getByText("Level:")).toBeInTheDocument();
+    expect(screen.getByText("5")).toBeInTheDocument();
+    expect(screen.getByText("Experience:")).toBeInTheDocument();
+    expect(screen.getByText("1000")).toBeInTheDocument();
+    expect(screen.getByText("Endurance:")).toBeInTheDocument();
+    expect(screen.getByText("80/100")).toBeInTheDocument();
+    expect(screen.getByText("Combat:")).toBeInTheDocument();
+    expect(screen.getByText("15")).toBeInTheDocument();
+    expect(screen.getByText("Defense:")).toBeInTheDocument();
+    expect(screen.getByText("12")).toBeInTheDocument();
+    expect(screen.getByText("Luck:")).toBeInTheDocument();
+    expect(screen.getByText("8")).toBeInTheDocument();
+    expect(screen.getByText("Equipment Count:")).toBeInTheDocument();
+    expect(screen.getByText("2")).toBeInTheDocument();
   });
 });

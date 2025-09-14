@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+import { type ClaimableReward, type ClaimsData, formatEthAmount } from "@chainbrawler/core";
 import React from "react";
-import { ClaimsData, ClaimableReward, formatEthAmount } from "@chainbrawler/core";
 
 interface ClaimsDisplayProps {
   claims: ClaimsData | null;
@@ -26,13 +26,13 @@ interface ClaimsDisplayProps {
   onClaimPrize: (epoch: bigint, index: bigint, amount: bigint, proof: string[]) => Promise<void>;
 }
 
-export function ClaimsDisplay({ 
-  claims, 
-  isLoading, 
-  error, 
-  onLoadClaims, 
-  onRefreshClaims, 
-  onClaimPrize 
+export function ClaimsDisplay({
+  claims,
+  isLoading,
+  error,
+  onLoadClaims,
+  onRefreshClaims,
+  onClaimPrize,
 }: ClaimsDisplayProps) {
   const handleLoadClaims = async () => {
     try {
@@ -70,7 +70,14 @@ export function ClaimsDisplay({
 
   return (
     <div style={{ border: "1px solid #ddd", padding: "1rem", borderRadius: "8px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "1rem",
+        }}
+      >
         <h3>Prize Claims</h3>
         <div>
           <button
@@ -108,20 +115,21 @@ export function ClaimsDisplay({
       </div>
 
       {isLoading && (
-        <div style={{ textAlign: "center", color: "#666" }}>
-          Loading claims data...
-        </div>
+        <div style={{ textAlign: "center", color: "#666" }}>Loading claims data...</div>
       )}
 
-      {error && (
-        <div style={{ color: "red", marginBottom: "1rem" }}>
-          Error: {error}
-        </div>
-      )}
+      {error && <div style={{ color: "red", marginBottom: "1rem" }}>Error: {error}</div>}
 
       {claims && (
         <div>
-          <div style={{ background: "#f5f5f5", padding: "1rem", borderRadius: "4px", marginBottom: "1rem" }}>
+          <div
+            style={{
+              background: "#f5f5f5",
+              padding: "1rem",
+              borderRadius: "4px",
+              marginBottom: "1rem",
+            }}
+          >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
                 <strong>Total Claimable:</strong> {formatEthAmount(claims.totalClaimable || 0n)}
@@ -130,7 +138,7 @@ export function ClaimsDisplay({
                 <strong>Available Rewards:</strong> {claims.available?.length || 0}
               </div>
             </div>
-            
+
             {claims.lastChecked && (
               <div style={{ marginTop: "0.5rem", fontSize: "0.9rem", color: "#666" }}>
                 Last checked: {new Date(claims.lastChecked).toLocaleString()}
@@ -143,17 +151,17 @@ export function ClaimsDisplay({
               <h4>Available Rewards</h4>
               <div style={{ background: "#f9f9f9", padding: "1rem", borderRadius: "4px" }}>
                 {claims.available.map((reward, index) => (
-                  <div 
+                  <div
                     key={index}
-                    style={{ 
-                      display: "flex", 
-                      justifyContent: "space-between", 
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
                       alignItems: "center",
                       padding: "0.75rem",
                       marginBottom: "0.5rem",
                       backgroundColor: reward.canClaim ? "#e8f5e8" : "#f5f5f5",
                       borderRadius: "4px",
-                      border: reward.canClaim ? "1px solid #4CAF50" : "1px solid #ddd"
+                      border: reward.canClaim ? "1px solid #4CAF50" : "1px solid #ddd",
                     }}
                   >
                     <div>
@@ -163,10 +171,10 @@ export function ClaimsDisplay({
                       <div style={{ fontSize: "0.9rem", color: "#666" }}>
                         Amount: {String(formatEthAmount(reward.amount || 0n))}
                         {reward.epoch && ` | Epoch: ${reward.epoch}`}
-                        {reward.index ? ` | Index: ${reward.index.toString()}` : ''}
+                        {reward.index ? ` | Index: ${reward.index.toString()}` : ""}
                       </div>
                     </div>
-                    
+
                     <button
                       onClick={() => handleClaimPrize(reward)}
                       disabled={!reward.canClaim}

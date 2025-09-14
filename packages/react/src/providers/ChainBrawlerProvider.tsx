@@ -1,25 +1,25 @@
 // React context provider for ChainBrawler
 // Based on REFACTORING_PLAN.md
 
-import React, { createContext, useContext, ReactNode } from 'react';
-import { ChainBrawlerConfig, UXState } from '@chainbrawler/core';
-import { useChainBrawler } from '../hooks/useChainBrawler';
+import type { ChainBrawlerConfig, UXState } from "@chainbrawler/core";
+import React, { createContext, type ReactNode, useContext } from "react";
+import { useChainBrawler } from "../hooks/useChainBrawler";
 
 interface ChainBrawlerContextValue {
   // State
-  character: UXState['character'];
-  menu: UXState['menu'];
-  operation: UXState['operation'];
-  pools: UXState['pools'];
-  leaderboard: UXState['leaderboard'];
-  claims: UXState['claims'];
+  character: UXState["character"];
+  menu: UXState["menu"];
+  operation: UXState["operation"];
+  pools: UXState["pools"];
+  leaderboard: UXState["leaderboard"];
+  claims: UXState["claims"];
   statusMessage: string;
   isLoading: boolean;
   error: string | null;
-  
+
   // Actions
   actions: any; // SDK actions object
-  
+
   // Config
   config: ChainBrawlerConfig;
 }
@@ -33,7 +33,7 @@ export interface ChainBrawlerProviderProps {
 
 export function ChainBrawlerProvider({ config, children }: ChainBrawlerProviderProps) {
   const chainBrawler = useChainBrawler(config);
-  
+
   const value: ChainBrawlerContextValue = {
     character: chainBrawler.character,
     menu: chainBrawler.menu,
@@ -45,20 +45,16 @@ export function ChainBrawlerProvider({ config, children }: ChainBrawlerProviderP
     isLoading: chainBrawler.isLoading,
     error: chainBrawler.error,
     actions: chainBrawler.actions,
-    config
+    config,
   };
-  
-  return (
-    <ChainBrawlerContext.Provider value={value}>
-      {children}
-    </ChainBrawlerContext.Provider>
-  );
+
+  return <ChainBrawlerContext.Provider value={value}>{children}</ChainBrawlerContext.Provider>;
 }
 
 export function useChainBrawlerContext(): ChainBrawlerContextValue {
   const context = useContext(ChainBrawlerContext);
   if (!context) {
-    throw new Error('useChainBrawlerContext must be used within a ChainBrawlerProvider');
+    throw new Error("useChainBrawlerContext must be used within a ChainBrawlerProvider");
   }
   return context;
 }

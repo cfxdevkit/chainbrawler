@@ -1,13 +1,26 @@
 // Fight data normalization utilities
 // Provides comprehensive data transformation for fight summary display
 
-import { FightSummaryData, EquipmentData } from '../types';
+import type { EquipmentData, FightSummaryData } from "../types";
 
 // Enemy names mapping
 export const ENEMY_NAMES = [
-  "Unknown", "Goblin Warrior", "Orc Berserker", "Shadow Assassin", "Ice Troll",
-  "Fire Elemental", "Stone Golem", "Dark Wizard", "Skeleton Knight", "Dragon Whelp",
-  "Void Stalker", "Ancient Dragon", "Crystal Beast", "Shadow Demon", "Frost Giant", "Lava Dragon"
+  "Unknown",
+  "Goblin Warrior",
+  "Orc Berserker",
+  "Shadow Assassin",
+  "Ice Troll",
+  "Fire Elemental",
+  "Stone Golem",
+  "Dark Wizard",
+  "Skeleton Knight",
+  "Dragon Whelp",
+  "Void Stalker",
+  "Ancient Dragon",
+  "Crystal Beast",
+  "Shadow Demon",
+  "Frost Giant",
+  "Lava Dragon",
 ];
 
 // Raw contract event data interface
@@ -46,18 +59,18 @@ export class FightDataNormalizer {
       return value;
     }
 
-    if (typeof value === 'bigint') {
+    if (typeof value === "bigint") {
       return value.toString();
     }
 
     if (Array.isArray(value)) {
-      return value.map(item => this.normalizeBigInts(item));
+      return value.map((item) => FightDataNormalizer.normalizeBigInts(item));
     }
 
-    if (typeof value === 'object') {
+    if (typeof value === "object") {
       const normalized: any = {};
       for (const [key, val] of Object.entries(value)) {
-        normalized[key] = this.normalizeBigInts(val);
+        normalized[key] = FightDataNormalizer.normalizeBigInts(val);
       }
       return normalized;
     }
@@ -77,11 +90,11 @@ export class FightDataNormalizer {
    * Get health color based on percentage
    */
   static getHealthColor(percentage: number): string {
-    if (percentage >= 80) return '#22c55e'; // green
-    if (percentage >= 60) return '#84cc16'; // lime
-    if (percentage >= 40) return '#eab308'; // yellow
-    if (percentage >= 20) return '#f97316'; // orange
-    return '#ef4444'; // red
+    if (percentage >= 80) return "#22c55e"; // green
+    if (percentage >= 60) return "#84cc16"; // lime
+    if (percentage >= 40) return "#eab308"; // yellow
+    if (percentage >= 20) return "#f97316"; // orange
+    return "#ef4444"; // red
   }
 
   /**
@@ -96,74 +109,86 @@ export class FightDataNormalizer {
    * Get progress color based on percentage
    */
   static getProgressColor(percentage: number): string {
-    if (percentage >= 90) return '#22c55e'; // green
-    if (percentage >= 70) return '#84cc16'; // lime
-    if (percentage >= 50) return '#eab308'; // yellow
-    if (percentage >= 30) return '#f97316'; // orange
-    return '#3b82f6'; // blue
+    if (percentage >= 90) return "#22c55e"; // green
+    if (percentage >= 70) return "#84cc16"; // lime
+    if (percentage >= 50) return "#eab308"; // yellow
+    if (percentage >= 30) return "#f97316"; // orange
+    return "#3b82f6"; // blue
   }
 
   /**
    * Format health display with color
    */
-  static formatHealthDisplay(current: number, max: number): {
+  static formatHealthDisplay(
+    current: number,
+    max: number
+  ): {
     current: number;
     max: number;
     percentage: number;
     color: string;
     display: string;
   } {
-    const percentage = this.calculateHealthPercentage(current, max);
-    const color = this.getHealthColor(percentage);
-    
+    const percentage = FightDataNormalizer.calculateHealthPercentage(current, max);
+    const color = FightDataNormalizer.getHealthColor(percentage);
+
     return {
       current,
       max,
       percentage,
       color,
-      display: `${current}/${max} (${percentage.toFixed(1)}%)`
+      display: `${current}/${max} (${percentage.toFixed(1)}%)`,
     };
   }
 
   /**
    * Format progress display with color
    */
-  static formatProgressDisplay(current: number, total: number, label: string = 'Progress'): {
+  static formatProgressDisplay(
+    current: number,
+    total: number,
+    label: string = "Progress"
+  ): {
     current: number;
     total: number;
     percentage: number;
     color: string;
     display: string;
   } {
-    const percentage = this.calculateProgressPercentage(current, total);
-    const color = this.getProgressColor(percentage);
-    
+    const percentage = FightDataNormalizer.calculateProgressPercentage(current, total);
+    const color = FightDataNormalizer.getProgressColor(percentage);
+
     return {
       current,
       total,
       percentage,
       color,
-      display: `${label}: ${current}/${total} (${percentage.toFixed(1)}%)`
+      display: `${label}: ${current}/${total} (${percentage.toFixed(1)}%)`,
     };
   }
 
   /**
    * Normalizes raw contract event data into structured FightSummaryData
    */
-  static normalizeFightSummary(rawData: RawFightSummaryEvent, equipmentDrop?: RawEquipmentDrop): FightSummaryData {
+  static normalizeFightSummary(
+    rawData: RawFightSummaryEvent,
+    equipmentDrop?: RawEquipmentDrop
+  ): FightSummaryData {
     // Calculate derived fields
     const playerDied = !rawData.victory && !rawData.unresolved;
     const enemyDied = rawData.victory;
-    
+
     // Normalize equipment drop data
-    const normalizedEquipmentDrop = equipmentDrop ? this.normalizeEquipmentDrop(equipmentDrop) : undefined;
-    
+    const normalizedEquipmentDrop = equipmentDrop
+      ? FightDataNormalizer.normalizeEquipmentDrop(equipmentDrop)
+      : undefined;
+
     // Get enemy name
-    const enemyName = this.getEnemyName(rawData.enemyId);
-    
+    const enemyName = FightDataNormalizer.getEnemyName(rawData.enemyId);
+
     // Normalize rounds data
-    const rounds = this.normalizeRoundsData(rawData);
-    
+    const rounds = FightDataNormalizer.normalizeRoundsData(rawData);
+
     return {
       enemyId: Number(rawData.enemyId),
       enemyLevel: Number(rawData.enemyLevel),
@@ -180,7 +205,9 @@ export class FightDataNormalizer {
       enemyStartEndurance: Number(rawData.enemyStartEndurance),
       rounds,
       enemyName,
-      difficultyMultiplier: rawData.difficultyMultiplier ? Number(rawData.difficultyMultiplier) : 1.0
+      difficultyMultiplier: rawData.difficultyMultiplier
+        ? Number(rawData.difficultyMultiplier)
+        : 1.0,
     };
   }
 
@@ -193,14 +220,14 @@ export class FightDataNormalizer {
       combat: bonuses[0] || 0,
       endurance: bonuses[1] || 0,
       defense: bonuses[2] || 0,
-      luck: bonuses[3] || 0
+      luck: bonuses[3] || 0,
     };
   }
 
   /**
    * Normalizes rounds data for display
    */
-  static normalizeRoundsData(rawData: RawFightSummaryEvent): FightSummaryData['rounds'] {
+  static normalizeRoundsData(rawData: RawFightSummaryEvent): FightSummaryData["rounds"] {
     const roundNumbers = (rawData.roundNumbers || []).map(Number);
     const playerDamages = (rawData.playerDamages || []).map(Number);
     const enemyDamages = (rawData.enemyDamages || []).map(Number);
@@ -213,7 +240,7 @@ export class FightDataNormalizer {
       playerDamages,
       enemyDamages,
       playerCriticals,
-      enemyCriticals
+      enemyCriticals,
     };
   }
 
@@ -228,43 +255,43 @@ export class FightDataNormalizer {
    * Calculates fight outcome for display
    */
   static getFightOutcome(fightData: FightSummaryData): {
-    type: 'victory' | 'defeat' | 'unresolved' | 'ended';
+    type: "victory" | "defeat" | "unresolved" | "ended";
     color: string;
     icon: string;
     text: string;
   } {
     if (fightData.victory) {
       return {
-        type: 'victory',
-        color: '#4CAF50',
-        icon: '🏆',
-        text: 'VICTORY!'
+        type: "victory",
+        color: "#4CAF50",
+        icon: "🏆",
+        text: "VICTORY!",
       };
     }
-    
+
     if (fightData.playerDied) {
       return {
-        type: 'defeat',
-        color: '#F44336',
-        icon: '💀',
-        text: 'DEFEAT'
+        type: "defeat",
+        color: "#F44336",
+        icon: "💀",
+        text: "DEFEAT",
       };
     }
-    
+
     if (fightData.unresolved) {
       return {
-        type: 'unresolved',
-        color: '#FF9800',
-        icon: '⏰',
-        text: 'UNRESOLVED'
+        type: "unresolved",
+        color: "#FF9800",
+        icon: "⏰",
+        text: "UNRESOLVED",
       };
     }
-    
+
     return {
-      type: 'ended',
-      color: '#666',
-      icon: '⚔️',
-      text: 'FIGHT ENDED'
+      type: "ended",
+      color: "#666",
+      icon: "⚔️",
+      text: "FIGHT ENDED",
     };
   }
 
@@ -280,14 +307,14 @@ export class FightDataNormalizer {
    * Formats damage for display
    */
   static formatDamage(damage: number, isCritical: boolean): string {
-    const criticalText = isCritical ? ' (CRITICAL!)' : '';
+    const criticalText = isCritical ? " (CRITICAL!)" : "";
     return `${damage}${criticalText}`;
   }
 
   /**
    * Gets round summary for display
    */
-  static getRoundSummary(rounds: FightSummaryData['rounds']): {
+  static getRoundSummary(rounds: FightSummaryData["rounds"]): {
     totalPlayerDamage: number;
     totalEnemyDamage: number;
     criticalHits: number;
@@ -295,14 +322,16 @@ export class FightDataNormalizer {
   } {
     const totalPlayerDamage = rounds.playerDamages.reduce((sum, damage) => sum + damage, 0);
     const totalEnemyDamage = rounds.enemyDamages.reduce((sum, damage) => sum + damage, 0);
-    const criticalHits = rounds.playerCriticals.filter(Boolean).length + rounds.enemyCriticals.filter(Boolean).length;
-    const averageDamage = rounds.count > 0 ? (totalPlayerDamage + totalEnemyDamage) / (rounds.count * 2) : 0;
+    const criticalHits =
+      rounds.playerCriticals.filter(Boolean).length + rounds.enemyCriticals.filter(Boolean).length;
+    const averageDamage =
+      rounds.count > 0 ? (totalPlayerDamage + totalEnemyDamage) / (rounds.count * 2) : 0;
 
     return {
       totalPlayerDamage,
       totalEnemyDamage,
       criticalHits,
-      averageDamage
+      averageDamage,
     };
   }
 
@@ -341,7 +370,7 @@ export class FightDataNormalizer {
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 }

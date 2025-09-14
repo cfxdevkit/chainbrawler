@@ -14,7 +14,17 @@ contract CombatMathTester {
         uint256 playerLuck,
         uint256 enemyLuck
     ) external pure returns (uint256, uint256, uint256, uint256, bool, bool, bool) {
-        return CombatMath.performRound(combatSkill, enemyCombat, enemyDefense, defense, currentEndurance, enemyCurrentEndurance, playerLuck, enemyLuck);
+        return
+            CombatMath.performRound(
+                combatSkill,
+                enemyCombat,
+                enemyDefense,
+                defense,
+                currentEndurance,
+                enemyCurrentEndurance,
+                playerLuck,
+                enemyLuck
+            );
     }
 
     function scaleEnemyForLevel(

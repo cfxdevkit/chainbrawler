@@ -19,10 +19,10 @@
  * Extracted from devkit-cli to provide basic node functionality using HARDHAT_VAR_DEPLOYER_MNEMONIC
  */
 
-import { mnemonicToSeed, validateMnemonic } from "bip39";
 import { BIP32Factory } from "bip32";
-import * as ecc from "tiny-secp256k1";
+import { mnemonicToSeed, validateMnemonic } from "bip39";
 import { privateKeyToAccount as corePrivateKeyToAccount } from "cive/accounts";
+import * as ecc from "tiny-secp256k1";
 import { privateKeyToAccount as espacePrivateKeyToAccount } from "viem/accounts";
 
 const bip32 = BIP32Factory(ecc);

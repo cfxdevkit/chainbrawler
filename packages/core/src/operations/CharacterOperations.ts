@@ -1,12 +1,12 @@
 // Character operations - create, get, heal, resurrect
 // Based on UX_STATE_MANAGEMENT_SPEC.md and CONTRACT_REFERENCE.md
 
-import { BaseOperation } from './BaseOperation';
-import { CharacterData, OperationResult, ValidationResult } from '../types';
-import { ContractClient } from '../contract/ContractClient';
-import { CharacterStateManager } from '../managers/CharacterStateManager';
-import { getCharacterClassName } from '../utils/CharacterUtils';
-import { MenuStateCalculator } from '../utils/MenuStateCalculator';
+import type { ContractClient } from "../contract/ContractClient";
+import { CharacterStateManager } from "../managers/CharacterStateManager";
+import type { CharacterData, OperationResult, ValidationResult } from "../types";
+import { getCharacterClassName } from "../utils/CharacterUtils";
+import { MenuStateCalculator } from "../utils/MenuStateCalculator";
+import { BaseOperation } from "./BaseOperation";
 
 export class CharacterOperations extends BaseOperation {
   private sdk: any; // ChainBrawlerSDK instance
@@ -23,37 +23,35 @@ export class CharacterOperations extends BaseOperation {
     this.sdk = sdk;
     this.characterStateManager = new CharacterStateManager(store, contractClient, eventEmitter);
   }
-  
+
   // Create character
   async createCharacter(classId: number): Promise<OperationResult<CharacterData>> {
-    if (!this.canStartOperation('createCharacter')) {
-      return { success: false, error: 'Cannot start operation' };
+    if (!this.canStartOperation("createCharacter")) {
+      return { success: false, error: "Cannot start operation" };
     }
 
-    this.startOperation('createCharacter', { classId });
-    this.store.setStatusMessage('Creating character...');
+    this.startOperation("createCharacter", { classId });
+    this.store.setStatusMessage("Creating character...");
 
     try {
-      
       // Get creation fee
       const creationFee = await this.contractClient.getCreationFee();
-      
+
       // Call contract method
       const result = await this.handleContractCall(async () => {
         return await this.contractClient.createCharacter(classId, creationFee);
       });
 
-
       if (!result.success) {
-        console.error('CharacterOperations.createCharacter: Contract call failed:', result.error);
-        this.failOperation(result.error || 'Character creation failed');
-        return { success: false, error: result.error || 'Character creation failed' };
+        console.error("CharacterOperations.createCharacter: Contract call failed:", result.error);
+        this.failOperation(result.error || "Character creation failed");
+        return { success: false, error: result.error || "Character creation failed" };
       }
 
       // Update character data - try to get player address from wallet client
       const playerAddress = this.sdk.getPlayerAddress();
       let character = null;
-      
+
       if (playerAddress) {
         // Use CharacterStateManager to refresh character data
         await this.characterStateManager.refreshCharacter(playerAddress);
@@ -64,12 +62,12 @@ export class CharacterOperations extends BaseOperation {
       }
 
       this.completeOperation();
-      this.store.setStatusMessage('Character created successfully');
+      this.store.setStatusMessage("Character created successfully");
 
       return { success: true, data: character || undefined };
     } catch (error) {
-      this.failOperation('Character creation failed');
-      return { success: false, error: 'Character creation failed' };
+      this.failOperation("Character creation failed");
+      return { success: false, error: "Character creation failed" };
     }
   }
 
@@ -80,19 +78,19 @@ export class CharacterOperations extends BaseOperation {
       const character = await this.characterStateManager.loadCharacter(playerAddress);
       return character;
     } catch (error) {
-      console.error('Failed to get character:', error);
+      console.error("Failed to get character:", error);
       return null;
     }
   }
 
   // Heal character
   async healCharacter(): Promise<OperationResult<void>> {
-    if (!this.canStartOperation('healCharacter')) {
-      return { success: false, error: 'Cannot start operation' };
+    if (!this.canStartOperation("healCharacter")) {
+      return { success: false, error: "Cannot start operation" };
     }
 
-    this.startOperation('healCharacter');
-    this.store.setStatusMessage('Healing character...');
+    this.startOperation("healCharacter");
+    this.store.setStatusMessage("Healing character...");
 
     try {
       const healingFee = await this.contractClient.getHealingFee();
@@ -101,8 +99,8 @@ export class CharacterOperations extends BaseOperation {
       });
 
       if (!result.success) {
-        this.failOperation(result.error || 'Healing failed');
-        return { success: false, error: result.error || 'Healing failed' };
+        this.failOperation(result.error || "Healing failed");
+        return { success: false, error: result.error || "Healing failed" };
       }
 
       // Refresh character data
@@ -114,23 +112,23 @@ export class CharacterOperations extends BaseOperation {
       }
 
       this.completeOperation();
-      this.store.setStatusMessage('Character healed successfully');
+      this.store.setStatusMessage("Character healed successfully");
 
       return { success: true };
     } catch (error) {
-      this.failOperation('Healing failed');
-      return { success: false, error: 'Healing failed' };
+      this.failOperation("Healing failed");
+      return { success: false, error: "Healing failed" };
     }
   }
 
   // Resurrect character
   async resurrectCharacter(): Promise<OperationResult<void>> {
-    if (!this.canStartOperation('resurrectCharacter')) {
-      return { success: false, error: 'Cannot start operation' };
+    if (!this.canStartOperation("resurrectCharacter")) {
+      return { success: false, error: "Cannot start operation" };
     }
 
-    this.startOperation('resurrectCharacter');
-    this.store.setStatusMessage('Resurrecting character...');
+    this.startOperation("resurrectCharacter");
+    this.store.setStatusMessage("Resurrecting character...");
 
     try {
       const resurrectionFee = await this.contractClient.getResurrectionFee();
@@ -139,8 +137,8 @@ export class CharacterOperations extends BaseOperation {
       });
 
       if (!result.success) {
-        this.failOperation(result.error || 'Resurrection failed');
-        return { success: false, error: result.error || 'Resurrection failed' };
+        this.failOperation(result.error || "Resurrection failed");
+        return { success: false, error: result.error || "Resurrection failed" };
       }
 
       // Refresh character data
@@ -152,12 +150,12 @@ export class CharacterOperations extends BaseOperation {
       }
 
       this.completeOperation();
-      this.store.setStatusMessage('Character resurrected successfully');
+      this.store.setStatusMessage("Character resurrected successfully");
 
       return { success: true };
     } catch (error) {
-      this.failOperation('Resurrection failed');
-      return { success: false, error: 'Resurrection failed' };
+      this.failOperation("Resurrection failed");
+      return { success: false, error: "Resurrection failed" };
     }
   }
 
@@ -174,11 +172,11 @@ export class CharacterOperations extends BaseOperation {
 
       const data = result.data;
       if (!data) {
-        return { valid: false, reason: 'No data returned' };
+        return { valid: false, reason: "No data returned" };
       }
       return { valid: data.canHeal, reason: data.canHeal ? undefined : data.reason };
     } catch (error) {
-      return { valid: false, reason: 'Failed to check heal status' };
+      return { valid: false, reason: "Failed to check heal status" };
     }
   }
 
@@ -195,11 +193,11 @@ export class CharacterOperations extends BaseOperation {
 
       const data = result.data;
       if (!data) {
-        return { valid: false, reason: 'No data returned' };
+        return { valid: false, reason: "No data returned" };
       }
       return { valid: data.canResurrect, reason: data.canResurrect ? undefined : data.reason };
     } catch (error) {
-      return { valid: false, reason: 'Failed to check resurrect status' };
+      return { valid: false, reason: "Failed to check resurrect status" };
     }
   }
 
@@ -220,21 +218,23 @@ export class CharacterOperations extends BaseOperation {
       endurance: {
         current: Number(contractData.currentEndurance),
         max: Number(contractData.maxEndurance),
-        percentage: percentage
+        percentage: percentage,
       },
       stats: {
         combat: Number(contractData.totalCombat),
         defense: Number(contractData.totalDefense),
-        luck: Number(contractData.totalLuck)
+        luck: Number(contractData.totalLuck),
       },
-      equipment: [{
-        combat: Number(contractData.equippedCombatBonus),
-        endurance: Number(contractData.equippedEnduranceBonus),
-        defense: Number(contractData.equippedDefenseBonus),
-        luck: Number(contractData.equippedLuckBonus)
-      }],
+      equipment: [
+        {
+          combat: Number(contractData.equippedCombatBonus),
+          endurance: Number(contractData.equippedEnduranceBonus),
+          defense: Number(contractData.equippedDefenseBonus),
+          luck: Number(contractData.equippedLuckBonus),
+        },
+      ],
       inCombat: false, // Will be updated by combat check
-      totalKills: Number(contractData.totalKills)
+      totalKills: Number(contractData.totalKills),
     };
   }
 
@@ -272,8 +272,7 @@ export class CharacterOperations extends BaseOperation {
   public calculateMenuState(character: CharacterData | null): any {
     return MenuStateCalculator.calculateMenuState(character, {
       operation: this.store.getOperation(),
-      healingCooldownRemaining: 0 // TODO: Get from contract
+      healingCooldownRemaining: 0, // TODO: Get from contract
     });
   }
-
 }

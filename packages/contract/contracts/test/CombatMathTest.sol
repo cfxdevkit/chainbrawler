@@ -19,16 +19,17 @@ contract CombatMathTest {
         uint256 enemyDefense,
         uint256 enemyLuck
     ) external pure returns (int256) {
-        return CombatMath.calculateCombatIndex(
-            playerCombat,
-            playerDefense,
-            playerLuck,
-            enemyCombat,
-            enemyDefense,
-            enemyLuck
-        );
+        return
+            CombatMath.calculateCombatIndex(
+                playerCombat,
+                playerDefense,
+                playerLuck,
+                enemyCombat,
+                enemyDefense,
+                enemyLuck
+            );
     }
-    
+
     /**
      * Test wrapper for calculateDifficultyMultiplier
      */

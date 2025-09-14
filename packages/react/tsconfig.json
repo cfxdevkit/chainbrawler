@@ -18,5 +18,12 @@
     }
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.tsx", "**/*.test.ts", "src/test/**/*", "**/test/**/*"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.tsx",
+    "**/*.test.ts",
+    "src/test/**/*",
+    "**/test/**/*"
+  ]
 }

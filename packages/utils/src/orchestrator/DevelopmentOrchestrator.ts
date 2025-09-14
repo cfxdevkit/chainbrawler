@@ -26,11 +26,11 @@
  * 6. Provides cleanup and CI-friendly operation
  */
 
-import { LocalConfluxNode, type LocalNodeInfo } from "../conflux/LocalConfluxNode";
 import { spawn } from "node:child_process";
 import { promises as fs } from "node:fs";
-import { resolve, join } from "node:path";
+import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { LocalConfluxNode, type LocalNodeInfo } from "../conflux/LocalConfluxNode";
 import { createLogger } from "../logging/logger";
 // Note: This would normally import from @chainbrawler/core
 // For now, we'll use a placeholder implementation
@@ -158,11 +158,13 @@ export class DevelopmentOrchestrator {
 
       this.log("🎉 Development environment ready!");
 
-      return deploymentResult || {
-        chainId: this.nodeInfo.chainId,
-        deployedAddresses: {},
-        transactionHashes: {},
-      };
+      return (
+        deploymentResult || {
+          chainId: this.nodeInfo.chainId,
+          deployedAddresses: {},
+          transactionHashes: {},
+        }
+      );
     } catch (error) {
       this.logger.error("Failed to start development environment", { error });
       throw error;
@@ -190,7 +192,15 @@ export class DevelopmentOrchestrator {
     return new Promise((resolve, reject) => {
       const contractDir = join(this.repoRoot, "packages", "contract");
       const hardhatCommand = "npx";
-      const hardhatArgs = ["hardhat", "ignition", "deploy", "ignition/modules/ChainBrawlerModule.ts", "--network", "confluxESpaceLocal", "--reset"];
+      const hardhatArgs = [
+        "hardhat",
+        "ignition",
+        "deploy",
+        "ignition/modules/ChainBrawlerModule.ts",
+        "--network",
+        "confluxESpaceLocal",
+        "--reset",
+      ];
 
       this.log(`Running: ${hardhatCommand} ${hardhatArgs.join(" ")} in ${contractDir}`);
 
@@ -200,7 +210,9 @@ export class DevelopmentOrchestrator {
         env: {
           ...process.env,
           HARDHAT_NETWORK: "confluxESpaceLocal",
-          HARDHAT_VAR_DEPLOYER_MNEMONIC: process.env.HARDHAT_VAR_DEPLOYER_MNEMONIC || "test test test test test test test test test test test junk",
+          HARDHAT_VAR_DEPLOYER_MNEMONIC:
+            process.env.HARDHAT_VAR_DEPLOYER_MNEMONIC ||
+            "test test test test test test test test test test test junk",
         },
       });
 

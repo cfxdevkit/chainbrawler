@@ -1,34 +1,35 @@
-import React from 'react'
 import {
-  Stack,
+  Avatar,
+  Badge,
   Button,
+  Card,
+  Divider,
   Group,
   Paper,
-  Text,
-  SimpleGrid,
-  ThemeIcon,
-  Badge,
   Progress,
-  Divider,
-  Card,
-  Avatar,
-  Title
-} from '@mantine/core'
+  SimpleGrid,
+  Stack,
+  Text,
+  ThemeIcon,
+  Title,
+} from "@mantine/core";
 import {
-  IconSwords,
-  IconShield,
   IconBolt,
+  IconClover,
   IconHeart,
+  IconShield,
+  IconSwords,
   IconTarget,
   IconWand,
-  IconClover
-} from '@tabler/icons-react'
+} from "@tabler/icons-react";
+import React from "react";
+
 // import { CHARACTER_CLASSES } from '@chainbrawler/core'
 
 interface CharacterCreationFormProps {
-  onCreateCharacter: (classId: number) => Promise<void>
-  isLoading: boolean
-  canCreate: boolean
+  onCreateCharacter: (classId: number) => Promise<void>;
+  isLoading: boolean;
+  canCreate: boolean;
 }
 
 // Character class configurations with enhanced stats and descriptions
@@ -36,7 +37,8 @@ const CHARACTER_CLASS_CONFIGS = [
   {
     id: 0,
     name: "Warrior",
-    description: "A fierce melee combatant with high attack power and decent defense. Masters of weapon combat.",
+    description:
+      "A fierce melee combatant with high attack power and decent defense. Masters of weapon combat.",
     icon: <IconSwords size={32} />,
     color: "red",
     primaryStat: "Combat",
@@ -44,16 +46,17 @@ const CHARACTER_CLASS_CONFIGS = [
       combat: 8,
       defense: 6,
       luck: 4,
-      health: 100
+      health: 100,
     },
     strengths: ["High damage output", "Good survivability", "Weapon mastery"],
     weaknesses: ["Limited magic resistance", "Slower critical hits"],
-    playStyle: "Aggressive front-line fighter"
+    playStyle: "Aggressive front-line fighter",
   },
   {
     id: 1,
     name: "Guardian",
-    description: "A defensive specialist with exceptional armor and protective abilities. Tank role in combat.",
+    description:
+      "A defensive specialist with exceptional armor and protective abilities. Tank role in combat.",
     icon: <IconShield size={32} />,
     color: "blue",
     primaryStat: "Defense",
@@ -61,33 +64,35 @@ const CHARACTER_CLASS_CONFIGS = [
       combat: 5,
       defense: 9,
       luck: 4,
-      health: 120
+      health: 120,
     },
     strengths: ["Exceptional defense", "High health pool", "Damage resistance"],
     weaknesses: ["Lower damage output", "Slower attacks"],
-    playStyle: "Defensive tank and protector"
+    playStyle: "Defensive tank and protector",
   },
   {
     id: 2,
     name: "Rogue",
-    description: "A swift and cunning fighter who relies on luck and critical strikes. Master of stealth and precision.",
+    description:
+      "A swift and cunning fighter who relies on luck and critical strikes. Master of stealth and precision.",
     icon: <IconTarget size={32} />,
-    color: "green", 
+    color: "green",
     primaryStat: "Luck",
     stats: {
       combat: 6,
       defense: 4,
       luck: 8,
-      health: 80
+      health: 80,
     },
     strengths: ["High critical chance", "Lucky dodges", "Rare item discovery"],
     weaknesses: ["Lower health", "Vulnerable to heavy attacks"],
-    playStyle: "Hit-and-run with critical strikes"
+    playStyle: "Hit-and-run with critical strikes",
   },
   {
     id: 3,
     name: "Mage",
-    description: "A mystical spellcaster with balanced magical abilities. Uses arcane power for both offense and defense.",
+    description:
+      "A mystical spellcaster with balanced magical abilities. Uses arcane power for both offense and defense.",
     icon: <IconWand size={32} />,
     color: "violet",
     primaryStat: "Balance",
@@ -95,30 +100,36 @@ const CHARACTER_CLASS_CONFIGS = [
       combat: 6,
       defense: 6,
       luck: 6,
-      health: 90
+      health: 90,
     },
     strengths: ["Balanced stats", "Magical versatility", "Adaptive combat"],
     weaknesses: ["Master of none", "Requires strategy"],
-    playStyle: "Versatile magical combat"
-  }
-]
+    playStyle: "Versatile magical combat",
+  },
+];
 
-export function CharacterCreationForm({ onCreateCharacter, isLoading, canCreate }: CharacterCreationFormProps) {
-  const [selectedClassId, setSelectedClassId] = React.useState<number | null>(null)
+export function CharacterCreationForm({
+  onCreateCharacter,
+  isLoading,
+  canCreate,
+}: CharacterCreationFormProps) {
+  const [selectedClassId, setSelectedClassId] = React.useState<number | null>(null);
 
   const handleCreateCharacter = async () => {
     if (selectedClassId !== null && canCreate) {
-      await onCreateCharacter(selectedClassId)
+      await onCreateCharacter(selectedClassId);
     }
-  }
+  };
 
-  const selectedClass = selectedClassId !== null ? CHARACTER_CLASS_CONFIGS[selectedClassId] : null
+  const selectedClass = selectedClassId !== null ? CHARACTER_CLASS_CONFIGS[selectedClassId] : null;
 
   return (
-    <Stack gap="xl" style={{ width: '100%', maxWidth: '800px' }}>
+    <Stack gap="xl" style={{ width: "100%", maxWidth: "800px" }}>
       {/* Class Selection Grid */}
       <Stack gap="md">
-        <Title order={3} ta="center" c="white">Choose Your Class</Title>
+        <Title order={3} ta="center" c="white">
+          Choose Your Class
+        </Title>
         <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
           {CHARACTER_CLASS_CONFIGS.map((charClass) => (
             <Card
@@ -127,16 +138,18 @@ export function CharacterCreationForm({ onCreateCharacter, isLoading, canCreate 
               radius="md"
               withBorder
               style={{
-                cursor: canCreate ? 'pointer' : 'not-allowed',
-                backgroundColor: selectedClassId === charClass.id 
-                  ? 'var(--mantine-color-dark-5)' 
-                  : 'var(--mantine-color-dark-6)',
-                borderColor: selectedClassId === charClass.id 
-                  ? `var(--mantine-color-${charClass.color}-6)` 
-                  : 'var(--mantine-color-dark-4)',
-                transform: selectedClassId === charClass.id ? 'scale(1.02)' : 'scale(1)',
-                transition: 'all 0.2s ease',
-                opacity: canCreate ? 1 : 0.6
+                cursor: canCreate ? "pointer" : "not-allowed",
+                backgroundColor:
+                  selectedClassId === charClass.id
+                    ? "var(--mantine-color-dark-5)"
+                    : "var(--mantine-color-dark-6)",
+                borderColor:
+                  selectedClassId === charClass.id
+                    ? `var(--mantine-color-${charClass.color}-6)`
+                    : "var(--mantine-color-dark-4)",
+                transform: selectedClassId === charClass.id ? "scale(1.02)" : "scale(1)",
+                transition: "all 0.2s ease",
+                opacity: canCreate ? 1 : 0.6,
               }}
               onClick={() => canCreate && setSelectedClassId(charClass.id)}
             >
@@ -153,49 +166,67 @@ export function CharacterCreationForm({ onCreateCharacter, isLoading, canCreate 
 
                 {/* Class Name */}
                 <Stack gap="xs" align="center">
-                  <Text size="xl" fw={700} c="white">{charClass.name}</Text>
+                  <Text size="xl" fw={700} c="white">
+                    {charClass.name}
+                  </Text>
                   <Badge color={charClass.color} size="md" variant="light">
                     {charClass.primaryStat} Specialist
                   </Badge>
                 </Stack>
 
                 {/* Description */}
-                <Text size="sm" c="dimmed" ta="center" style={{ minHeight: '60px' }}>
+                <Text size="sm" c="dimmed" ta="center" style={{ minHeight: "60px" }}>
                   {charClass.description}
                 </Text>
 
                 {/* Stats Preview */}
-                <Stack gap="xs" style={{ width: '100%' }}>
+                <Stack gap="xs" style={{ width: "100%" }}>
                   <Group justify="space-between">
                     <Group gap="xs">
                       <IconSwords size={14} color="red" />
-                      <Text size="sm" c="white">Combat</Text>
+                      <Text size="sm" c="white">
+                        Combat
+                      </Text>
                     </Group>
-                    <Text size="sm" fw={600} c="red">{charClass.stats.combat}</Text>
+                    <Text size="sm" fw={600} c="red">
+                      {charClass.stats.combat}
+                    </Text>
                   </Group>
-                  
+
                   <Group justify="space-between">
                     <Group gap="xs">
                       <IconShield size={14} color="blue" />
-                      <Text size="sm" c="white">Defense</Text>
+                      <Text size="sm" c="white">
+                        Defense
+                      </Text>
                     </Group>
-                    <Text size="sm" fw={600} c="blue">{charClass.stats.defense}</Text>
+                    <Text size="sm" fw={600} c="blue">
+                      {charClass.stats.defense}
+                    </Text>
                   </Group>
-                  
+
                   <Group justify="space-between">
                     <Group gap="xs">
                       <IconClover size={14} color="green" />
-                      <Text size="sm" c="white">Luck</Text>
+                      <Text size="sm" c="white">
+                        Luck
+                      </Text>
                     </Group>
-                    <Text size="sm" fw={600} c="green">{charClass.stats.luck}</Text>
+                    <Text size="sm" fw={600} c="green">
+                      {charClass.stats.luck}
+                    </Text>
                   </Group>
 
                   <Group justify="space-between">
                     <Group gap="xs">
                       <IconHeart size={14} color="pink" />
-                      <Text size="sm" c="white">Health</Text>
+                      <Text size="sm" c="white">
+                        Health
+                      </Text>
                     </Group>
-                    <Text size="sm" fw={600} c="pink">{charClass.stats.health}</Text>
+                    <Text size="sm" fw={600} c="pink">
+                      {charClass.stats.health}
+                    </Text>
                   </Group>
                 </Stack>
 
@@ -218,7 +249,9 @@ export function CharacterCreationForm({ onCreateCharacter, isLoading, canCreate 
                 {selectedClass.icon}
               </Avatar>
               <Stack gap="xs">
-                <Title order={2} c="white">{selectedClass.name}</Title>
+                <Title order={2} c="white">
+                  {selectedClass.name}
+                </Title>
                 <Badge color={selectedClass.color} size="lg">
                   {selectedClass.primaryStat} Specialist
                 </Badge>
@@ -234,20 +267,29 @@ export function CharacterCreationForm({ onCreateCharacter, isLoading, canCreate 
             {/* Detailed Stats */}
             <SimpleGrid cols={2} spacing="lg">
               <Stack gap="sm">
-                <Text size="lg" fw={700} c="white">Base Statistics</Text>
+                <Text size="lg" fw={700} c="white">
+                  Base Statistics
+                </Text>
                 {Object.entries(selectedClass.stats).map(([stat, value]) => (
                   <Stack key={stat} gap="xs">
                     <Group justify="space-between">
-                      <Text size="sm" c="white" tt="capitalize">{stat}</Text>
-                      <Text size="sm" fw={700}>{value}</Text>
+                      <Text size="sm" c="white" tt="capitalize">
+                        {stat}
+                      </Text>
+                      <Text size="sm" fw={700}>
+                        {value}
+                      </Text>
                     </Group>
-                    <Progress 
-                      value={(value / (stat === 'health' ? 120 : 10)) * 100} 
+                    <Progress
+                      value={(value / (stat === "health" ? 120 : 10)) * 100}
                       color={
-                        stat === 'combat' ? 'red' :
-                        stat === 'defense' ? 'blue' :
-                        stat === 'luck' ? 'green' :
-                        'pink'
+                        stat === "combat"
+                          ? "red"
+                          : stat === "defense"
+                            ? "blue"
+                            : stat === "luck"
+                              ? "green"
+                              : "pink"
                       }
                       size="sm"
                     />
@@ -256,17 +298,27 @@ export function CharacterCreationForm({ onCreateCharacter, isLoading, canCreate 
               </Stack>
 
               <Stack gap="sm">
-                <Text size="lg" fw={700} c="white">Combat Profile</Text>
+                <Text size="lg" fw={700} c="white">
+                  Combat Profile
+                </Text>
                 <Stack gap="xs">
-                  <Text size="sm" fw={600} c="green">Strengths:</Text>
+                  <Text size="sm" fw={600} c="green">
+                    Strengths:
+                  </Text>
                   {selectedClass.strengths.map((strength, idx) => (
-                    <Text key={idx} size="xs" c="dimmed">• {strength}</Text>
+                    <Text key={idx} size="xs" c="dimmed">
+                      • {strength}
+                    </Text>
                   ))}
                 </Stack>
                 <Stack gap="xs">
-                  <Text size="sm" fw={600} c="orange">Weaknesses:</Text>
+                  <Text size="sm" fw={600} c="orange">
+                    Weaknesses:
+                  </Text>
                   {selectedClass.weaknesses.map((weakness, idx) => (
-                    <Text key={idx} size="xs" c="dimmed">• {weakness}</Text>
+                    <Text key={idx} size="xs" c="dimmed">
+                      • {weakness}
+                    </Text>
                   ))}
                 </Stack>
               </Stack>
@@ -280,21 +332,20 @@ export function CharacterCreationForm({ onCreateCharacter, isLoading, canCreate 
         <Button
           size="xl"
           variant="gradient"
-          gradient={{ 
-            from: selectedClass?.color || 'violet', 
-            to: `${selectedClass?.color}.7` || 'blue', 
-            deg: 45 
+          gradient={{
+            from: selectedClass?.color || "violet",
+            to: `${selectedClass?.color}.7` || "blue",
+            deg: 45,
           }}
           leftSection={<IconBolt size={20} />}
           onClick={handleCreateCharacter}
           disabled={!canCreate || selectedClassId === null}
           loading={isLoading}
-          style={{ minWidth: '250px', height: '60px', fontSize: '18px' }}
+          style={{ minWidth: "250px", height: "60px", fontSize: "18px" }}
         >
           {selectedClassId !== null
             ? `Create ${CHARACTER_CLASS_CONFIGS[selectedClassId].name} Warrior`
-            : "Select a Class to Create Character"
-          }
+            : "Select a Class to Create Character"}
         </Button>
       </Group>
 
@@ -304,5 +355,5 @@ export function CharacterCreationForm({ onCreateCharacter, isLoading, canCreate 
         </Text>
       )}
     </Stack>
-  )
+  );
 }

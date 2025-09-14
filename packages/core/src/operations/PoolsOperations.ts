@@ -1,54 +1,51 @@
 // Pools operations - load, refresh, calculate percentages
 // Based on UX_STATE_MANAGEMENT_SPEC.md and CONTRACT_REFERENCE.md
 
-import { BaseOperation } from './BaseOperation';
-import { PoolsData, PoolInfo, OperationResult } from '../types';
-import { ContractClient } from '../contract/ContractClient';
+import { ContractClient } from "../contract/ContractClient";
+import type { OperationResult, PoolInfo, PoolsData } from "../types";
+import { BaseOperation } from "./BaseOperation";
 
 export class PoolsOperations extends BaseOperation {
-  
   // Load all pools data
   async loadPools(): Promise<OperationResult<PoolsData>> {
-    
-    if (!this.canStartOperation('loadPools')) {
-      return { success: false, error: 'Cannot start operation' };
+    if (!this.canStartOperation("loadPools")) {
+      return { success: false, error: "Cannot start operation" };
     }
 
-    console.log('PoolsOperations: Starting loadPools operation');
-    this.startOperation('loadPools');
-    this.store.setStatusMessage('Loading pools data...');
+    console.log("PoolsOperations: Starting loadPools operation");
+    this.startOperation("loadPools");
+    this.store.setStatusMessage("Loading pools data...");
 
     try {
-      console.log('PoolsOperations: Calling contractClient.getAllPoolData...');
+      console.log("PoolsOperations: Calling contractClient.getAllPoolData...");
       const result = await this.handleContractCall(async () => {
         return await this.contractClient.getAllPoolData();
       });
-      console.log('PoolsOperations: Contract call result:', result);
-
+      console.log("PoolsOperations: Contract call result:", result);
 
       if (!result.success) {
-        console.log('PoolsOperations: Contract call failed:', result.error);
-        this.failOperation(result.error || 'Failed to load pools');
+        console.log("PoolsOperations: Contract call failed:", result.error);
+        this.failOperation(result.error || "Failed to load pools");
         return result;
       }
 
-      console.log('PoolsOperations: Using pools data from contract client');
+      console.log("PoolsOperations: Using pools data from contract client");
       const poolsData = result.data as PoolsData;
-      console.log('PoolsOperations: Final pools data:', poolsData);
-      
-      console.log('PoolsOperations: Updating store...');
+      console.log("PoolsOperations: Final pools data:", poolsData);
+
+      console.log("PoolsOperations: Updating store...");
       this.store.updatePools(poolsData);
 
-      console.log('PoolsOperations: Completing operation...');
+      console.log("PoolsOperations: Completing operation...");
       this.completeOperation();
-      this.store.setStatusMessage('Pools data loaded successfully');
+      this.store.setStatusMessage("Pools data loaded successfully");
 
-      console.log('PoolsOperations: Returning success result');
+      console.log("PoolsOperations: Returning success result");
       return { success: true, data: poolsData };
     } catch (error) {
-      console.error('PoolsOperations: Exception caught:', error);
-      this.failOperation('Failed to load pools');
-      return { success: false, error: 'Failed to load pools' };
+      console.error("PoolsOperations: Exception caught:", error);
+      this.failOperation("Failed to load pools");
+      return { success: false, error: "Failed to load pools" };
     }
   }
 
@@ -57,17 +54,10 @@ export class PoolsOperations extends BaseOperation {
     return this.loadPools();
   }
 
-
   // Parse pools data from contract
   private parsePoolsData(contractData: any): PoolsData {
-    const [
-      prizePool,
-      equipmentPool,
-      gasRefundPool,
-      developerPool,
-      nextEpochPool,
-      emergencyPool
-    ] = contractData;
+    const [prizePool, equipmentPool, gasRefundPool, developerPool, nextEpochPool, emergencyPool] =
+      contractData;
 
     const pools = {
       prizePool: this.createPoolInfo(prizePool, "Rewards for top players each epoch"),
@@ -75,20 +65,21 @@ export class PoolsOperations extends BaseOperation {
       gasRefundPool: this.createPoolInfo(gasRefundPool, "Gas fee reimbursements"),
       developerPool: this.createPoolInfo(developerPool, "Development funding"),
       nextEpochPool: this.createPoolInfo(nextEpochPool, "Reserved for next epoch rewards"),
-      emergencyPool: this.createPoolInfo(emergencyPool, "Emergency funds and contingency")
+      emergencyPool: this.createPoolInfo(emergencyPool, "Emergency funds and contingency"),
     };
 
-    const totalValue = prizePool + equipmentPool + gasRefundPool + developerPool + nextEpochPool + emergencyPool;
+    const totalValue =
+      prizePool + equipmentPool + gasRefundPool + developerPool + nextEpochPool + emergencyPool;
 
     // Calculate percentages
-    Object.values(pools).forEach(pool => {
+    Object.values(pools).forEach((pool) => {
       pool.percentage = totalValue > 0n ? Number((pool.value * 100n) / totalValue) : 0;
     });
 
     return {
       ...pools,
       totalValue,
-      lastUpdated: Date.now()
+      lastUpdated: Date.now(),
     };
   }
 
@@ -98,7 +89,7 @@ export class PoolsOperations extends BaseOperation {
       value,
       formatted: this.formatEther(value),
       description,
-      percentage: 0 // Will be calculated later
+      percentage: 0, // Will be calculated later
     };
   }
 
@@ -112,15 +103,15 @@ export class PoolsOperations extends BaseOperation {
   // Calculate pool percentages
   calculatePoolPercentages(pools: PoolsData): PoolsData {
     const totalValue = pools.totalValue;
-    
+
     if (totalValue === 0n) {
       return pools;
     }
 
     const updatedPools = { ...pools };
-    
-    Object.values(updatedPools).forEach(pool => {
-      if (typeof pool === 'object' && 'value' in pool && 'percentage' in pool) {
+
+    Object.values(updatedPools).forEach((pool) => {
+      if (typeof pool === "object" && "value" in pool && "percentage" in pool) {
         (pool as PoolInfo).percentage = Number((pool.value * 100n) / totalValue);
       }
     });
@@ -135,12 +126,19 @@ export class PoolsOperations extends BaseOperation {
 
   // Validate pool data
   validatePoolData(data: any): { valid: boolean; reason?: string } {
-    if (!data || typeof data !== 'object') {
-      return { valid: false, reason: 'Invalid pool data format' };
+    if (!data || typeof data !== "object") {
+      return { valid: false, reason: "Invalid pool data format" };
     }
 
-    const requiredFields = ['prizePool', 'equipmentPool', 'gasRefundPool', 'developerPool', 'nextEpochPool', 'emergencyPool'];
-    
+    const requiredFields = [
+      "prizePool",
+      "equipmentPool",
+      "gasRefundPool",
+      "developerPool",
+      "nextEpochPool",
+      "emergencyPool",
+    ];
+
     for (const field of requiredFields) {
       if (!(field in data)) {
         return { valid: false, reason: `Missing field: ${field}` };
@@ -153,14 +151,14 @@ export class PoolsOperations extends BaseOperation {
   // Get pool status message
   getPoolStatusMessage(): string {
     const pools = this.store.getPools();
-    
+
     if (!pools) {
-      return 'Pools data not loaded';
+      return "Pools data not loaded";
     }
 
     const totalValue = pools.totalValue;
     const formattedTotal = this.formatEther(totalValue);
-    
+
     return `Total pool value: ${formattedTotal}`;
   }
 }

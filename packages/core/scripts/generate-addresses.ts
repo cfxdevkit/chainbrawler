@@ -1,13 +1,13 @@
 #!/usr/bin/env tsx
 /**
  * Address Generation Script
- * 
+ *
  * Generates contract addresses from the common package's deployed addresses
  * and creates a TypeScript module for the core package.
  */
 
 import { promises as fs } from "node:fs";
-import { resolve, join } from "node:path";
+import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { glob } from "glob";
 
@@ -31,9 +31,9 @@ async function generateContractAddresses() {
 
   // Find all deployed_addresses.json files
   const contractDir = resolve(coreDir, "..", "contract");
-  const deploymentFiles = await glob("**/deployed_addresses.json", { 
+  const deploymentFiles = await glob("**/deployed_addresses.json", {
     cwd: join(contractDir, "ignition", "deployments"),
-    absolute: true 
+    absolute: true,
   });
 
   console.log(`Found ${deploymentFiles.length} deployment files:`, deploymentFiles);
@@ -43,26 +43,34 @@ async function generateContractAddresses() {
     try {
       const content = await fs.readFile(deploymentFile, "utf8");
       const deployedAddresses = JSON.parse(content);
-      
+
       // Extract chain ID from the path (e.g., "chain-2030" -> 2030)
       const chainMatch = deploymentFile.match(/chain-(\d+)/);
       if (!chainMatch) {
         console.warn(`Could not extract chain ID from path: ${deploymentFile}`);
         continue;
       }
-      
+
       const chainId = parseInt(chainMatch[1]);
       console.log(`Processing chain ${chainId}:`, deployedAddresses);
-      
+
       // Map the deployed addresses to our interface
       const mappedAddresses: ContractAddresses = {
-        chainBrawler: deployedAddresses["ChainBrawlerModule#ChainBrawlerClean"] as `0x${string}` || "0x0000000000000000000000000000000000000000" as `0x${string}`,
-        leaderboardTreasury: deployedAddresses["ChainBrawlerModule#LeaderboardTreasury"] as `0x${string}` || "0x0000000000000000000000000000000000000000" as `0x${string}`,
-        leaderboardManager: deployedAddresses["ChainBrawlerModule#LeaderboardManager"] as `0x${string}` || "0x0000000000000000000000000000000000000000" as `0x${string}`,
+        chainBrawler:
+          (deployedAddresses["ChainBrawlerModule#ChainBrawlerClean"] as `0x${string}`) ||
+          ("0x0000000000000000000000000000000000000000" as `0x${string}`),
+        leaderboardTreasury:
+          (deployedAddresses["ChainBrawlerModule#LeaderboardTreasury"] as `0x${string}`) ||
+          ("0x0000000000000000000000000000000000000000" as `0x${string}`),
+        leaderboardManager:
+          (deployedAddresses["ChainBrawlerModule#LeaderboardManager"] as `0x${string}`) ||
+          ("0x0000000000000000000000000000000000000000" as `0x${string}`),
       };
-      
+
       // Only add addresses if they're not all zero
-      const hasValidAddresses = Object.values(mappedAddresses).some(addr => addr !== "0x0000000000000000000000000000000000000000");
+      const hasValidAddresses = Object.values(mappedAddresses).some(
+        (addr) => addr !== "0x0000000000000000000000000000000000000000"
+      );
       if (hasValidAddresses) {
         addresses[chainId] = mappedAddresses;
         console.log(`✅ Added addresses for chain ${chainId}:`, mappedAddresses);

@@ -16,7 +16,7 @@
 
 // UI utilities for ChainBrawler
 
-import { FightSummaryData } from '../types';
+import type { FightSummaryData } from "../types";
 
 export interface FightOutcome {
   color: string;
@@ -29,35 +29,35 @@ export function getFightOutcome(fightSummary: FightSummaryData): FightOutcome {
     return {
       color: "#4CAF50", // Green
       text: "VICTORY!",
-      icon: "🏆"
+      icon: "🏆",
     };
   }
-  
+
   if (fightSummary.playerDied) {
     return {
       color: "#F44336", // Red
       text: "DEFEAT",
-      icon: "💀"
+      icon: "💀",
     };
   }
-  
+
   if (fightSummary.unresolved) {
     return {
       color: "#FF9800", // Orange
       text: "UNRESOLVED",
-      icon: "⏰"
+      icon: "⏰",
     };
   }
-  
+
   return {
     color: "#666", // Gray
     text: "FIGHT ENDED",
-    icon: "⚔️"
+    icon: "⚔️",
   };
 }
 
 export function formatEthAmount(amount: bigint | number): string {
-  const value = typeof amount === 'bigint' ? Number(amount) : amount;
+  const value = typeof amount === "bigint" ? Number(amount) : amount;
   return `${(value / 1e18).toFixed(4)} ETH`;
 }
 
@@ -87,10 +87,10 @@ export function formatHealthDisplay(current: number, max: number): HealthDisplay
   const percentage = max > 0 ? (current / max) * 100 : 0;
   const color = current > 0 ? "#4CAF50" : "#F44336";
   const display = `${current}/${max}`;
-  
+
   return {
     percentage,
     color,
-    display
+    display,
   };
 }

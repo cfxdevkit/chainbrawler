@@ -1,25 +1,18 @@
-import { 
-  Group, 
-  Text, 
-  Container,
-  Box
-} from '@mantine/core'
-import { 
-  IconSword
-} from '@tabler/icons-react'
-import { ConnectKitButton } from 'connectkit'
+import { Box, Container, Group, Text } from "@mantine/core";
+import { IconSword } from "@tabler/icons-react";
+import { ConnectKitButton } from "connectkit";
 
 export function AppHeader() {
   return (
     <Box
       h={80}
       px="md"
-      style={{ 
-        background: 'rgba(15, 23, 42, 0.8)',
-        backdropFilter: 'blur(10px)',
-        borderBottom: '1px solid rgba(59, 130, 246, 0.2)',
-        display: 'flex',
-        alignItems: 'center'
+      style={{
+        background: "rgba(15, 23, 42, 0.8)",
+        backdropFilter: "blur(10px)",
+        borderBottom: "1px solid rgba(59, 130, 246, 0.2)",
+        display: "flex",
+        alignItems: "center",
       }}
     >
       <Container size="xl" h="100%">
@@ -39,5 +32,5 @@ export function AppHeader() {
         </Group>
       </Container>
     </Box>
-  )
+  );
 }

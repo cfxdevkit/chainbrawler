@@ -1,112 +1,112 @@
-import { 
-  Card, 
-  Title, 
-  Text, 
-  Group, 
-  Button, 
-  Stack, 
-  Table,
-  Badge,
+import type { LeaderboardData } from "@chainbrawler/core";
+import {
   Alert,
-  LoadingOverlay,
-  ThemeIcon,
-  Box,
-  ScrollArea,
   Avatar,
+  Badge,
+  Box,
+  Button,
+  Card,
+  Grid,
+  Group,
+  LoadingOverlay,
   Progress,
-  Grid
-} from '@mantine/core'
-import { 
-  IconTrophy, 
-  IconClock, 
-  IconUsers, 
-  IconRefresh,
-  IconDownload,
+  ScrollArea,
+  Stack,
+  Table,
+  Text,
+  ThemeIcon,
+  Title,
+} from "@mantine/core";
+import {
   IconAlertTriangle,
+  IconAward,
+  IconClock,
   IconCrown,
+  IconDownload,
   IconMedal,
-  IconAward
-} from '@tabler/icons-react'
-import { LeaderboardData } from '@chainbrawler/core'
-import { rateLimitedRead } from '../../utils/rateLimiter'
+  IconRefresh,
+  IconTrophy,
+  IconUsers,
+} from "@tabler/icons-react";
+import { rateLimitedRead } from "../../utils/rateLimiter";
 
 interface LeaderboardDisplayProps {
-  leaderboard: LeaderboardData | null
-  isLoading: boolean
-  error: string | null
-  onLoadLeaderboard: () => Promise<void>
-  onRefreshLeaderboard: () => Promise<void>
+  leaderboard: LeaderboardData | null;
+  isLoading: boolean;
+  error: string | null;
+  onLoadLeaderboard: () => Promise<void>;
+  onRefreshLeaderboard: () => Promise<void>;
 }
 
-export function LeaderboardDisplay({ 
-  leaderboard, 
-  isLoading, 
-  error, 
-  onLoadLeaderboard, 
-  onRefreshLeaderboard 
+export function LeaderboardDisplay({
+  leaderboard,
+  isLoading,
+  error,
+  onLoadLeaderboard,
+  onRefreshLeaderboard,
 }: LeaderboardDisplayProps) {
   const handleLoadLeaderboard = async () => {
     try {
       await rateLimitedRead(
-        'leaderboardDisplay_loadLeaderboard',
+        "leaderboardDisplay_loadLeaderboard",
         () => onLoadLeaderboard(),
         15000 // 15 seconds cache
-      )
+      );
     } catch (error) {
-      console.error('Failed to load leaderboard:', error)
+      console.error("Failed to load leaderboard:", error);
     }
-  }
+  };
 
   const handleRefreshLeaderboard = async () => {
     try {
       await rateLimitedRead(
-        'leaderboardDisplay_refreshLeaderboard',
+        "leaderboardDisplay_refreshLeaderboard",
         () => onRefreshLeaderboard(),
         10000 // 10 seconds cache
-      )
+      );
     } catch (error) {
-      console.error('Failed to refresh leaderboard:', error)
+      console.error("Failed to refresh leaderboard:", error);
     }
-  }
+  };
 
   const formatTimeRemaining = (seconds: bigint) => {
-    const hours = Number(seconds) / 3600
+    const hours = Number(seconds) / 3600;
     if (hours >= 24) {
-      return `${(hours / 24).toFixed(1)} days`
+      return `${(hours / 24).toFixed(1)} days`;
     } else if (hours >= 1) {
-      return `${hours.toFixed(1)} hours`
+      return `${hours.toFixed(1)} hours`;
     } else {
-      return `${(Number(seconds) / 60).toFixed(1)} minutes`
+      return `${(Number(seconds) / 60).toFixed(1)} minutes`;
     }
-  }
+  };
 
   const getRankIcon = (rank: number) => {
-    if (rank === 1) return <IconCrown size={16} color="#FFD700" />
-    if (rank === 2) return <IconMedal size={16} color="#C0C0C0" />
-    if (rank === 3) return <IconAward size={16} color="#CD7F32" />
-    return null
-  }
+    if (rank === 1) return <IconCrown size={16} color="#FFD700" />;
+    if (rank === 2) return <IconMedal size={16} color="#C0C0C0" />;
+    if (rank === 3) return <IconAward size={16} color="#CD7F32" />;
+    return null;
+  };
 
   const getRankColor = (rank: number) => {
-    if (rank === 1) return 'yellow'
-    if (rank === 2) return 'gray'
-    if (rank === 3) return 'orange'
-    if (rank <= 10) return 'blue'
-    return 'default'
-  }
+    if (rank === 1) return "yellow";
+    if (rank === 2) return "gray";
+    if (rank === 3) return "orange";
+    if (rank <= 10) return "blue";
+    return "default";
+  };
 
   const rows = leaderboard?.topPlayers?.slice(0, 10).map((player, index) => (
-    <Table.Tr 
+    <Table.Tr
       key={index}
-      style={{ 
-        backgroundColor: player.isCurrentPlayer ? 'rgba(59, 130, 246, 0.1)' : 'transparent' 
+      style={{
+        backgroundColor: player.isCurrentPlayer ? "rgba(59, 130, 246, 0.1)" : "transparent",
       }}
     >
       <Table.Td>
         <Group gap="xs">
-          {getRankIcon(Number(player.rank) || (index + 1))}
-          <Text fw={700} c={getRankColor(Number(player.rank) || (index + 1))}>
-            #{player.rank ? Number(player.rank).toString() : (index + 1)}
+          {getRankIcon(Number(player.rank) || index + 1)}
+          <Text fw={700} c={getRankColor(Number(player.rank) || index + 1)}>
+            #{player.rank ? Number(player.rank).toString() : index + 1}
           </Text>
         </Group>
       </Table.Td>
@@ -127,7 +127,7 @@ export function LeaderboardDisplay({
       </Table.Td>
       <Table.Td>
         <Text fw={600} c="white">
-          {player.score?.toString() || '0'}
+          {player.score?.toString() || "0"}
         </Text>
       </Table.Td>
       <Table.Td>
@@ -136,12 +136,12 @@ export function LeaderboardDisplay({
         </Badge>
       </Table.Td>
     </Table.Tr>
-  ))
+  ));
 
   return (
-    <Card withBorder radius="md" p="xl" style={{ position: 'relative' }}>
-      <LoadingOverlay visible={isLoading} overlayProps={{ radius: 'md', blur: 2 }} />
-      
+    <Card withBorder radius="md" p="xl" style={{ position: "relative" }}>
+      <LoadingOverlay visible={isLoading} overlayProps={{ radius: "md", blur: 2 }} />
+
       <Group justify="space-between" mb="md">
         <Title order={3} c="white">
           Leaderboard
@@ -169,12 +169,7 @@ export function LeaderboardDisplay({
       </Group>
 
       {error && (
-        <Alert
-          icon={<IconAlertTriangle size={16} />}
-          title="Error"
-          color="red"
-          mb="md"
-        >
+        <Alert icon={<IconAlertTriangle size={16} />} title="Error" color="red" mb="md">
           {error}
         </Alert>
       )}
@@ -189,34 +184,40 @@ export function LeaderboardDisplay({
                   <ThemeIcon color="blue" variant="light" size="sm">
                     <IconTrophy size={16} />
                   </ThemeIcon>
-                  <Text fw={600} size="sm" c="dimmed">Current Epoch</Text>
+                  <Text fw={600} size="sm" c="dimmed">
+                    Current Epoch
+                  </Text>
                 </Group>
                 <Text fw={700} size="xl" c="white">
-                  {leaderboard.currentEpoch ? Number(leaderboard.currentEpoch).toString() : '0'}
+                  {leaderboard.currentEpoch ? Number(leaderboard.currentEpoch).toString() : "0"}
                 </Text>
               </Grid.Col>
-              
+
               <Grid.Col span={{ base: 12, sm: 4 }}>
                 <Group gap="xs" mb="xs">
                   <ThemeIcon color="green" variant="light" size="sm">
                     <IconUsers size={16} />
                   </ThemeIcon>
-                  <Text fw={600} size="sm" c="dimmed">Your Rank</Text>
+                  <Text fw={600} size="sm" c="dimmed">
+                    Your Rank
+                  </Text>
                 </Group>
                 <Text fw={700} size="xl" c="white">
-                  #{leaderboard.playerRank ? Number(leaderboard.playerRank).toString() : '0'}
+                  #{leaderboard.playerRank ? Number(leaderboard.playerRank).toString() : "0"}
                 </Text>
               </Grid.Col>
-              
+
               <Grid.Col span={{ base: 12, sm: 4 }}>
                 <Group gap="xs" mb="xs">
                   <ThemeIcon color="yellow" variant="light" size="sm">
                     <IconTrophy size={16} />
                   </ThemeIcon>
-                  <Text fw={600} size="sm" c="dimmed">Your Score</Text>
+                  <Text fw={600} size="sm" c="dimmed">
+                    Your Score
+                  </Text>
                 </Group>
                 <Text fw={700} size="xl" c="white">
-                  {leaderboard.playerScore ? Number(leaderboard.playerScore).toString() : '0'}
+                  {leaderboard.playerScore ? Number(leaderboard.playerScore).toString() : "0"}
                 </Text>
               </Grid.Col>
             </Grid>
@@ -228,15 +229,11 @@ export function LeaderboardDisplay({
                   <ThemeIcon color="orange" variant="light" size="sm">
                     <IconClock size={16} />
                   </ThemeIcon>
-                  <Text fw={600} size="sm" c="dimmed">Time Remaining</Text>
+                  <Text fw={600} size="sm" c="dimmed">
+                    Time Remaining
+                  </Text>
                 </Group>
-                <Progress
-                  value={100}
-                  size="lg"
-                  radius="xl"
-                  color="orange"
-                  animated
-                />
+                <Progress value={100} size="lg" radius="xl" color="orange" animated />
                 <Text size="sm" c="dimmed" mt="xs">
                   {formatTimeRemaining(leaderboard.epochTimeRemaining)}
                 </Text>
@@ -246,7 +243,10 @@ export function LeaderboardDisplay({
             {/* Total Players */}
             <Box mt="md">
               <Text size="sm" c="dimmed">
-                Total Players: <Text span fw={600} c="white">{leaderboard.totalPlayers ? Number(leaderboard.totalPlayers).toString() : '0'}</Text>
+                Total Players:{" "}
+                <Text span fw={600} c="white">
+                  {leaderboard.totalPlayers ? Number(leaderboard.totalPlayers).toString() : "0"}
+                </Text>
               </Text>
             </Box>
           </Card>
@@ -257,7 +257,7 @@ export function LeaderboardDisplay({
               <Title order={4} mb="md" c="white">
                 Top Players
               </Title>
-              
+
               <ScrollArea>
                 <Table verticalSpacing="sm">
                   <Table.Thead>
@@ -289,5 +289,5 @@ export function LeaderboardDisplay({
         </Box>
       )}
     </Card>
-  )
+  );
 }

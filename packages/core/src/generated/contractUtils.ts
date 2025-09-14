@@ -1,8 +1,8 @@
 // Custom contract utilities and interfaces
 // This file contains custom contract creation functions and utilities
 
-import { CONTRACT_ADDRESSES, getContractAddresses } from './contractAddresses';
-import { ERROR_CODES, getErrorMessage, extractErrorCode, isRetryableError } from './errorCodes';
+import { CONTRACT_ADDRESSES, getContractAddresses } from "./contractAddresses";
+import { ERROR_CODES, extractErrorCode, getErrorMessage, isRetryableError } from "./errorCodes";
 
 // Contract ABI types (simplified for now)
 export interface ChainBrawlerABI {
@@ -29,7 +29,7 @@ export function createChainBrawlerContract(chainId: number): ChainBrawlerABI {
   return {
     address: addresses.chainBrawler,
     abi: [], // Will be populated by Wagmi
-    errorCodes: ERROR_CODES
+    errorCodes: ERROR_CODES,
   };
 }
 
@@ -38,7 +38,7 @@ export function createLeaderboardTreasuryContract(chainId: number): LeaderboardT
   return {
     address: addresses.leaderboardTreasury,
     abi: [], // Will be populated by Wagmi
-    errorCodes: ERROR_CODES
+    errorCodes: ERROR_CODES,
   };
 }
 
@@ -47,10 +47,10 @@ export function createLeaderboardManagerContract(chainId: number): LeaderboardMa
   return {
     address: addresses.leaderboardManager,
     abi: [], // Will be populated by Wagmi
-    errorCodes: ERROR_CODES
+    errorCodes: ERROR_CODES,
   };
 }
 
 // Re-export for convenience
-export { CONTRACT_ADDRESSES, getContractAddresses } from './contractAddresses';
-export { ERROR_CODES, getErrorMessage, extractErrorCode, isRetryableError } from './errorCodes';
+export { CONTRACT_ADDRESSES, getContractAddresses } from "./contractAddresses";
+export { ERROR_CODES, extractErrorCode, getErrorMessage, isRetryableError } from "./errorCodes";

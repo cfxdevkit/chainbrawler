@@ -1,81 +1,81 @@
-import { Stack, Text, Group, Loader, Alert, Box } from '@mantine/core'
-import { IconCheck, IconX, IconAlertTriangle, IconClock } from '@tabler/icons-react'
-import { GameModal, GameButton, LoadingState } from '../../components/game'
-import { designTokens } from '../../theme'
+import { Alert, Box, Group, Loader, Stack, Text } from "@mantine/core";
+import { IconAlertTriangle, IconCheck, IconClock, IconX } from "@tabler/icons-react";
+import { GameButton, GameModal, LoadingState } from "../../components/game";
+import { designTokens } from "../../theme";
 
 interface TransactionModalProps {
-  opened: boolean
-  onClose: () => void
-  operationType?: string
-  status?: 'pending' | 'confirming' | 'success' | 'error'
-  progress?: number
-  message?: string
-  error?: string
-  transactionHash?: string
-  canClose?: boolean
+  opened: boolean;
+  onClose: () => void;
+  operationType?: string;
+  status?: "pending" | "confirming" | "success" | "error";
+  progress?: number;
+  message?: string;
+  error?: string;
+  transactionHash?: string;
+  canClose?: boolean;
 }
 
 export function TransactionModal({
   opened,
   onClose,
-  operationType = 'Transaction',
-  status = 'pending',
+  operationType = "Transaction",
+  status = "pending",
   progress = 0,
   message,
   error,
   transactionHash,
-  canClose = false
+  canClose = false,
 }: TransactionModalProps) {
   const getStatusIcon = () => {
     switch (status) {
-      case 'pending':
-        return <Loader size="sm" color="blue" />
-      case 'confirming':
-        return <Loader size="sm" color="orange" />
-      case 'success':
-        return <IconCheck size={20} color="green" />
-      case 'error':
-        return <IconX size={20} color="red" />
+      case "pending":
+        return <Loader size="sm" color="blue" />;
+      case "confirming":
+        return <Loader size="sm" color="orange" />;
+      case "success":
+        return <IconCheck size={20} color="green" />;
+      case "error":
+        return <IconX size={20} color="red" />;
       default:
-        return <IconClock size={20} color="gray" />
+        return <IconClock size={20} color="gray" />;
     }
-  }
+  };
 
   const getStatusColor = () => {
     switch (status) {
-      case 'pending':
-        return 'blue'
-      case 'confirming':
-        return 'orange'
-      case 'success':
-        return 'green'
-      case 'error':
-        return 'red'
+      case "pending":
+        return "blue";
+      case "confirming":
+        return "orange";
+      case "success":
+        return "green";
+      case "error":
+        return "red";
       default:
-        return 'gray'
+        return "gray";
     }
-  }
+  };
 
   const getStatusText = () => {
     switch (status) {
-      case 'pending':
-        return 'Preparing transaction...'
-      case 'confirming':
-        return 'Confirming transaction...'
-      case 'success':
-        return 'Transaction successful!'
-      case 'error':
-        return 'Transaction failed'
+      case "pending":
+        return "Preparing transaction...";
+      case "confirming":
+        return "Confirming transaction...";
+      case "success":
+        return "Transaction successful!";
+      case "error":
+        return "Transaction failed";
       default:
-        return 'Processing...'
+        return "Processing...";
     }
-  }
+  };
 
   const getProgressValue = () => {
-    if (status === 'success') return 100
-    if (status === 'error') return 0
-    return progress
-  }
+    if (status === "success") return 100;
+    if (status === "error") return 0;
+    return progress;
+  };
 
   return (
     <GameModal
@@ -98,7 +98,7 @@ export function TransactionModal({
           variant="progress"
           message={message || getStatusText()}
           progress={getProgressValue()}
-          status={status === 'success' ? 'success' : status === 'error' ? 'error' : 'loading'}
+          status={status === "success" ? "success" : status === "error" ? "error" : "loading"}
           size="md"
         />
 
@@ -111,8 +111,8 @@ export function TransactionModal({
             radius="md"
             style={{
               background: designTokens.colors.surface.glass,
-              backdropFilter: 'blur(10px)',
-              border: `1px solid ${designTokens.colors.border.primary}`
+              backdropFilter: "blur(10px)",
+              border: `1px solid ${designTokens.colors.border.primary}`,
             }}
           >
             <Text
@@ -120,8 +120,8 @@ export function TransactionModal({
               c="chainbrawler-primary"
               ff="monospace"
               style={{
-                wordBreak: 'break-all',
-                fontSize: '12px'
+                wordBreak: "break-all",
+                fontSize: "12px",
               }}
             >
               {transactionHash}
@@ -139,8 +139,8 @@ export function TransactionModal({
             radius="md"
             style={{
               background: designTokens.colors.surface.glass,
-              backdropFilter: 'blur(10px)',
-              border: `1px solid ${designTokens.colors.border.error}`
+              backdropFilter: "blur(10px)",
+              border: `1px solid ${designTokens.colors.border.error}`,
             }}
           >
             <Text size="sm" c="red">
@@ -154,11 +154,11 @@ export function TransactionModal({
           <Box mt="md">
             <GameButton
               onClick={onClose}
-              variant={status === 'error' ? 'combat' : 'primary'}
+              variant={status === "error" ? "combat" : "primary"}
               size="md"
               fullWidth
             >
-              {status === 'error' ? 'Close' : 'Continue'}
+              {status === "error" ? "Close" : "Continue"}
             </GameButton>
           </Box>
         )}
@@ -171,5 +171,5 @@ export function TransactionModal({
         )}
       </Stack>
     </GameModal>
-  )
+  );
 }

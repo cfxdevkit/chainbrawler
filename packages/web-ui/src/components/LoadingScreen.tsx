@@ -1,22 +1,15 @@
-import { 
-  Container, 
-  Stack, 
-  Text, 
-  Loader,
-  Group,
-  Box
-} from '@mantine/core'
-import { IconSword } from '@tabler/icons-react'
+import { Box, Container, Group, Loader, Stack, Text } from "@mantine/core";
+import { IconSword } from "@tabler/icons-react";
 
 export function LoadingScreen() {
   return (
     <Box
       style={{
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       <Container size="sm">
@@ -27,9 +20,9 @@ export function LoadingScreen() {
               ChainBrawler
             </Text>
           </Group>
-          
+
           <Loader size="lg" color="blue" />
-          
+
           <Stack align="center" gap="xs">
             <Text size="lg" fw={500} c="white">
               Loading Game...
@@ -41,5 +34,5 @@ export function LoadingScreen() {
         </Stack>
       </Container>
     </Box>
-  )
+  );
 }

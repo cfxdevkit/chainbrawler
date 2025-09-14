@@ -1,11 +1,11 @@
-import React from 'react'
-import { WebChainBrawlerProvider } from '@chainbrawler/react'
-import { BrowserRouter } from 'react-router-dom'
-import type { ChainBrawlerConfig } from '@chainbrawler/core'
+import type { ChainBrawlerConfig } from "@chainbrawler/core";
+import { WebChainBrawlerProvider } from "@chainbrawler/react";
+import type React from "react";
+import { BrowserRouter } from "react-router-dom";
 
 interface ChainBrawlerProviderProps {
-  children: React.ReactNode
-  chainBrawlerConfig?: ChainBrawlerConfig
+  children: React.ReactNode;
+  chainBrawlerConfig?: ChainBrawlerConfig;
 }
 
 export function ChainBrawlerProvider({ children, chainBrawlerConfig }: ChainBrawlerProviderProps) {
@@ -13,9 +13,7 @@ export function ChainBrawlerProvider({ children, chainBrawlerConfig }: ChainBraw
   // The WebChainBrawlerProvider will handle the case when config is undefined
   return (
     <BrowserRouter>
-      <WebChainBrawlerProvider config={chainBrawlerConfig}>
-        {children}
-      </WebChainBrawlerProvider>
+      <WebChainBrawlerProvider config={chainBrawlerConfig}>{children}</WebChainBrawlerProvider>
     </BrowserRouter>
-  )
+  );
 }

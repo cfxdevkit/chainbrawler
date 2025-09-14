@@ -1,21 +1,21 @@
 /**
  * Gas Configuration for ChainBrawler
- * 
+ *
  * Chain-specific gas settings for different operations
  * Manual gas configuration for write calls with chain ID awareness
  */
 
 export interface GasConfig {
-  gasPrice: bigint
-  gasLimit: bigint
-  maxFeePerGas?: bigint
-  maxPriorityFeePerGas?: bigint
+  gasPrice: bigint;
+  gasLimit: bigint;
+  maxFeePerGas?: bigint;
+  maxPriorityFeePerGas?: bigint;
 }
 
 export interface ChainGasConfig {
   [chainId: number]: {
-    [operation: string]: GasConfig
-  }
+    [operation: string]: GasConfig;
+  };
 }
 
 /**
@@ -58,7 +58,7 @@ export const CHAIN_GAS_CONFIGS: ChainGasConfig = {
       gasLimit: 300000n, // 300k gas
     },
   },
-  
+
   // Conflux eSpace Testnet (Chain ID: 71) - Test network
   71: {
     createCharacter: {
@@ -94,7 +94,7 @@ export const CHAIN_GAS_CONFIGS: ChainGasConfig = {
       gasLimit: 300000n, // 300k gas
     },
   },
-  
+
   // Conflux eSpace Mainnet (Chain ID: 1030) - Production network
   1030: {
     createCharacter: {
@@ -130,7 +130,7 @@ export const CHAIN_GAS_CONFIGS: ChainGasConfig = {
       gasLimit: 300000n, // 300k gas
     },
   },
-  
+
   // Ethereum Mainnet (Chain ID: 1) - EIP-1559 support
   1: {
     createCharacter: {
@@ -182,26 +182,28 @@ export const CHAIN_GAS_CONFIGS: ChainGasConfig = {
       maxPriorityFeePerGas: 2000000000n, // 2 Gwei
     },
   },
-}
+};
 
 /**
  * Get gas configuration for a specific operation and chain ID
  * This is the main function that should be used throughout the app
  */
 export function getGasConfig(chainId: number, operation: string): GasConfig {
-  const chainConfig = CHAIN_GAS_CONFIGS[chainId]
+  const chainConfig = CHAIN_GAS_CONFIGS[chainId];
   if (!chainConfig) {
-    console.warn(`No gas configuration found for chain ID ${chainId}, using default`)
-    return getDefaultGasConfig(chainId)
+    console.warn(`No gas configuration found for chain ID ${chainId}, using default`);
+    return getDefaultGasConfig(chainId);
   }
-  
-  const operationConfig = chainConfig[operation]
+
+  const operationConfig = chainConfig[operation];
   if (!operationConfig) {
-    console.warn(`No gas configuration found for operation ${operation} on chain ${chainId}, using default`)
-    return chainConfig.default || getDefaultGasConfig(chainId)
+    console.warn(
+      `No gas configuration found for operation ${operation} on chain ${chainId}, using default`
+    );
+    return chainConfig.default || getDefaultGasConfig(chainId);
   }
-  
-  return operationConfig
+
+  return operationConfig;
 }
 
 /**
@@ -209,16 +211,16 @@ export function getGasConfig(chainId: number, operation: string): GasConfig {
  * Fallback when no specific operation config is found
  */
 export function getDefaultGasConfig(chainId: number): GasConfig {
-  const chainConfig = CHAIN_GAS_CONFIGS[chainId]
+  const chainConfig = CHAIN_GAS_CONFIGS[chainId];
   if (chainConfig?.default) {
-    return chainConfig.default
+    return chainConfig.default;
   }
-  
+
   // Ultimate fallback - conservative settings
   return {
     gasPrice: 2000000000n, // 2 Gwei
     gasLimit: 300000n, // 300k gas
-  }
+  };
 }
 
 /**
@@ -226,7 +228,7 @@ export function getDefaultGasConfig(chainId: number): GasConfig {
  */
 export function supportsEIP1559(chainId: number): boolean {
   // Ethereum mainnet and some other chains support EIP-1559
-  return chainId === 1 // Add more chains as needed
+  return chainId === 1; // Add more chains as needed
 }
 
 /**
@@ -234,8 +236,8 @@ export function supportsEIP1559(chainId: number): boolean {
  * Automatically detects EIP-1559 support and adjusts accordingly
  */
 export function getOptimizedGasConfig(chainId: number, operation: string): GasConfig {
-  const baseConfig = getGasConfig(chainId, operation)
-  
+  const baseConfig = getGasConfig(chainId, operation);
+
   // For EIP-1559 chains, ensure we have the required fields
   if (supportsEIP1559(chainId)) {
     return {
@@ -243,42 +245,42 @@ export function getOptimizedGasConfig(chainId: number, operation: string): GasCo
       // Ensure we have EIP-1559 fields for Type 2 transactions
       maxFeePerGas: baseConfig.maxFeePerGas || baseConfig.gasPrice * 2n,
       maxPriorityFeePerGas: baseConfig.maxPriorityFeePerGas || baseConfig.gasPrice / 10n,
-    }
+    };
   }
-  
-  return baseConfig
+
+  return baseConfig;
 }
 
 /**
  * Format gas price for display
  */
 export function formatGasPrice(gasPrice: bigint): string {
-  const gwei = Number(gasPrice) / 1e9
-  return `${gwei} Gwei`
+  const gwei = Number(gasPrice) / 1e9;
+  return `${gwei} Gwei`;
 }
 
 /**
  * Format gas limit for display
  */
 export function formatGasLimit(gasLimit: bigint): string {
-  const kGas = Number(gasLimit) / 1000
-  return `${kGas}k gas`
+  const kGas = Number(gasLimit) / 1000;
+  return `${kGas}k gas`;
 }
 
 /**
  * Format gas configuration for display
  */
 export function formatGasConfig(config: GasConfig): string {
-  const price = formatGasPrice(config.gasPrice)
-  const limit = formatGasLimit(config.gasLimit)
-  
+  const price = formatGasPrice(config.gasPrice);
+  const limit = formatGasLimit(config.gasLimit);
+
   if (config.maxFeePerGas && config.maxPriorityFeePerGas) {
-    const maxFee = formatGasPrice(config.maxFeePerGas)
-    const priorityFee = formatGasPrice(config.maxPriorityFeePerGas)
-    return `${price} (max: ${maxFee}, priority: ${priorityFee}) | ${limit}`
+    const maxFee = formatGasPrice(config.maxFeePerGas);
+    const priorityFee = formatGasPrice(config.maxPriorityFeePerGas);
+    return `${price} (max: ${maxFee}, priority: ${priorityFee}) | ${limit}`;
   }
-  
-  return `${price} | ${limit}`
+
+  return `${price} | ${limit}`;
 }
 
 /**
@@ -288,15 +290,15 @@ export function formatGasConfig(config: GasConfig): string {
 export function validateGasConfig(config: GasConfig, operation: string): boolean {
   // Basic validation
   if (config.gasPrice <= 0n) {
-    console.error(`Invalid gas price for ${operation}: ${config.gasPrice}`)
-    return false
+    console.error(`Invalid gas price for ${operation}: ${config.gasPrice}`);
+    return false;
   }
-  
+
   if (config.gasLimit <= 0n) {
-    console.error(`Invalid gas limit for ${operation}: ${config.gasLimit}`)
-    return false
+    console.error(`Invalid gas limit for ${operation}: ${config.gasLimit}`);
+    return false;
   }
-  
+
   // Check for reasonable gas limits based on operation
   const minGasLimits: Record<string, bigint> = {
     createCharacter: 100000n,
@@ -306,12 +308,12 @@ export function validateGasConfig(config: GasConfig, operation: string): boolean
     continueFight: 100000n,
     fleeFight: 50000n,
     claimRewards: 100000n,
-  }
-  
-  const minLimit = minGasLimits[operation] || 50000n
+  };
+
+  const minLimit = minGasLimits[operation] || 50000n;
   if (config.gasLimit < minLimit) {
-    console.warn(`Gas limit for ${operation} seems low: ${config.gasLimit} < ${minLimit}`)
+    console.warn(`Gas limit for ${operation} seems low: ${config.gasLimit} < ${minLimit}`);
   }
-  
-  return true
+
+  return true;
 }

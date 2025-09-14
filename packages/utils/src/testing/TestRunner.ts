@@ -43,7 +43,7 @@ export interface TestOptions {
 }
 
 export class TestRunner {
-  private options: Required<Omit<TestOptions, 'only'>> & Pick<TestOptions, 'only'>;
+  private options: Required<Omit<TestOptions, "only">> & Pick<TestOptions, "only">;
   private logger = createLogger("TestRunner");
   private orchestrator: DevelopmentOrchestrator | null = null;
 
@@ -86,7 +86,10 @@ export class TestRunner {
       }
 
       // Run contract tests
-      if (!this.options.skipContractTests && (!this.options.only || this.options.only === "contract")) {
+      if (
+        !this.options.skipContractTests &&
+        (!this.options.only || this.options.only === "contract")
+      ) {
         this.logger.info("📦 Running contract tests...");
         const contractTestsPassed = await this.runContractTests();
         allPassed = allPassed && contractTestsPassed;
@@ -100,7 +103,10 @@ export class TestRunner {
       }
 
       // Run example tests
-      if (!this.options.skipExamplesTests && (!this.options.only || this.options.only === "examples")) {
+      if (
+        !this.options.skipExamplesTests &&
+        (!this.options.only || this.options.only === "examples")
+      ) {
         this.logger.info("📚 Running example tests...");
         const exampleTestsPassed = await this.runExampleTests();
         allPassed = allPassed && exampleTestsPassed;

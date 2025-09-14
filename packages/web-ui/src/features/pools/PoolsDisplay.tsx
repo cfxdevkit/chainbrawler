@@ -1,136 +1,136 @@
-import { 
-  Card, 
-  Title, 
-  Text, 
-  Group, 
-  Button, 
-  Stack, 
-  Grid, 
-  Badge, 
+import type { PoolsData } from "@chainbrawler/core";
+import {
   Alert,
+  Badge,
+  Box,
+  Button,
+  Card,
+  Grid,
+  Group,
   LoadingOverlay,
+  Stack,
+  Text,
   ThemeIcon,
-  Box
-} from '@mantine/core'
-import { 
-  IconCoins, 
-  IconShield, 
-  IconGasStation, 
-  IconCode, 
-  IconClock, 
+  Title,
+} from "@mantine/core";
+import {
   IconAlertTriangle,
+  IconClock,
+  IconCode,
+  IconCoins,
+  IconDownload,
+  IconGasStation,
   IconRefresh,
-  IconDownload
-} from '@tabler/icons-react'
-import { PoolsData } from '@chainbrawler/core'
-import { rateLimitedRead } from '../../utils/rateLimiter'
+  IconShield,
+} from "@tabler/icons-react";
+import { rateLimitedRead } from "../../utils/rateLimiter";
 
 interface PoolsDisplayProps {
-  pools: PoolsData | null
-  isLoading: boolean
-  error: string | null
-  onLoadPools: () => Promise<void>
-  onRefreshPools: () => Promise<void>
+  pools: PoolsData | null;
+  isLoading: boolean;
+  error: string | null;
+  onLoadPools: () => Promise<void>;
+  onRefreshPools: () => Promise<void>;
 }
 
-export function PoolsDisplay({ 
-  pools, 
-  isLoading, 
-  error, 
-  onLoadPools, 
-  onRefreshPools 
+export function PoolsDisplay({
+  pools,
+  isLoading,
+  error,
+  onLoadPools,
+  onRefreshPools,
 }: PoolsDisplayProps) {
   const handleLoadPools = async () => {
     try {
       await rateLimitedRead(
-        'poolsDisplay_loadPools',
+        "poolsDisplay_loadPools",
         () => onLoadPools(),
         10000 // 10 seconds cache
-      )
+      );
     } catch (error) {
-      console.error('Failed to load pools:', error)
+      console.error("Failed to load pools:", error);
     }
-  }
+  };
 
   const handleRefreshPools = async () => {
     try {
       await rateLimitedRead(
-        'poolsDisplay_refreshPools',
+        "poolsDisplay_refreshPools",
         () => onRefreshPools(),
         5000 // 5 seconds cache
-      )
+      );
     } catch (error) {
-      console.error('Failed to refresh pools:', error)
+      console.error("Failed to refresh pools:", error);
     }
-  }
+  };
 
   const formatAmount = (amount: bigint | number | undefined) => {
-    if (!amount) return '0 ETH'
-    const value = typeof amount === 'bigint' ? Number(amount) : amount
-    return `${(value / 1e18).toFixed(4)} ETH`
-  }
+    if (!amount) return "0 ETH";
+    const value = typeof amount === "bigint" ? Number(amount) : amount;
+    return `${(value / 1e18).toFixed(4)} ETH`;
+  };
 
   const poolItems = [
     {
-      key: 'prizePool',
-      title: 'Prize Pool',
-      description: 'Rewards for top players each epoch',
+      key: "prizePool",
+      title: "Prize Pool",
+      description: "Rewards for top players each epoch",
       icon: IconCoins,
-      color: 'yellow',
-      value: pools?.prizePool?.formatted || '0 ETH',
-      rawValue: pools?.prizePool?.value
+      color: "yellow",
+      value: pools?.prizePool?.formatted || "0 ETH",
+      rawValue: pools?.prizePool?.value,
     },
     {
-      key: 'equipmentPool',
-      title: 'Equipment Pool',
-      description: 'Funding for equipment drops',
+      key: "equipmentPool",
+      title: "Equipment Pool",
+      description: "Funding for equipment drops",
       icon: IconShield,
-      color: 'blue',
-      value: pools?.equipmentPool?.formatted || '0 ETH',
-      rawValue: pools?.equipmentPool?.value
+      color: "blue",
+      value: pools?.equipmentPool?.formatted || "0 ETH",
+      rawValue: pools?.equipmentPool?.value,
     },
     {
-      key: 'gasRefundPool',
-      title: 'Gas Refund Pool',
-      description: 'Gas fee reimbursements',
+      key: "gasRefundPool",
+      title: "Gas Refund Pool",
+      description: "Gas fee reimbursements",
       icon: IconGasStation,
-      color: 'green',
-      value: pools?.gasRefundPool?.formatted || '0 ETH',
-      rawValue: pools?.gasRefundPool?.value
+      color: "green",
+      value: pools?.gasRefundPool?.formatted || "0 ETH",
+      rawValue: pools?.gasRefundPool?.value,
     },
     {
-      key: 'developerPool',
-      title: 'Developer Pool',
-      description: 'Development funding',
+      key: "developerPool",
+      title: "Developer Pool",
+      description: "Development funding",
       icon: IconCode,
-      color: 'purple',
-      value: pools?.developerPool?.formatted || '0 ETH',
-      rawValue: pools?.developerPool?.value
+      color: "purple",
+      value: pools?.developerPool?.formatted || "0 ETH",
+      rawValue: pools?.developerPool?.value,
     },
     {
-      key: 'nextEpochPool',
-      title: 'Next Epoch Pool',
-      description: 'Reserved for next epoch rewards',
+      key: "nextEpochPool",
+      title: "Next Epoch Pool",
+      description: "Reserved for next epoch rewards",
       icon: IconClock,
-      color: 'cyan',
-      value: pools?.nextEpochPool?.formatted || '0 ETH',
-      rawValue: pools?.nextEpochPool?.value
+      color: "cyan",
+      value: pools?.nextEpochPool?.formatted || "0 ETH",
+      rawValue: pools?.nextEpochPool?.value,
     },
     {
-      key: 'emergencyPool',
-      title: 'Emergency Pool',
-      description: 'Emergency funds and contingency',
+      key: "emergencyPool",
+      title: "Emergency Pool",
+      description: "Emergency funds and contingency",
       icon: IconAlertTriangle,
-      color: 'red',
-      value: pools?.emergencyPool?.formatted || '0 ETH',
-      rawValue: pools?.emergencyPool?.value
-    }
-  ]
+      color: "red",
+      value: pools?.emergencyPool?.formatted || "0 ETH",
+      rawValue: pools?.emergencyPool?.value,
+    },
+  ];
 
   return (
-    <Card withBorder radius="md" p="xl" style={{ position: 'relative' }}>
-      <LoadingOverlay visible={isLoading} overlayProps={{ radius: 'md', blur: 2 }} />
-      
+    <Card withBorder radius="md" p="xl" style={{ position: "relative" }}>
+      <LoadingOverlay visible={isLoading} overlayProps={{ radius: "md", blur: 2 }} />
+
       <Group justify="space-between" mb="md">
         <Title order={3} c="white">
           Treasury Pools
@@ -158,12 +158,7 @@ export function PoolsDisplay({
       </Group>
 
       {error && (
-        <Alert
-          icon={<IconAlertTriangle size={16} />}
-          title="Error"
-          color="red"
-          mb="md"
-        >
+        <Alert icon={<IconAlertTriangle size={16} />} title="Error" color="red" mb="md">
           {error}
         </Alert>
       )}
@@ -183,11 +178,11 @@ export function PoolsDisplay({
                       {pool.title}
                     </Text>
                   </Group>
-                  
+
                   <Text fw={700} size="lg" c="white">
                     {pool.value}
                   </Text>
-                  
+
                   <Text size="xs" c="dimmed" mt="xs">
                     {pool.description}
                   </Text>
@@ -202,8 +197,8 @@ export function PoolsDisplay({
               <Text fw={600} size="lg" c="white">
                 Total Treasury Value
               </Text>
-              <Badge size="lg" variant="gradient" gradient={{ from: 'blue', to: 'purple' }}>
-                {pools.totalValue ? formatAmount(pools.totalValue) : '0 ETH'}
+              <Badge size="lg" variant="gradient" gradient={{ from: "blue", to: "purple" }}>
+                {pools.totalValue ? formatAmount(pools.totalValue) : "0 ETH"}
               </Badge>
             </Group>
           </Card>
@@ -223,5 +218,5 @@ export function PoolsDisplay({
         </Box>
       )}
     </Card>
-  )
+  );
 }

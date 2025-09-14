@@ -1,19 +1,18 @@
 // Leaderboard operations - load, refresh, get player rank
 // Based on UX_STATE_MANAGEMENT_SPEC.md and CONTRACT_REFERENCE.md
 
-import { BaseOperation } from './BaseOperation';
-import { LeaderboardData, LeaderboardPlayer, OperationResult } from '../types';
+import type { LeaderboardData, LeaderboardPlayer, OperationResult } from "../types";
+import { BaseOperation } from "./BaseOperation";
 
 export class LeaderboardOperations extends BaseOperation {
-  
   // Load leaderboard data for a player
   async loadLeaderboard(playerAddress: string): Promise<OperationResult<LeaderboardData>> {
-    if (!this.canStartOperation('loadLeaderboard')) {
-      return { success: false, error: 'Cannot start operation' };
+    if (!this.canStartOperation("loadLeaderboard")) {
+      return { success: false, error: "Cannot start operation" };
     }
 
-    this.startOperation('loadLeaderboard');
-    this.store.setStatusMessage('Loading leaderboard...');
+    this.startOperation("loadLeaderboard");
+    this.store.setStatusMessage("Loading leaderboard...");
 
     try {
       // Get current epoch
@@ -22,28 +21,31 @@ export class LeaderboardOperations extends BaseOperation {
       });
 
       if (!epochResult.success) {
-        this.failOperation(epochResult.error || 'Failed to get current epoch');
-        return { success: false, error: epochResult.error || 'Failed to get current epoch' };
+        this.failOperation(epochResult.error || "Failed to get current epoch");
+        return { success: false, error: epochResult.error || "Failed to get current epoch" };
       }
 
       const currentEpoch = epochResult.data;
       if (!currentEpoch) {
-        this.failOperation('No current epoch data');
-        return { success: false, error: 'No current epoch data' };
+        this.failOperation("No current epoch data");
+        return { success: false, error: "No current epoch data" };
       }
 
       // Get player score (with fallback for contract revert)
       let scoreResult;
       try {
         scoreResult = await this.handleContractCall(async () => {
-          return await this.contractClient.getEpochScore(playerAddress as `0x${string}`, currentEpoch);
+          return await this.contractClient.getEpochScore(
+            playerAddress as `0x${string}`,
+            currentEpoch
+          );
         });
         if (!scoreResult.success) {
-          console.warn('getEpochScore failed, using fallback score of 0:', scoreResult.error);
+          console.warn("getEpochScore failed, using fallback score of 0:", scoreResult.error);
           scoreResult = { success: true, data: 0n }; // Fallback to zero score
         }
       } catch (error) {
-        console.warn('getEpochScore failed, using fallback score of 0:', error);
+        console.warn("getEpochScore failed, using fallback score of 0:", error);
         scoreResult = { success: true, data: 0n }; // Fallback to zero score
       }
 
@@ -53,8 +55,11 @@ export class LeaderboardOperations extends BaseOperation {
       });
 
       if (!totalPlayersResult.success) {
-        this.failOperation(totalPlayersResult.error || 'Failed to get total player count');
-        return { success: false, error: totalPlayersResult.error || 'Failed to get total player count' };
+        this.failOperation(totalPlayersResult.error || "Failed to get total player count");
+        return {
+          success: false,
+          error: totalPlayersResult.error || "Failed to get total player count",
+        };
       }
 
       // Get player rank by building leaderboard
@@ -64,7 +69,7 @@ export class LeaderboardOperations extends BaseOperation {
       const topPlayers = await this.buildTopPlayers(10, currentEpoch);
 
       // Mark current player in top players list
-      topPlayers.forEach(player => {
+      topPlayers.forEach((player) => {
         player.isCurrentPlayer = player.address.toLowerCase() === playerAddress.toLowerCase();
       });
 
@@ -78,18 +83,18 @@ export class LeaderboardOperations extends BaseOperation {
         totalPlayers: totalPlayersResult.data || 0n,
         topPlayers,
         epochTimeRemaining,
-        lastUpdated: Date.now()
+        lastUpdated: Date.now(),
       };
 
       this.store.updateLeaderboard(leaderboardData);
 
       this.completeOperation();
-      this.store.setStatusMessage('Leaderboard loaded successfully');
+      this.store.setStatusMessage("Leaderboard loaded successfully");
 
       return { success: true, data: leaderboardData };
     } catch (error) {
-      this.failOperation('Failed to load leaderboard');
-      return { success: false, error: 'Failed to load leaderboard' };
+      this.failOperation("Failed to load leaderboard");
+      return { success: false, error: "Failed to load leaderboard" };
     }
   }
 
@@ -104,7 +109,7 @@ export class LeaderboardOperations extends BaseOperation {
       const result = await this.calculatePlayerRank(playerAddress, epoch);
       return { success: true, data: result.rank };
     } catch (error) {
-      return { success: false, error: 'Failed to get player rank' };
+      return { success: false, error: "Failed to get player rank" };
     }
   }
 
@@ -121,10 +126,9 @@ export class LeaderboardOperations extends BaseOperation {
 
       return { success: true, data: result.data };
     } catch (error) {
-      return { success: false, error: 'Failed to get current epoch' };
+      return { success: false, error: "Failed to get current epoch" };
     }
   }
-
 
   // Get player score for specific epoch
   async getEpochScore(playerAddress: string, epoch: bigint): Promise<OperationResult<bigint>> {
@@ -139,7 +143,7 @@ export class LeaderboardOperations extends BaseOperation {
 
       return { success: true, data: result.data };
     } catch (error) {
-      return { success: false, error: 'Failed to get epoch score' };
+      return { success: false, error: "Failed to get epoch score" };
     }
   }
 
@@ -156,7 +160,7 @@ export class LeaderboardOperations extends BaseOperation {
 
       return { success: true, data: result.data };
     } catch (error) {
-      return { success: false, error: 'Failed to get total player count' };
+      return { success: false, error: "Failed to get total player count" };
     }
   }
 
@@ -169,7 +173,7 @@ export class LeaderboardOperations extends BaseOperation {
       });
 
       if (!totalPlayersResult.success || !totalPlayersResult.data) {
-        console.warn('Failed to get total player count, returning empty array');
+        console.warn("Failed to get total player count, returning empty array");
         return [];
       }
 
@@ -191,10 +195,10 @@ export class LeaderboardOperations extends BaseOperation {
 
         // Execute batch in parallel
         const batchResults = await Promise.allSettled(batch);
-        
+
         // Process batch results
         for (const result of batchResults) {
-          if (result.status === 'fulfilled' && result.value) {
+          if (result.status === "fulfilled" && result.value) {
             players.push(result.value);
           }
         }
@@ -209,7 +213,7 @@ export class LeaderboardOperations extends BaseOperation {
       // Return top N players
       return players.slice(0, limit);
     } catch (error) {
-      console.warn('buildTopPlayers failed:', error);
+      console.warn("buildTopPlayers failed:", error);
       return [];
     }
   }
@@ -247,7 +251,7 @@ export class LeaderboardOperations extends BaseOperation {
         const characterResult = await this.handleContractCall(async () => {
           return await this.contractClient.getCharacter(playerAddress);
         });
-        
+
         if (characterResult.success && characterResult.data) {
           level = characterResult.data.level;
           kills = characterResult.data.totalKills;
@@ -262,7 +266,7 @@ export class LeaderboardOperations extends BaseOperation {
         rank: 0n, // Will be assigned after sorting
         level,
         kills,
-        isCurrentPlayer: false // Will be set later
+        isCurrentPlayer: false, // Will be set later
       };
     } catch (error) {
       return null;
@@ -270,7 +274,10 @@ export class LeaderboardOperations extends BaseOperation {
   }
 
   // Calculate player rank by building leaderboard
-  private async calculatePlayerRank(playerAddress: string, epoch: bigint): Promise<{ rank: bigint; totalPlayers: number }> {
+  private async calculatePlayerRank(
+    playerAddress: string,
+    epoch: bigint
+  ): Promise<{ rank: bigint; totalPlayers: number }> {
     try {
       // Get total player count
       const totalPlayersResult = await this.handleContractCall(async () => {
@@ -282,7 +289,7 @@ export class LeaderboardOperations extends BaseOperation {
       }
 
       const totalPlayers = Number(totalPlayersResult.data);
-      
+
       // Get current player's score
       let playerScore = 0n;
       try {
@@ -307,9 +314,9 @@ export class LeaderboardOperations extends BaseOperation {
         }
 
         const batchResults = await Promise.allSettled(batch);
-        
+
         for (const result of batchResults) {
-          if (result.status === 'fulfilled' && result.value > playerScore) {
+          if (result.status === "fulfilled" && result.value > playerScore) {
             playersAhead++;
           }
         }
@@ -317,10 +324,10 @@ export class LeaderboardOperations extends BaseOperation {
 
       // Rank is number of players ahead + 1
       const rank = BigInt(playersAhead + 1);
-      
+
       return { rank, totalPlayers };
     } catch (error) {
-      console.warn('calculatePlayerRank failed:', error);
+      console.warn("calculatePlayerRank failed:", error);
       return { rank: 0n, totalPlayers: 0 };
     }
   }
@@ -366,21 +373,27 @@ export class LeaderboardOperations extends BaseOperation {
         rank: contractData.ranks[index],
         level: 0, // Would need additional call to get character level
         kills: 0, // Would need additional call to get character kills
-        isCurrentPlayer: address.toLowerCase() === playerAddress.toLowerCase()
+        isCurrentPlayer: address.toLowerCase() === playerAddress.toLowerCase(),
       })),
       epochTimeRemaining: 0n, // Would need additional calculation
-      lastUpdated: Date.now()
+      lastUpdated: Date.now(),
     };
   }
 
   // Validate leaderboard data
   validateLeaderboardData(data: any): { valid: boolean; reason?: string } {
-    if (!data || typeof data !== 'object') {
-      return { valid: false, reason: 'Invalid leaderboard data format' };
+    if (!data || typeof data !== "object") {
+      return { valid: false, reason: "Invalid leaderboard data format" };
     }
 
-    const requiredFields = ['currentEpoch', 'playerScore', 'playerRank', 'totalPlayers', 'topPlayers'];
-    
+    const requiredFields = [
+      "currentEpoch",
+      "playerScore",
+      "playerRank",
+      "totalPlayers",
+      "topPlayers",
+    ];
+
     for (const field of requiredFields) {
       if (!(field in data)) {
         return { valid: false, reason: `Missing field: ${field}` };
@@ -393,9 +406,9 @@ export class LeaderboardOperations extends BaseOperation {
   // Get leaderboard status message
   getLeaderboardStatusMessage(): string {
     const leaderboard = this.store.getLeaderboard();
-    
+
     if (!leaderboard) {
-      return 'Leaderboard data not loaded';
+      return "Leaderboard data not loaded";
     }
 
     return `Epoch ${leaderboard.currentEpoch} - Rank #${leaderboard.playerRank} - Score: ${leaderboard.playerScore}`;
@@ -413,21 +426,21 @@ export class LeaderboardOperations extends BaseOperation {
         return timeRemainingResult.data;
       }
     } catch (error) {
-      console.warn('Contract epoch time remaining not available, using fallback:', error);
+      console.warn("Contract epoch time remaining not available, using fallback:", error);
     }
 
     // Fallback calculation if contract method isn't available
     const epochDurationSeconds = 24 * 60 * 60; // 24 hours in seconds
     const currentTime = Math.floor(Date.now() / 1000); // Current timestamp in seconds
-    
+
     // Simple calculation: assume epoch started at beginning of current day
     const dayStart = new Date();
     dayStart.setHours(0, 0, 0, 0);
     const epochStartTime = Math.floor(dayStart.getTime() / 1000);
-    
+
     const timeElapsed = currentTime - epochStartTime;
     const timeRemaining = Math.max(0, epochDurationSeconds - timeElapsed);
-    
+
     return BigInt(timeRemaining);
   }
 }

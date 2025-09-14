@@ -1,6 +1,6 @@
-import { afterEach } from 'vitest';
-import { cleanup } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { cleanup } from "@testing-library/react";
+import { afterEach } from "vitest";
+import "@testing-library/jest-dom";
 
 // Clean up the DOM after each test to prevent memory leaks
 afterEach(() => {
@@ -8,7 +8,7 @@ afterEach(() => {
 });
 
 // Mock the core package
-vi.mock('@chainbrawler/core', () => ({
+vi.mock("@chainbrawler/core", () => ({
   ChainBrawlerSDK: vi.fn().mockImplementation(() => ({
     actions: {
       createCharacter: vi.fn().mockResolvedValue({ success: true, data: {} }),
@@ -35,7 +35,7 @@ vi.mock('@chainbrawler/core', () => ({
       pools: null,
       leaderboard: null,
       claims: null,
-      statusMessage: 'Ready',
+      statusMessage: "Ready",
       isLoading: false,
       error: null,
     }),

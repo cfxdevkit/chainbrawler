@@ -1,13 +1,13 @@
 /**
  * Contract Client Interface for ChainBrawler Core
- * 
+ *
  * This interface defines the contract interaction methods that will be used
  * by the core package. It's designed to be environment-agnostic and can be
  * implemented by different clients (wagmi, viem, etc.).
  */
 
-import { Address, Hash, PublicClient, WalletClient } from 'viem';
-import { PoolsData } from '../types';
+import type { Address, Hash, PublicClient, WalletClient } from "viem";
+import type { PoolsData } from "../types";
 
 export interface ContractClient {
   // Read operations
@@ -49,17 +49,17 @@ export interface ContractClient {
     onLogs: (logs: FightSummaryEventLog[]) => void,
     options?: { fromBlock?: bigint; toBlock?: bigint }
   ): () => void;
-  
+
   watchCharacterHealedEvent(
     onLogs: (logs: CharacterHealedEventLog[]) => void,
     options?: { fromBlock?: bigint; toBlock?: bigint }
   ): () => void;
-  
+
   watchCharacterResurrectedEvent(
     onLogs: (logs: CharacterResurrectedEventLog[]) => void,
     options?: { fromBlock?: bigint; toBlock?: bigint }
   ): () => void;
-  
+
   watchEquipmentDroppedEvent(
     onLogs: (logs: EquipmentDroppedEventLog[]) => void,
     options?: { fromBlock?: bigint; toBlock?: bigint }
@@ -108,7 +108,6 @@ export interface EnemyStatsData {
   enemyDefense: number;
   enemyLuck: number;
 }
-
 
 export interface TopPlayersData {
   players: `0x${string}`[];

@@ -13,8 +13,21 @@ contract HelpersForTests {
         return SafePacker.writeClamped(packed, shift, mask, value);
     }
 
-    function generateNewCharacter(uint256 seed, uint256 baseCombat, uint256 baseEndurance, uint256 baseDefense, uint256 baseLuck) external pure returns (uint256, uint256) {
-        BitPackedCharacterLib.BitPackedCharacter memory c = BitPackedCharacterLib.generateNewCharacter(address(0), seed, baseCombat, baseEndurance, baseDefense, baseLuck);
+    function generateNewCharacter(
+        uint256 seed,
+        uint256 baseCombat,
+        uint256 baseEndurance,
+        uint256 baseDefense,
+        uint256 baseLuck
+    ) external pure returns (uint256, uint256) {
+        BitPackedCharacterLib.BitPackedCharacter memory c = BitPackedCharacterLib.generateNewCharacter(
+            address(0),
+            seed,
+            baseCombat,
+            baseEndurance,
+            baseDefense,
+            baseLuck
+        );
         return (c.coreStats, c.progressionStats);
     }
 }

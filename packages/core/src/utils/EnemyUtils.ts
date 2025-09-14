@@ -60,7 +60,7 @@ export const ENEMY_TYPES: EnemyType[] = [
 ];
 
 export function getEnemyType(enemyId: number): EnemyType | undefined {
-  return ENEMY_TYPES.find(e => e.id === enemyId);
+  return ENEMY_TYPES.find((e) => e.id === enemyId);
 }
 
 export function getEnemyName(enemyId: number): string {
@@ -70,16 +70,16 @@ export function getEnemyName(enemyId: number): string {
 
 export function calculateEnemyStats(enemyId: number, level: number): EnemyStats {
   const enemy = getEnemyType(enemyId) || ENEMY_TYPES[0];
-  
+
   // Base stats vary by enemy type
-  const baseHealth = 50 + (enemyId * 10);
-  const baseCombat = 8 + (enemyId * 2);
-  const baseDefense = 6 + (enemyId * 1.5);
-  const baseLuck = 4 + (enemyId * 1);
+  const baseHealth = 50 + enemyId * 10;
+  const baseCombat = 8 + enemyId * 2;
+  const baseDefense = 6 + enemyId * 1.5;
+  const baseLuck = 4 + enemyId * 1;
 
   // Scale by level
   const levelMultiplier = 1 + (level - 1) * 0.2;
-  
+
   // Calculate difficulty multiplier
   const difficultyMultiplier = 1 + (enemyId - 1) * 0.1 + (level - 1) * 0.05;
 
@@ -104,7 +104,7 @@ export function calculateEnemyStats(enemyId: number, level: number): EnemyStats 
   };
 }
 
-export type DifficultyLevel = 'Easy' | 'Medium' | 'Hard' | 'Extreme';
+export type DifficultyLevel = "Easy" | "Medium" | "Hard" | "Extreme";
 
 export function getDifficultyLevel(multiplier: number): DifficultyLevel {
   if (multiplier <= 1.2) return "Easy";

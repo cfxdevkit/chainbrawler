@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+import type { PoolsData } from "@chainbrawler/core";
 import React from "react";
-import { PoolsData } from "@chainbrawler/core";
 
 interface PoolsDisplayProps {
   pools: PoolsData | null;
@@ -25,7 +25,13 @@ interface PoolsDisplayProps {
   onRefreshPools: () => Promise<void>;
 }
 
-export function PoolsDisplay({ pools, isLoading, error, onLoadPools, onRefreshPools }: PoolsDisplayProps) {
+export function PoolsDisplay({
+  pools,
+  isLoading,
+  error,
+  onLoadPools,
+  onRefreshPools,
+}: PoolsDisplayProps) {
   const handleLoadPools = async () => {
     try {
       await onLoadPools();
@@ -44,7 +50,14 @@ export function PoolsDisplay({ pools, isLoading, error, onLoadPools, onRefreshPo
 
   return (
     <div style={{ border: "1px solid #ddd", padding: "1rem", borderRadius: "8px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "1rem",
+        }}
+      >
         <h3>Treasury Pools</h3>
         <div>
           <button
@@ -81,34 +94,46 @@ export function PoolsDisplay({ pools, isLoading, error, onLoadPools, onRefreshPo
         </div>
       </div>
 
-      {isLoading && (
-        <div style={{ textAlign: "center", color: "#666" }}>
-          Loading pools data...
-        </div>
-      )}
+      {isLoading && <div style={{ textAlign: "center", color: "#666" }}>Loading pools data...</div>}
 
-      {error && (
-        <div style={{ color: "red", marginBottom: "1rem" }}>
-          Error: {error}
-        </div>
-      )}
+      {error && <div style={{ color: "red", marginBottom: "1rem" }}>Error: {error}</div>}
 
       {pools && (
         <div>
-          <div style={{ background: "#f5f5f5", padding: "1rem", borderRadius: "4px", marginBottom: "1rem" }}>
+          <div
+            style={{
+              background: "#f5f5f5",
+              padding: "1rem",
+              borderRadius: "4px",
+              marginBottom: "1rem",
+            }}
+          >
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
-              <div><strong>Prize Pool:</strong> {pools.prizePool?.formatted || "0 ETH"}</div>
-              <div><strong>Equipment Pool:</strong> {pools.equipmentPool?.formatted || "0 ETH"}</div>
-              <div><strong>Gas Refund Pool:</strong> {pools.gasRefundPool?.formatted || "0 ETH"}</div>
-              <div><strong>Developer Pool:</strong> {pools.developerPool?.formatted || "0 ETH"}</div>
-              <div><strong>Next Epoch Pool:</strong> {pools.nextEpochPool?.formatted || "0 ETH"}</div>
-              <div><strong>Emergency Pool:</strong> {pools.emergencyPool?.formatted || "0 ETH"}</div>
+              <div>
+                <strong>Prize Pool:</strong> {pools.prizePool?.formatted || "0 ETH"}
+              </div>
+              <div>
+                <strong>Equipment Pool:</strong> {pools.equipmentPool?.formatted || "0 ETH"}
+              </div>
+              <div>
+                <strong>Gas Refund Pool:</strong> {pools.gasRefundPool?.formatted || "0 ETH"}
+              </div>
+              <div>
+                <strong>Developer Pool:</strong> {pools.developerPool?.formatted || "0 ETH"}
+              </div>
+              <div>
+                <strong>Next Epoch Pool:</strong> {pools.nextEpochPool?.formatted || "0 ETH"}
+              </div>
+              <div>
+                <strong>Emergency Pool:</strong> {pools.emergencyPool?.formatted || "0 ETH"}
+              </div>
             </div>
-            
+
             <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid #ddd" }}>
-              <strong>Total Value:</strong> {pools.totalValue ? `${(Number(pools.totalValue) / 1e18).toFixed(2)} ETH` : "0 ETH"}
+              <strong>Total Value:</strong>{" "}
+              {pools.totalValue ? `${(Number(pools.totalValue) / 1e18).toFixed(2)} ETH` : "0 ETH"}
             </div>
-            
+
             {pools.lastUpdated && (
               <div style={{ marginTop: "0.5rem", fontSize: "0.9rem", color: "#666" }}>
                 Last updated: {new Date(pools.lastUpdated).toLocaleString()}
@@ -117,12 +142,30 @@ export function PoolsDisplay({ pools, isLoading, error, onLoadPools, onRefreshPo
           </div>
 
           <div style={{ fontSize: "0.9rem", color: "#666" }}>
-            <div><strong>Prize Pool:</strong> {pools.prizePool?.description || "Rewards for top players each epoch"}</div>
-            <div><strong>Equipment Pool:</strong> {pools.equipmentPool?.description || "Funding for equipment drops"}</div>
-            <div><strong>Gas Refund Pool:</strong> {pools.gasRefundPool?.description || "Gas fee reimbursements"}</div>
-            <div><strong>Developer Pool:</strong> {pools.developerPool?.description || "Development funding"}</div>
-            <div><strong>Next Epoch Pool:</strong> {pools.nextEpochPool?.description || "Reserved for next epoch rewards"}</div>
-            <div><strong>Emergency Pool:</strong> {pools.emergencyPool?.description || "Emergency funds and contingency"}</div>
+            <div>
+              <strong>Prize Pool:</strong>{" "}
+              {pools.prizePool?.description || "Rewards for top players each epoch"}
+            </div>
+            <div>
+              <strong>Equipment Pool:</strong>{" "}
+              {pools.equipmentPool?.description || "Funding for equipment drops"}
+            </div>
+            <div>
+              <strong>Gas Refund Pool:</strong>{" "}
+              {pools.gasRefundPool?.description || "Gas fee reimbursements"}
+            </div>
+            <div>
+              <strong>Developer Pool:</strong>{" "}
+              {pools.developerPool?.description || "Development funding"}
+            </div>
+            <div>
+              <strong>Next Epoch Pool:</strong>{" "}
+              {pools.nextEpochPool?.description || "Reserved for next epoch rewards"}
+            </div>
+            <div>
+              <strong>Emergency Pool:</strong>{" "}
+              {pools.emergencyPool?.description || "Emergency funds and contingency"}
+            </div>
           </div>
         </div>
       )}

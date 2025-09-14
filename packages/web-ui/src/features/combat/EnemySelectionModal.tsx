@@ -1,48 +1,43 @@
-import { useState, useEffect } from 'react'
 import {
-  Text,
-  Group,
-  Stack,
-  Select,
-  NumberInput,
   Badge,
-  ThemeIcon,
   Box,
   Divider,
+  Flex,
+  Group,
+  NumberInput,
+  Select,
   SimpleGrid,
-  Flex
-} from '@mantine/core'
-import {
-  IconSword,
-  IconShield,
-  IconHeart,
-  IconDice
-} from '@tabler/icons-react'
-import { GameModal, GameButton, GameCard } from '../../components/game'
-import { designTokens } from '../../theme'
+  Stack,
+  Text,
+  ThemeIcon,
+} from "@mantine/core";
+import { IconDice, IconHeart, IconShield, IconSword } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
+import { GameButton, GameCard, GameModal } from "../../components/game";
+import { designTokens } from "../../theme";
 
 interface EnemyStats {
-  name: string
-  description: string
+  name: string;
+  description: string;
   baseStats: {
-    health: number
-    combat: number
-    defense: number
-    luck: number
-  }
+    health: number;
+    combat: number;
+    defense: number;
+    luck: number;
+  };
   scaledStats: {
-    health: number
-    combat: number
-    defense: number
-    luck: number
-  }
-  difficultyMultiplier: number
+    health: number;
+    combat: number;
+    defense: number;
+    luck: number;
+  };
+  difficultyMultiplier: number;
 }
 
 interface EnemySelectionModalProps {
-  onFightEnemy: (enemyId: number, enemyLevel: number) => Promise<void>
-  onClose: () => void
-  opened: boolean
+  onFightEnemy: (enemyId: number, enemyLevel: number) => Promise<void>;
+  onClose: () => void;
+  opened: boolean;
 }
 
 const ENEMY_TYPES = [
@@ -62,41 +57,37 @@ const ENEMY_TYPES = [
   { id: 14, name: "Phoenix Guardian", description: "A reborn fire bird" },
   { id: 15, name: "Void Stalker", description: "A creature from the void" },
   { id: 16, name: "Ancient Dragon", description: "An ancient, powerful dragon" },
-]
+];
 
-export function EnemySelectionModal({ 
-  onFightEnemy, 
-  onClose, 
-  opened 
-}: EnemySelectionModalProps) {
-  const [selectedEnemyId, setSelectedEnemyId] = useState(1)
-  const [selectedLevel, setSelectedLevel] = useState(1)
-  const [enemyStats, setEnemyStats] = useState<EnemyStats | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+export function EnemySelectionModal({ onFightEnemy, onClose, opened }: EnemySelectionModalProps) {
+  const [selectedEnemyId, setSelectedEnemyId] = useState(1);
+  const [selectedLevel, setSelectedLevel] = useState(1);
+  const [enemyStats, setEnemyStats] = useState<EnemyStats | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Calculate enemy stats based on ID and level
   useEffect(() => {
     const calculateEnemyStats = () => {
-      const enemy = ENEMY_TYPES.find(e => e.id === selectedEnemyId) || ENEMY_TYPES[0]
-      
+      const enemy = ENEMY_TYPES.find((e) => e.id === selectedEnemyId) || ENEMY_TYPES[0];
+
       // Base stats vary by enemy type
-      const baseHealth = 50 + (selectedEnemyId * 10)
-      const baseCombat = 8 + (selectedEnemyId * 2)
-      const baseDefense = 6 + (selectedEnemyId * 1.5)
-      const baseLuck = 4 + (selectedEnemyId * 1)
+      const baseHealth = 50 + selectedEnemyId * 10;
+      const baseCombat = 8 + selectedEnemyId * 2;
+      const baseDefense = 6 + selectedEnemyId * 1.5;
+      const baseLuck = 4 + selectedEnemyId * 1;
 
       // Scale by level
-      const levelMultiplier = 1 + (selectedLevel - 1) * 0.2
-      
+      const levelMultiplier = 1 + (selectedLevel - 1) * 0.2;
+
       // Calculate difficulty multiplier
-      const difficultyMultiplier = 1 + (selectedEnemyId - 1) * 0.1 + (selectedLevel - 1) * 0.05
+      const difficultyMultiplier = 1 + (selectedEnemyId - 1) * 0.1 + (selectedLevel - 1) * 0.05;
 
       const scaledStats = {
         health: Math.floor(baseHealth * levelMultiplier),
         combat: Math.floor(baseCombat * levelMultiplier),
         defense: Math.floor(baseDefense * levelMultiplier),
         luck: Math.floor(baseLuck * levelMultiplier),
-      }
+      };
 
       setEnemyStats({
         name: enemy.name,
@@ -109,36 +100,36 @@ export function EnemySelectionModal({
         },
         scaledStats,
         difficultyMultiplier,
-      })
-    }
+      });
+    };
 
-    calculateEnemyStats()
-  }, [selectedEnemyId, selectedLevel])
+    calculateEnemyStats();
+  }, [selectedEnemyId, selectedLevel]);
 
   const handleFight = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      await onFightEnemy(selectedEnemyId, selectedLevel)
-      onClose()
+      await onFightEnemy(selectedEnemyId, selectedLevel);
+      onClose();
     } catch (error) {
-      console.error('Failed to fight enemy:', error)
+      console.error("Failed to fight enemy:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const getDifficultyColor = (multiplier: number) => {
-    if (multiplier <= 1.2) return 'green'
-    if (multiplier <= 1.8) return 'yellow'
-    return 'red'
-  }
+    if (multiplier <= 1.2) return "green";
+    if (multiplier <= 1.8) return "yellow";
+    return "red";
+  };
 
   const getDifficultyText = (multiplier: number) => {
-    if (multiplier <= 1.2) return 'Easy'
-    if (multiplier <= 1.8) return 'Medium'
-    if (multiplier <= 2.5) return 'Hard'
-    return 'Extreme'
-  }
+    if (multiplier <= 1.2) return "Easy";
+    if (multiplier <= 1.8) return "Medium";
+    if (multiplier <= 2.5) return "Hard";
+    return "Extreme";
+  };
 
   return (
     <GameModal
@@ -149,7 +140,9 @@ export function EnemySelectionModal({
           <ThemeIcon color="game-combat" variant="light" size="sm">
             <IconSword size={16} />
           </ThemeIcon>
-          <Text fw={700} c="white">Select Enemy</Text>
+          <Text fw={700} c="white">
+            Select Enemy
+          </Text>
         </Group>
       }
       subtitle="Choose your opponent wisely - higher levels mean greater rewards but deadlier combat"
@@ -163,14 +156,14 @@ export function EnemySelectionModal({
             placeholder="Select an enemy"
             value={selectedEnemyId.toString()}
             onChange={(value) => setSelectedEnemyId(Number(value))}
-            data={ENEMY_TYPES.map(enemy => ({
+            data={ENEMY_TYPES.map((enemy) => ({
               value: enemy.id.toString(),
-              label: enemy.name
+              label: enemy.name,
             }))}
             leftSection={<IconSword size={16} />}
             radius="md"
             style={{
-              '--input-bg': designTokens.colors.surface.glass
+              "--input-bg": designTokens.colors.surface.glass,
             }}
           />
 
@@ -184,7 +177,7 @@ export function EnemySelectionModal({
             leftSection={<IconDice size={16} />}
             radius="md"
             style={{
-              '--input-bg': designTokens.colors.surface.glass
+              "--input-bg": designTokens.colors.surface.glass,
             }}
           />
         </SimpleGrid>
@@ -225,7 +218,9 @@ export function EnemySelectionModal({
                         <ThemeIcon color="game-combat" variant="light" size="sm">
                           <IconHeart size={14} />
                         </ThemeIcon>
-                        <Text size="sm" c="dimmed">Health</Text>
+                        <Text size="sm" c="dimmed">
+                          Health
+                        </Text>
                       </Group>
                       <Text fw={600} c="game-combat">
                         {enemyStats.scaledStats.health}
@@ -237,7 +232,9 @@ export function EnemySelectionModal({
                         <ThemeIcon color="game-combat" variant="light" size="sm">
                           <IconSword size={14} />
                         </ThemeIcon>
-                        <Text size="sm" c="dimmed">Combat</Text>
+                        <Text size="sm" c="dimmed">
+                          Combat
+                        </Text>
                       </Group>
                       <Text fw={600} c="game-combat">
                         {enemyStats.scaledStats.combat}
@@ -249,7 +246,9 @@ export function EnemySelectionModal({
                         <ThemeIcon color="game-defense" variant="light" size="sm">
                           <IconShield size={14} />
                         </ThemeIcon>
-                        <Text size="sm" c="dimmed">Defense</Text>
+                        <Text size="sm" c="dimmed">
+                          Defense
+                        </Text>
                       </Group>
                       <Text fw={600} c="game-defense">
                         {enemyStats.scaledStats.defense}
@@ -261,7 +260,9 @@ export function EnemySelectionModal({
                         <ThemeIcon color="game-luck" variant="light" size="sm">
                           <IconDice size={14} />
                         </ThemeIcon>
-                        <Text size="sm" c="dimmed">Luck</Text>
+                        <Text size="sm" c="dimmed">
+                          Luck
+                        </Text>
                       </Group>
                       <Text fw={600} c="game-luck">
                         {enemyStats.scaledStats.luck}
@@ -276,17 +277,18 @@ export function EnemySelectionModal({
                   </Text>
                   <Stack gap="xs">
                     <Group justify="space-between">
-                      <Text size="sm" c="dimmed">Multiplier</Text>
-                      <Text
-                        fw={600}
-                        c={getDifficultyColor(enemyStats.difficultyMultiplier)}
-                      >
+                      <Text size="sm" c="dimmed">
+                        Multiplier
+                      </Text>
+                      <Text fw={600} c={getDifficultyColor(enemyStats.difficultyMultiplier)}>
                         {enemyStats.difficultyMultiplier.toFixed(2)}x
                       </Text>
                     </Group>
 
                     <Group justify="space-between">
-                      <Text size="sm" c="dimmed">Rating</Text>
+                      <Text size="sm" c="dimmed">
+                        Rating
+                      </Text>
                       <Badge
                         color={getDifficultyColor(enemyStats.difficultyMultiplier)}
                         variant="light"
@@ -314,7 +316,7 @@ export function EnemySelectionModal({
             disabled={isLoading}
             flex={1}
           >
-            {`Fight ${enemyStats?.name || 'Enemy'}`}
+            {`Fight ${enemyStats?.name || "Enemy"}`}
           </GameButton>
 
           <GameButton
@@ -322,12 +324,12 @@ export function EnemySelectionModal({
             variant="outline"
             size="md"
             flex="0 0 auto"
-            style={{ minWidth: '100px' }}
+            style={{ minWidth: "100px" }}
           >
             Cancel
           </GameButton>
         </Flex>
       </Stack>
     </GameModal>
-  )
+  );
 }

@@ -1,8 +1,8 @@
 // Simplified tests for CharacterOperations
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { CharacterOperations } from '../operations/CharacterOperations';
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { CharacterOperations } from "../operations/CharacterOperations";
 
-describe('CharacterOperations - Simplified', () => {
+describe("CharacterOperations - Simplified", () => {
   let mockStore: any;
   let mockContractClient: any;
   let mockEventEmitter: any;
@@ -18,7 +18,7 @@ describe('CharacterOperations - Simplified', () => {
       setStatusMessage: vi.fn(),
       updateCharacter: vi.fn(),
       updateMenu: vi.fn(),
-      getCharacter: vi.fn().mockReturnValue(null)
+      getCharacter: vi.fn().mockReturnValue(null),
     };
 
     mockContractClient = {
@@ -27,63 +27,68 @@ describe('CharacterOperations - Simplified', () => {
       healCharacter: vi.fn(),
       resurrectCharacter: vi.fn(),
       canHeal: vi.fn(),
-      canResurrect: vi.fn()
+      canResurrect: vi.fn(),
     };
 
     mockEventEmitter = {
-      emit: vi.fn()
+      emit: vi.fn(),
     };
 
     mockSDK = {
-      getPlayerAddress: vi.fn().mockReturnValue('0x1234567890123456789012345678901234567890')
+      getPlayerAddress: vi.fn().mockReturnValue("0x1234567890123456789012345678901234567890"),
     };
 
-    characterOps = new CharacterOperations(mockStore, mockContractClient, mockEventEmitter, mockSDK);
+    characterOps = new CharacterOperations(
+      mockStore,
+      mockContractClient,
+      mockEventEmitter,
+      mockSDK
+    );
   });
 
-  describe('Operation Validation', () => {
-    it('should prevent operations when another is active', async () => {
+  describe("Operation Validation", () => {
+    it("should prevent operations when another is active", async () => {
       mockStore.getOperation.mockReturnValue({ isActive: true });
 
       const result = await characterOps.createCharacter(0);
 
       expect(result.success).toBe(false);
-      expect(result.error).toBe('Cannot start operation');
+      expect(result.error).toBe("Cannot start operation");
       expect(mockContractClient.createCharacter).not.toHaveBeenCalled();
     });
 
-    it('should prevent operations when loading', async () => {
+    it("should prevent operations when loading", async () => {
       mockStore.isLoading.mockReturnValue(true);
 
       const result = await characterOps.createCharacter(0);
 
       expect(result.success).toBe(false);
-      expect(result.error).toBe('Cannot start operation');
+      expect(result.error).toBe("Cannot start operation");
     });
 
-    it('should prevent operations when there is an error', async () => {
-      mockStore.getError.mockReturnValue('Previous error');
+    it("should prevent operations when there is an error", async () => {
+      mockStore.getError.mockReturnValue("Previous error");
 
       const result = await characterOps.createCharacter(0);
 
       expect(result.success).toBe(false);
-      expect(result.error).toBe('Cannot start operation');
+      expect(result.error).toBe("Cannot start operation");
     });
   });
 
-  describe('Contract Error Handling', () => {
-    it('should handle contract errors gracefully', async () => {
-      mockContractClient.createCharacter.mockRejectedValue(new Error('Contract error'));
+  describe("Contract Error Handling", () => {
+    it("should handle contract errors gracefully", async () => {
+      mockContractClient.createCharacter.mockRejectedValue(new Error("Contract error"));
 
       const result = await characterOps.createCharacter(0);
 
       expect(result.success).toBe(false);
-      expect(result.error).toBe('Character creation failed');
+      expect(result.error).toBe("Character creation failed");
     });
   });
 
-  describe('Data Parsing', () => {
-    it('should parse character data correctly', () => {
+  describe("Data Parsing", () => {
+    it("should parse character data correctly", () => {
       const contractData = {
         characterClass: 1,
         level: 5,
@@ -98,7 +103,7 @@ describe('CharacterOperations - Simplified', () => {
         equippedEnduranceBonus: 1,
         equippedDefenseBonus: 1,
         equippedLuckBonus: 0,
-        totalKills: 3
+        totalKills: 3,
       };
 
       const result = (characterOps as any).parseCharacterData(contractData);
@@ -107,23 +112,25 @@ describe('CharacterOperations - Simplified', () => {
         exists: true,
         isAlive: true,
         class: 1,
-        className: 'Guardian',
+        className: "Guardian",
         level: 5,
         experience: 100,
         endurance: { current: 80, max: 100, percentage: 80 },
         stats: { combat: 15, defense: 12, luck: 8 },
-        equipment: [{
-          combat: 2,
-          endurance: 1,
-          defense: 1,
-          luck: 0
-        }],
+        equipment: [
+          {
+            combat: 2,
+            endurance: 1,
+            defense: 1,
+            luck: 0,
+          },
+        ],
         inCombat: false,
-        totalKills: 3
+        totalKills: 3,
       });
     });
 
-    it('should handle non-existent character', () => {
+    it("should handle non-existent character", () => {
       const contractData = {
         characterClass: 0,
         level: 0,
@@ -138,7 +145,7 @@ describe('CharacterOperations - Simplified', () => {
         equippedEnduranceBonus: 0,
         equippedDefenseBonus: 0,
         equippedLuckBonus: 0,
-        totalKills: 0
+        totalKills: 0,
       };
 
       const result = (characterOps as any).parseCharacterData(contractData);
@@ -147,18 +154,18 @@ describe('CharacterOperations - Simplified', () => {
     });
   });
 
-  describe('Class Name Mapping', () => {
-    it('should return correct class names', () => {
-      expect((characterOps as any).getClassName(0)).toBe('Warrior');
-      expect((characterOps as any).getClassName(1)).toBe('Guardian');
-      expect((characterOps as any).getClassName(2)).toBe('Rogue');
-      expect((characterOps as any).getClassName(3)).toBe('Mage');
-      expect((characterOps as any).getClassName(4)).toBe('Class 4');
+  describe("Class Name Mapping", () => {
+    it("should return correct class names", () => {
+      expect((characterOps as any).getClassName(0)).toBe("Warrior");
+      expect((characterOps as any).getClassName(1)).toBe("Guardian");
+      expect((characterOps as any).getClassName(2)).toBe("Rogue");
+      expect((characterOps as any).getClassName(3)).toBe("Mage");
+      expect((characterOps as any).getClassName(4)).toBe("Class 4");
     });
   });
 
-  describe('Menu State Calculation', () => {
-    it('should calculate menu state for no character', () => {
+  describe("Menu State Calculation", () => {
+    it("should calculate menu state for no character", () => {
       const menuState = (characterOps as any).calculateMenuState(null);
 
       expect(menuState.canCreateCharacter).toBe(true);
@@ -174,11 +181,11 @@ describe('CharacterOperations - Simplified', () => {
       expect(menuState.canClaimPrize).toBe(false);
     });
 
-    it('should calculate menu state for alive character', () => {
+    it("should calculate menu state for alive character", () => {
       const character = {
         exists: true,
         isAlive: true,
-        inCombat: false
+        inCombat: false,
       };
 
       const menuState = (characterOps as any).calculateMenuState(character);
@@ -192,11 +199,11 @@ describe('CharacterOperations - Simplified', () => {
       expect(menuState.canFlee).toBe(false);
     });
 
-    it('should calculate menu state for dead character', () => {
+    it("should calculate menu state for dead character", () => {
       const character = {
         exists: true,
         isAlive: false,
-        inCombat: false
+        inCombat: false,
       };
 
       const menuState = (characterOps as any).calculateMenuState(character);
@@ -210,11 +217,11 @@ describe('CharacterOperations - Simplified', () => {
       expect(menuState.canFlee).toBe(false);
     });
 
-    it('should calculate menu state for character in combat', () => {
+    it("should calculate menu state for character in combat", () => {
       const character = {
         exists: true,
         isAlive: true,
-        inCombat: true
+        inCombat: true,
       };
 
       const menuState = (characterOps as any).calculateMenuState(character);

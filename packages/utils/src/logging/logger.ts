@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import pino from "pino";
 import { promises as fs } from "fs";
 import { join } from "path";
+import pino from "pino";
 
 // Logger configuration via environment variables with safe defaults
 const getEnvVar = (key: string, defaultValue: string): string => {

@@ -13,10 +13,10 @@ library CombatConfig {
     uint256 internal constant DAMAGE_TABLE_SIZE = 11;
 
     // Weight constants used by CombatMath - Fixed for proper Lone Wolf mechanics
-    uint256 internal constant WEIGHT_COMBAT = 9;      // Primary damage factor (reduced from 10)
-    uint256 internal constant WEIGHT_ENDURANCE = 0;   // Remove endurance differential impact
-    uint256 internal constant WEIGHT_DEFENSE = 3;     // Moderate defense impact
-    uint256 internal constant WEIGHT_LUCK = 2;        // Increased luck variance (from 1)
+    uint256 internal constant WEIGHT_COMBAT = 9; // Primary damage factor (reduced from 10)
+    uint256 internal constant WEIGHT_ENDURANCE = 0; // Remove endurance differential impact
+    uint256 internal constant WEIGHT_DEFENSE = 3; // Moderate defense impact
+    uint256 internal constant WEIGHT_LUCK = 2; // Increased luck variance (from 1)
     uint256 internal constant WEIGHT_NORMALIZER = 14; // Adjusted for new weights
 
     // Basis-point scaling
@@ -30,15 +30,13 @@ library CombatConfig {
      * @return defensePerLevel Defense stat growth per level
      * @return luckPerLevel Luck stat growth per level
      */
-    function charPerLevelByClass(uint8 /*classId*/) 
-        internal 
-        pure 
-        returns (
-            uint256 combatPerLevel, 
-            uint256 endurancePerLevel, 
-            uint256 defensePerLevel, 
-            uint256 luckPerLevel
-        ) {
+    function charPerLevelByClass(
+        uint8 /*classId*/
+    )
+        internal
+        pure
+        returns (uint256 combatPerLevel, uint256 endurancePerLevel, uint256 defensePerLevel, uint256 luckPerLevel)
+    {
         combatPerLevel = 2;
         endurancePerLevel = 5;
         defensePerLevel = 1;
@@ -55,15 +53,9 @@ library CombatConfig {
      * @return baseDefense Base defense stat
      * @return baseLuck Base luck stat
      */
-    function baseStatsByClass(uint8 classId) 
-        internal 
-        pure 
-        returns (
-            uint256 baseCombat, 
-            uint256 baseEndurance, 
-            uint256 baseDefense, 
-            uint256 baseLuck
-        ) {
+    function baseStatsByClass(
+        uint8 classId
+    ) internal pure returns (uint256 baseCombat, uint256 baseEndurance, uint256 baseDefense, uint256 baseLuck) {
         // Flat arrays make it simple to scan and edit base values for each class.
         // Indexes: 0=Warrior,1=Tank,2=Defender,3=Rogue
         uint256[] memory bc = new uint256[](4);
@@ -71,11 +63,23 @@ library CombatConfig {
         uint256[] memory bd = new uint256[](4);
         uint256[] memory bl = new uint256[](4);
 
-    // Tune class base values below
-        bc[0] = 12; be[0] = 90;  bd[0] = 4;  bl[0] = 2;  // Warrior - Balanced fighter (baseline)
-        bc[1] = 10; be[1] = 120; bd[1] = 6;  bl[1] = 1;  // Tank - Lower attack, higher defense/HP
-        bc[2] = 11; be[2] = 100; bd[2] = 7;  bl[2] = 1;  // Defender - Moderate attack, high defense
-        bc[3] = 13; be[3] = 80;  bd[3] = 3;  bl[3] = 4;  // Rogue - Higher attack/luck, lower defense/HP
+        // Tune class base values below
+        bc[0] = 12;
+        be[0] = 90;
+        bd[0] = 4;
+        bl[0] = 2; // Warrior - Balanced fighter (baseline)
+        bc[1] = 10;
+        be[1] = 120;
+        bd[1] = 6;
+        bl[1] = 1; // Tank - Lower attack, higher defense/HP
+        bc[2] = 11;
+        be[2] = 100;
+        bd[2] = 7;
+        bl[2] = 1; // Defender - Moderate attack, high defense
+        bc[3] = 13;
+        be[3] = 80;
+        bd[3] = 3;
+        bl[3] = 4; // Rogue - Higher attack/luck, lower defense/HP
 
         uint256 idx = uint256(classId);
         if (idx > bc.length - 1) {
@@ -130,7 +134,17 @@ library CombatConfig {
      */
     function damageTableAttacker() internal pure returns (uint8[] memory) {
         uint8[] memory t = new uint8[](DAMAGE_TABLE_SIZE);
-        t[0]=1; t[1]=2; t[2]=4; t[3]=6; t[4]=8; t[5]=10; t[6]=12; t[7]=14; t[8]=16; t[9]=18; t[10]=20;
+        t[0] = 1;
+        t[1] = 2;
+        t[2] = 4;
+        t[3] = 6;
+        t[4] = 8;
+        t[5] = 10;
+        t[6] = 12;
+        t[7] = 14;
+        t[8] = 16;
+        t[9] = 18;
+        t[10] = 20;
         return t;
     }
 
@@ -140,7 +154,17 @@ library CombatConfig {
      */
     function damageTableDefender() internal pure returns (uint8[] memory) {
         uint8[] memory t = new uint8[](DAMAGE_TABLE_SIZE);
-        t[0]=20; t[1]=18; t[2]=16; t[3]=14; t[4]=12; t[5]=10; t[6]=8; t[7]=6; t[8]=4; t[9]=2; t[10]=1;
+        t[0] = 20;
+        t[1] = 18;
+        t[2] = 16;
+        t[3] = 14;
+        t[4] = 12;
+        t[5] = 10;
+        t[6] = 8;
+        t[7] = 6;
+        t[8] = 4;
+        t[9] = 2;
+        t[10] = 1;
         return t;
     }
 
@@ -155,23 +179,26 @@ library CombatConfig {
      * @return xpReward XP reward for defeating this enemy
      * @return dropRate Drop rate in basis points (e.g., 300 = 3%)
      */
-    function enemyBaseById(uint256 id) 
-        internal 
-        pure 
+    function enemyBaseById(
+        uint256 id
+    )
+        internal
+        pure
         returns (
-            uint256 baseCombat, 
-            uint256 baseEndurance, 
-            uint256 baseDefense, 
-            uint256 baseLuck, 
-            uint256 xpReward, 
+            uint256 baseCombat,
+            uint256 baseEndurance,
+            uint256 baseDefense,
+            uint256 baseLuck,
+            uint256 xpReward,
             uint256 dropRate
-        ) {
+        )
+    {
         uint256 maxEnemies = 16;
-        
+
         if (id == 0 || id > maxEnemies) {
             return _getDefaultEnemyStats(id);
         }
-        
+
         return _getConfiguredEnemyStats(id);
     }
 
@@ -183,17 +210,20 @@ library CombatConfig {
     /// @return baseLuck Base luck stat
     /// @return xpReward XP reward for defeating this enemy
     /// @return dropRate Drop rate in basis points
-    function _getDefaultEnemyStats(uint256 id) 
-        internal 
-        pure 
+    function _getDefaultEnemyStats(
+        uint256 id
+    )
+        internal
+        pure
         returns (
-            uint256 baseCombat, 
-            uint256 baseEndurance, 
-            uint256 baseDefense, 
-            uint256 baseLuck, 
-            uint256 xpReward, 
+            uint256 baseCombat,
+            uint256 baseEndurance,
+            uint256 baseDefense,
+            uint256 baseLuck,
+            uint256 xpReward,
             uint256 dropRate
-        ) {
+        )
+    {
         baseCombat = 10 + (id * 2);
         baseEndurance = 20 + (id * 5);
         baseDefense = 5 + (id / 2);
@@ -210,17 +240,20 @@ library CombatConfig {
     /// @return baseLuck Base luck stat
     /// @return xpReward XP reward for defeating this enemy
     /// @return dropRate Drop rate in basis points
-    function _getConfiguredEnemyStats(uint256 id) 
-        internal 
-        pure 
+    function _getConfiguredEnemyStats(
+        uint256 id
+    )
+        internal
+        pure
         returns (
-            uint256 baseCombat, 
-            uint256 baseEndurance, 
-            uint256 baseDefense, 
-            uint256 baseLuck, 
-            uint256 xpReward, 
+            uint256 baseCombat,
+            uint256 baseEndurance,
+            uint256 baseDefense,
+            uint256 baseLuck,
+            uint256 xpReward,
             uint256 dropRate
-        ) {
+        )
+    {
         uint256[] memory bc = new uint256[](17);
         uint256[] memory be = new uint256[](17);
         uint256[] memory bd = new uint256[](17);
@@ -243,15 +276,44 @@ library CombatConfig {
     /// @param xp XP reward array
     /// @param dr Drop rate array
     function _populateEarlyGameEnemies(
-        uint256[] memory bc, uint256[] memory be, uint256[] memory bd,
-        uint256[] memory bl, uint256[] memory xp, uint256[] memory dr
+        uint256[] memory bc,
+        uint256[] memory be,
+        uint256[] memory bd,
+        uint256[] memory bl,
+        uint256[] memory xp,
+        uint256[] memory dr
     ) internal pure {
         // Early game enemies (1-5) - for character levels 1-5
-        bc[1] = 13; be[1] = 30; bd[1] = 2; bl[1] = 2; xp[1] = 50; dr[1] = 300;   // Goblin
-        bc[2] = 15; be[2] = 30; bd[2] = 3; bl[2] = 2; xp[2] = 60; dr[2] = 500;   // Orc
-        bc[3] = 17; be[3] = 35; bd[3] = 3; bl[3] = 3; xp[3] = 70; dr[3] = 700;   // Skeleton
-        bc[4] = 19; be[4] = 40; bd[4] = 4; bl[4] = 3; xp[4] = 80; dr[4] = 900;   // Wolf
-        bc[5] = 21; be[5] = 45; bd[5] = 4; bl[5] = 4; xp[5] = 90; dr[5] = 1100;  // Bear
+        bc[1] = 13;
+        be[1] = 30;
+        bd[1] = 2;
+        bl[1] = 2;
+        xp[1] = 50;
+        dr[1] = 300; // Goblin
+        bc[2] = 15;
+        be[2] = 30;
+        bd[2] = 3;
+        bl[2] = 2;
+        xp[2] = 60;
+        dr[2] = 500; // Orc
+        bc[3] = 17;
+        be[3] = 35;
+        bd[3] = 3;
+        bl[3] = 3;
+        xp[3] = 70;
+        dr[3] = 700; // Skeleton
+        bc[4] = 19;
+        be[4] = 40;
+        bd[4] = 4;
+        bl[4] = 3;
+        xp[4] = 80;
+        dr[4] = 900; // Wolf
+        bc[5] = 21;
+        be[5] = 45;
+        bd[5] = 4;
+        bl[5] = 4;
+        xp[5] = 90;
+        dr[5] = 1100; // Bear
     }
 
     /// @notice Populate mid game enemy stats (6-10)
@@ -262,15 +324,44 @@ library CombatConfig {
     /// @param xp XP reward array
     /// @param dr Drop rate array
     function _populateMidGameEnemies(
-        uint256[] memory bc, uint256[] memory be, uint256[] memory bd,
-        uint256[] memory bl, uint256[] memory xp, uint256[] memory dr
+        uint256[] memory bc,
+        uint256[] memory be,
+        uint256[] memory bd,
+        uint256[] memory bl,
+        uint256[] memory xp,
+        uint256[] memory dr
     ) internal pure {
         // Mid game enemies (6-10) - for character levels 6-10
-        bc[6] = 26; be[6] = 50; bd[6] = 5; bl[6] = 4; xp[6] = 100; dr[6] = 1300; // Troll
-        bc[7] = 28; be[7] = 55; bd[7] = 5; bl[7] = 5; xp[7] = 110; dr[7] = 1500; // Ogre
-        bc[8] = 30; be[8] = 60; bd[8] = 6; bl[8] = 5; xp[8] = 120; dr[8] = 1700; // Giant Spider
-        bc[9] = 32; be[9] = 65; bd[9] = 6; bl[9] = 6; xp[9] = 130; dr[9] = 1900; // Wyvern
-        bc[10] = 34; be[10] = 70; bd[10] = 7; bl[10] = 6; xp[10] = 140; dr[10] = 2100; // Drake
+        bc[6] = 26;
+        be[6] = 50;
+        bd[6] = 5;
+        bl[6] = 4;
+        xp[6] = 100;
+        dr[6] = 1300; // Troll
+        bc[7] = 28;
+        be[7] = 55;
+        bd[7] = 5;
+        bl[7] = 5;
+        xp[7] = 110;
+        dr[7] = 1500; // Ogre
+        bc[8] = 30;
+        be[8] = 60;
+        bd[8] = 6;
+        bl[8] = 5;
+        xp[8] = 120;
+        dr[8] = 1700; // Giant Spider
+        bc[9] = 32;
+        be[9] = 65;
+        bd[9] = 6;
+        bl[9] = 6;
+        xp[9] = 130;
+        dr[9] = 1900; // Wyvern
+        bc[10] = 34;
+        be[10] = 70;
+        bd[10] = 7;
+        bl[10] = 6;
+        xp[10] = 140;
+        dr[10] = 2100; // Drake
     }
 
     /// @notice Populate high level enemy stats (11-16)
@@ -281,16 +372,50 @@ library CombatConfig {
     /// @param xp XP reward array
     /// @param dr Drop rate array
     function _populateHighLevelEnemies(
-        uint256[] memory bc, uint256[] memory be, uint256[] memory bd,
-        uint256[] memory bl, uint256[] memory xp, uint256[] memory dr
+        uint256[] memory bc,
+        uint256[] memory be,
+        uint256[] memory bd,
+        uint256[] memory bl,
+        uint256[] memory xp,
+        uint256[] memory dr
     ) internal pure {
         // High level enemies (11-16) - for character levels 11-16
-        bc[11] = 36; be[11] = 75; bd[11] = 7; bl[11] = 7; xp[11] = 150; dr[11] = 2300; // Minotaur
-        bc[12] = 38; be[12] = 80; bd[12] = 8; bl[12] = 7; xp[12] = 160; dr[12] = 2500; // Hydra
-        bc[13] = 40; be[13] = 85; bd[13] = 8; bl[13] = 8; xp[13] = 170; dr[13] = 2700; // Demon
-        bc[14] = 42; be[14] = 90; bd[14] = 9; bl[14] = 8; xp[14] = 180; dr[14] = 2800; // Lich
-        bc[15] = 44; be[15] = 95; bd[15] = 9; bl[15] = 9; xp[15] = 190; dr[15] = 2900; // Ancient Dragon
-        bc[16] = 46; be[16] = 100; bd[16] = 10; bl[16] = 10; xp[16] = 200; dr[16] = 3000; // Titan
+        bc[11] = 36;
+        be[11] = 75;
+        bd[11] = 7;
+        bl[11] = 7;
+        xp[11] = 150;
+        dr[11] = 2300; // Minotaur
+        bc[12] = 38;
+        be[12] = 80;
+        bd[12] = 8;
+        bl[12] = 7;
+        xp[12] = 160;
+        dr[12] = 2500; // Hydra
+        bc[13] = 40;
+        be[13] = 85;
+        bd[13] = 8;
+        bl[13] = 8;
+        xp[13] = 170;
+        dr[13] = 2700; // Demon
+        bc[14] = 42;
+        be[14] = 90;
+        bd[14] = 9;
+        bl[14] = 8;
+        xp[14] = 180;
+        dr[14] = 2800; // Lich
+        bc[15] = 44;
+        be[15] = 95;
+        bd[15] = 9;
+        bl[15] = 9;
+        xp[15] = 190;
+        dr[15] = 2900; // Ancient Dragon
+        bc[16] = 46;
+        be[16] = 100;
+        bd[16] = 10;
+        bl[16] = 10;
+        xp[16] = 200;
+        dr[16] = 3000; // Titan
     }
 
     // Backwards-compatible wrapper used by production contracts.
@@ -306,17 +431,20 @@ library CombatConfig {
      * @return xpReward XP reward for defeating this enemy
      * @return dropRate Drop rate in basis points (e.g., 300 = 3%)
      */
-    function baseStatsByEnemy(uint8 id) 
-        internal 
-        pure 
+    function baseStatsByEnemy(
+        uint8 id
+    )
+        internal
+        pure
         returns (
-            uint256 baseCombat, 
-            uint256 baseEndurance, 
-            uint256 baseDefense, 
-            uint256 baseLuck, 
-            uint256 xpReward, 
+            uint256 baseCombat,
+            uint256 baseEndurance,
+            uint256 baseDefense,
+            uint256 baseLuck,
+            uint256 xpReward,
             uint256 dropRate
-        ) {
+        )
+    {
         return enemyBaseById(uint256(id));
     }
 }

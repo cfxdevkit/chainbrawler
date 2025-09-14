@@ -1,12 +1,12 @@
-import { renderHook } from '@testing-library/react';
-import { useLeaderboard } from '../../hooks/useLeaderboard';
+import { renderHook } from "@testing-library/react";
+import { useLeaderboard } from "../../hooks/useLeaderboard";
 
 // Mock the context provider
-vi.mock('../../providers/ChainBrawlerProvider', () => ({
+vi.mock("../../providers/ChainBrawlerProvider", () => ({
   useChainBrawlerContext: vi.fn(),
 }));
 
-describe('useLeaderboard', () => {
+describe("useLeaderboard", () => {
   const mockLeaderboard = {
     currentEpoch: 5n,
     epochTimeRemaining: 3600n,
@@ -15,7 +15,7 @@ describe('useLeaderboard', () => {
     totalPlayers: 100n,
     topPlayers: [
       {
-        address: '0xabcdef1234567890abcdef1234567890abcdef12',
+        address: "0xabcdef1234567890abcdef1234567890abcdef12",
         rank: 1n,
         score: 5000n,
         level: 25,
@@ -23,7 +23,7 @@ describe('useLeaderboard', () => {
         isCurrentPlayer: false,
       },
       {
-        address: '0x1234567890abcdef1234567890abcdef12345678',
+        address: "0x1234567890abcdef1234567890abcdef12345678",
         rank: 2n,
         score: 4500n,
         level: 22,
@@ -54,8 +54,8 @@ describe('useLeaderboard', () => {
     vi.clearAllMocks();
   });
 
-  it('should return leaderboard data from context', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should return leaderboard data from context", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       leaderboard: mockLeaderboard,
       isLoading: false,
@@ -72,8 +72,8 @@ describe('useLeaderboard', () => {
     expect(result.current.refreshLeaderboard).toBe(mockActions.refreshLeaderboard);
   });
 
-  it('should return loading state from context', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should return loading state from context", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       leaderboard: null,
       isLoading: true,
@@ -90,12 +90,12 @@ describe('useLeaderboard', () => {
     expect(result.current.refreshLeaderboard).toBe(mockActions.refreshLeaderboard);
   });
 
-  it('should return error state from context', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should return error state from context", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       leaderboard: null,
       isLoading: false,
-      error: 'Failed to load leaderboard',
+      error: "Failed to load leaderboard",
       actions: mockActions,
     });
 
@@ -103,13 +103,13 @@ describe('useLeaderboard', () => {
 
     expect(result.current.leaderboard).toBe(null);
     expect(result.current.isLoading).toBe(false);
-    expect(result.current.error).toBe('Failed to load leaderboard');
+    expect(result.current.error).toBe("Failed to load leaderboard");
     expect(result.current.loadLeaderboard).toBe(mockActions.loadLeaderboard);
     expect(result.current.refreshLeaderboard).toBe(mockActions.refreshLeaderboard);
   });
 
-  it('should provide access to loadLeaderboard and refreshLeaderboard actions', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should provide access to loadLeaderboard and refreshLeaderboard actions", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       leaderboard: mockLeaderboard,
       isLoading: false,
@@ -119,14 +119,14 @@ describe('useLeaderboard', () => {
 
     const { result } = renderHook(() => useLeaderboard());
 
-    expect(typeof result.current.loadLeaderboard).toBe('function');
-    expect(typeof result.current.refreshLeaderboard).toBe('function');
+    expect(typeof result.current.loadLeaderboard).toBe("function");
+    expect(typeof result.current.refreshLeaderboard).toBe("function");
     expect(result.current.loadLeaderboard).toBe(mockActions.loadLeaderboard);
     expect(result.current.refreshLeaderboard).toBe(mockActions.refreshLeaderboard);
   });
 
-  it('should handle null leaderboard data', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should handle null leaderboard data", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       leaderboard: null,
       isLoading: false,
@@ -141,8 +141,8 @@ describe('useLeaderboard', () => {
     expect(result.current.error).toBe(null);
   });
 
-  it('should update when context changes', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should update when context changes", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     const mockContextFn = vi.mocked(useChainBrawlerContext);
 
     // Initial state
@@ -172,8 +172,8 @@ describe('useLeaderboard', () => {
     expect(result.current.isLoading).toBe(false);
   });
 
-  it('should maintain action references across re-renders', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should maintain action references across re-renders", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       leaderboard: mockLeaderboard,
       isLoading: false,
@@ -192,13 +192,13 @@ describe('useLeaderboard', () => {
     expect(result.current.refreshLeaderboard).toBe(initialRefreshLeaderboard);
   });
 
-  it('should handle complex leaderboard data structures', async () => {
+  it("should handle complex leaderboard data structures", async () => {
     const complexLeaderboard = {
       ...mockLeaderboard,
       topPlayers: [
         ...mockLeaderboard.topPlayers,
         {
-          address: '0xfedcba0987654321fedcba0987654321fedcba09',
+          address: "0xfedcba0987654321fedcba0987654321fedcba09",
           rank: 3n,
           score: 4000n,
           level: 20,
@@ -208,7 +208,7 @@ describe('useLeaderboard', () => {
       ],
     };
 
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       leaderboard: complexLeaderboard,
       isLoading: false,
@@ -223,8 +223,8 @@ describe('useLeaderboard', () => {
     expect(result.current.leaderboard.topPlayers[2].rank).toBe(3n);
   });
 
-  it('should handle undefined actions gracefully', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should handle undefined actions gracefully", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       leaderboard: mockLeaderboard,
       isLoading: false,
@@ -239,7 +239,7 @@ describe('useLeaderboard', () => {
     expect(result.current.refreshLeaderboard).toBeUndefined();
   });
 
-  it('should handle leaderboard with empty top players', async () => {
+  it("should handle leaderboard with empty top players", async () => {
     const emptyLeaderboard = {
       ...mockLeaderboard,
       topPlayers: [],
@@ -248,7 +248,7 @@ describe('useLeaderboard', () => {
       playerScore: 0n,
     };
 
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       leaderboard: emptyLeaderboard,
       isLoading: false,

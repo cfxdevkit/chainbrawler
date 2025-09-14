@@ -4,14 +4,14 @@
 // Access Control Errors (1000-1099)
 const ACCESS_ERRORS = {
   1001: "Only owner",
-  1002: "Only owner or test helper"
+  1002: "Only owner or test helper",
 } as const;
 
 // Fee and Payment Errors (1100-1199)
 const FEE_ERRORS = {
   1101: "Insufficient fee",
   1102: "Already at full health",
-  1103: "Healing on cooldown"
+  1103: "Healing on cooldown",
 } as const;
 
 // Character Errors (1200-1299)
@@ -23,19 +23,19 @@ const CHARACTER_ERRORS = {
   1205: "Character is not in combat",
   1206: "Character already exists",
   1207: "Invalid class",
-  1208: "Character is already alive"
+  1208: "Character is already alive",
 } as const;
 
 // Combat Errors (1300-1399)
 const COMBAT_ERRORS = {
-  1301: "Invalid enemy level"
+  1301: "Invalid enemy level",
 } as const;
 
 // Batch Operation Errors (1400-1499)
 const BATCH_ERRORS = {
   1401: "Empty players array",
   1402: "Batch size too large",
-  1403: "Invalid player address"
+  1403: "Invalid player address",
 } as const;
 
 // Treasury Errors (1500-1599)
@@ -43,13 +43,13 @@ const TREASURY_ERRORS = {
   1501: "Drop rate too high",
   1502: "No funds to withdraw",
   1503: "Transfer failed",
-  1504: "cached dropRate exceeds MAX_DROP_RATE_BP"
+  1504: "cached dropRate exceeds MAX_DROP_RATE_BP",
 } as const;
 
 // Enemy Errors (1600-1699)
 const ENEMY_ERRORS = {
   1601: "Enemy does not exist",
-  1602: "No active combat state"
+  1602: "No active combat state",
 } as const;
 
 // Leaderboard and Claims Errors (1700-1799)
@@ -73,7 +73,7 @@ const LEADERBOARD_ERRORS = {
   1717: "Invalid treasury address",
   1718: "Transfer failed",
   1719: "Invalid proof",
-  1720: "Withdraw failed"
+  1720: "Withdraw failed",
 } as const;
 
 // BitPacked Library Errors (2000+)
@@ -87,7 +87,7 @@ const BITPACKED_ERRORS = {
   2103: "BitPackedEnemyLib: baseDefense overflow",
   2104: "BitPackedEnemyLib: baseLuck overflow",
   2105: "BitPackedEnemyLib: xpReward overflow",
-  2106: "BitPackedEnemyLib: dropRate overflow"
+  2106: "BitPackedEnemyLib: dropRate overflow",
 } as const;
 
 export const ERROR_CODES = {
@@ -99,7 +99,7 @@ export const ERROR_CODES = {
   ...TREASURY_ERRORS,
   ...ENEMY_ERRORS,
   ...LEADERBOARD_ERRORS,
-  ...BITPACKED_ERRORS
+  ...BITPACKED_ERRORS,
 } as const;
 
 export type ErrorCode = keyof typeof ERROR_CODES;
@@ -110,7 +110,7 @@ export function getErrorMessage(errorCode: number): string {
 
 export function extractErrorCode(error: any): number | null {
   // Extract error code from various error formats
-  if (typeof error === 'number') return error;
+  if (typeof error === "number") return error;
   if (error?.code) return error.code;
   if (error?.error?.code) return error.error.code;
   if (error?.message) {
@@ -131,6 +131,6 @@ export function isRetryableError(errorCode: number): boolean {
     1503, // Transfer failed (network issue)
     1718, // Transfer failed (network issue)
   ];
-  
+
   return retryableCodes.includes(errorCode);
 }

@@ -1,7 +1,19 @@
 // Core UX Store - centralized state management
 // Based on UX_STATE_MANAGEMENT_SPEC.md
 
-import { UXState, CharacterData, MenuState, OperationState, PoolsData, LeaderboardData, ClaimsData, FightSummaryData, EquipmentDropData, HealingData, ResurrectionData } from '../types';
+import type {
+  CharacterData,
+  ClaimsData,
+  EquipmentDropData,
+  FightSummaryData,
+  HealingData,
+  LeaderboardData,
+  MenuState,
+  OperationState,
+  PoolsData,
+  ResurrectionData,
+  UXState,
+} from "../types";
 
 export class UXStore {
   private state: UXState;
@@ -22,7 +34,7 @@ export class UXStore {
       claims: null,
       statusMessage: "Initializing...",
       isLoading: true,
-      error: null
+      error: null,
     };
   }
 
@@ -159,11 +171,11 @@ export class UXStore {
   }
 
   notifyListeners(): void {
-    this.listeners.forEach(listener => {
+    this.listeners.forEach((listener) => {
       try {
         listener(this.getState());
       } catch (error) {
-        console.error('Error in state listener:', error);
+        console.error("Error in state listener:", error);
       }
     });
   }

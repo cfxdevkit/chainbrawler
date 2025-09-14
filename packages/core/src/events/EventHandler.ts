@@ -1,9 +1,19 @@
 // Event handler for processing contract events
 // Based on UX_STATE_MANAGEMENT_SPEC.md
 
-import { EventEmitter } from './EventEmitter';
-import { EventType, FightSummaryData, EquipmentDropData, HealingData, ResurrectionData } from '../types';
-import { FightDataNormalizer, RawFightSummaryEvent, RawEquipmentDrop } from '../utils/FightDataNormalizer';
+import {
+  EquipmentDropData,
+  EventType,
+  type FightSummaryData,
+  type HealingData,
+  type ResurrectionData,
+} from "../types";
+import {
+  FightDataNormalizer,
+  type RawEquipmentDrop,
+  type RawFightSummaryEvent,
+} from "../utils/FightDataNormalizer";
+import type { EventEmitter } from "./EventEmitter";
 
 export class EventHandler {
   constructor(
@@ -22,7 +32,10 @@ export class EventHandler {
     this.eventEmitter.on(EventType.HEALING_STARTED, this.handleHealingStarted.bind(this));
     this.eventEmitter.on(EventType.HEALING_COMPLETED, this.handleHealingCompleted.bind(this));
     this.eventEmitter.on(EventType.RESURRECTION_STARTED, this.handleResurrectionStarted.bind(this));
-    this.eventEmitter.on(EventType.RESURRECTION_COMPLETED, this.handleResurrectionCompleted.bind(this));
+    this.eventEmitter.on(
+      EventType.RESURRECTION_COMPLETED,
+      this.handleResurrectionCompleted.bind(this)
+    );
     this.eventEmitter.on(EventType.OPERATION_STARTED, this.handleOperationStarted.bind(this));
     this.eventEmitter.on(EventType.OPERATION_COMPLETED, this.handleOperationCompleted.bind(this));
     this.eventEmitter.on(EventType.OPERATION_FAILED, this.handleOperationFailed.bind(this));
@@ -37,85 +50,85 @@ export class EventHandler {
 
   // Character events
   private handleCharacterCreated(data: any): void {
-    this.store.setStatusMessage('Character created successfully');
+    this.store.setStatusMessage("Character created successfully");
     this.store.setLastFightSummary(undefined);
   }
 
   private handleCharacterUpdated(data: any): void {
-    this.store.setStatusMessage('Character updated');
+    this.store.setStatusMessage("Character updated");
   }
 
   // Combat events
   private handleFightStarted(data: any): void {
-    this.store.setStatusMessage('Fight started');
+    this.store.setStatusMessage("Fight started");
   }
 
   private handleFightCompleted(data: any): void {
     const fightSummary = this.processFightSummary(data);
     this.store.setLastFightSummary(fightSummary);
-    this.store.setStatusMessage('Fight completed');
+    this.store.setStatusMessage("Fight completed");
   }
 
   // Healing events
   private handleHealingStarted(data: any): void {
-    this.store.setStatusMessage('Healing in progress...');
+    this.store.setStatusMessage("Healing in progress...");
   }
 
   private handleHealingCompleted(data: any): void {
     const healingData = this.processHealingData(data);
     this.store.setLastHealing(healingData);
-    this.store.setStatusMessage('Character healed successfully');
+    this.store.setStatusMessage("Character healed successfully");
   }
 
   // Resurrection events
   private handleResurrectionStarted(data: any): void {
-    this.store.setStatusMessage('Resurrection in progress...');
+    this.store.setStatusMessage("Resurrection in progress...");
   }
 
   private handleResurrectionCompleted(data: any): void {
     const resurrectionData = this.processResurrectionData(data);
     this.store.setLastResurrection(resurrectionData);
-    this.store.setStatusMessage('Character resurrected successfully');
+    this.store.setStatusMessage("Character resurrected successfully");
   }
 
   // Operation events
   private handleOperationStarted(data: any): void {
-    this.store.setStatusMessage('Operation started...');
+    this.store.setStatusMessage("Operation started...");
   }
 
   private handleOperationCompleted(data: any): void {
-    this.store.setStatusMessage('Operation completed');
+    this.store.setStatusMessage("Operation completed");
   }
 
   private handleOperationFailed(data: any): void {
-    this.store.setStatusMessage('Operation failed');
+    this.store.setStatusMessage("Operation failed");
   }
 
   // Pools events
   private handlePoolsUpdated(data: any): void {
-    this.store.setStatusMessage('Pools updated');
+    this.store.setStatusMessage("Pools updated");
   }
 
   // Leaderboard events
   private handleLeaderboardUpdated(data: any): void {
-    this.store.setStatusMessage('Leaderboard updated');
+    this.store.setStatusMessage("Leaderboard updated");
   }
 
   // Claims events
   private handleClaimsUpdated(data: any): void {
-    this.store.setStatusMessage('Claims updated');
+    this.store.setStatusMessage("Claims updated");
   }
 
   private handleClaimStarted(data: any): void {
-    this.store.setStatusMessage('Claiming reward...');
+    this.store.setStatusMessage("Claiming reward...");
   }
 
   private handleClaimCompleted(data: any): void {
-    this.store.setStatusMessage('Reward claimed successfully');
+    this.store.setStatusMessage("Reward claimed successfully");
   }
 
   private handleClaimFailed(data: any): void {
-    this.store.setStatusMessage('Claim failed');
+    this.store.setStatusMessage("Claim failed");
   }
 
   // Error events
@@ -143,14 +156,18 @@ export class EventHandler {
       playerCriticals: data.playerCriticals || [],
       enemyCriticals: data.enemyCriticals || [],
       xpGained: data.xpGained || 0,
-      difficultyMultiplier: data.difficultyMultiplier
+      difficultyMultiplier: data.difficultyMultiplier,
     };
 
     // Normalize equipment drop if present
-    const rawEquipmentDrop: RawEquipmentDrop | undefined = data.equipmentDropped ? {
-      bonuses: Array.isArray(data.equipmentDropped) ? data.equipmentDropped : data.equipmentDropped.bonuses || [],
-      description: data.equipmentDropped.description
-    } : undefined;
+    const rawEquipmentDrop: RawEquipmentDrop | undefined = data.equipmentDropped
+      ? {
+          bonuses: Array.isArray(data.equipmentDropped)
+            ? data.equipmentDropped
+            : data.equipmentDropped.bonuses || [],
+          description: data.equipmentDropped.description,
+        }
+      : undefined;
 
     // Use the normalizer to create comprehensive fight summary data
     return FightDataNormalizer.normalizeFightSummary(rawFightData, rawEquipmentDrop);
@@ -159,14 +176,14 @@ export class EventHandler {
   private processHealingData(data: any): HealingData {
     return {
       newEndurance: data.newEndurance || 0,
-      cost: data.cost || 0n
+      cost: data.cost || 0n,
     };
   }
 
   private processResurrectionData(data: any): ResurrectionData {
     return {
       newEndurance: data.newEndurance || 0,
-      cost: data.cost || 0n
+      cost: data.cost || 0n,
     };
   }
 

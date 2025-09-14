@@ -1,6 +1,6 @@
-import { ChainBrawlerError, ErrorType } from '../types/ErrorType';
-import { StatusMessageType } from '../types/StatusMessageType';
-import { MenuStateCalculator } from '../utils/MenuStateCalculator';
+import { type ChainBrawlerError, ErrorType } from "../types/ErrorType";
+import { StatusMessageType } from "../types/StatusMessageType";
+import { MenuStateCalculator } from "../utils/MenuStateCalculator";
 
 export class ErrorRecoveryManager {
   constructor(
@@ -21,7 +21,7 @@ export class ErrorRecoveryManager {
       message,
       originalError: error,
       retryable,
-      context
+      context,
     };
 
     // Update UX state with error
@@ -29,12 +29,12 @@ export class ErrorRecoveryManager {
     this.store.setStatusMessage(`Error: ${chainBrawlerError.message}`);
 
     // Log error for debugging
-    console.error('Contract error occurred', {
+    console.error("Contract error occurred", {
       code: chainBrawlerError.code,
       message: chainBrawlerError.message,
       type: chainBrawlerError.type,
       retryable: chainBrawlerError.retryable,
-      context
+      context,
     });
 
     return chainBrawlerError;
@@ -79,7 +79,7 @@ export class ErrorRecoveryManager {
       1704: "Insufficient contract balance",
       1708: "No root available",
       1711: "Already claimed",
-      1719: "Invalid proof"
+      1719: "Invalid proof",
     };
 
     return errorMessages[errorCode] || `Error ${errorCode}: Unknown error occurred`;
@@ -96,7 +96,7 @@ export class ErrorRecoveryManager {
     if (errorCode >= 1600 && errorCode < 1700) return ErrorType.CONTRACT_ERROR;
     if (errorCode >= 1700 && errorCode < 1800) return ErrorType.LEADERBOARD_ERROR;
     if (errorCode >= 2000) return ErrorType.CONTRACT_ERROR;
-    
+
     return ErrorType.UNKNOWN_ERROR;
   }
 
@@ -106,7 +106,7 @@ export class ErrorRecoveryManager {
       1012, // Transaction failed
       1503, // Transfer failed
       1704, // Insufficient contract balance
-      1708  // No root available
+      1708, // No root available
     ];
     return retryableErrors.includes(errorCode);
   }
@@ -130,24 +130,26 @@ export class ErrorRecoveryManager {
         return await operation();
       } catch (error) {
         lastError = this.handleContractError(error);
-        
+
         if (!lastError.retryable || attempt === maxRetries - 1) {
           throw lastError;
         }
 
         // Exponential backoff
-        const delay = baseDelay * Math.pow(2, attempt);
-        await new Promise(resolve => setTimeout(resolve, delay));
+        const delay = baseDelay * 2 ** attempt;
+        await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
 
-    throw lastError || {
-      type: ErrorType.UNKNOWN_ERROR,
-      code: 5000,
-      message: 'Max retries exceeded',
-      originalError: null,
-      retryable: false
-    };
+    throw (
+      lastError || {
+        type: ErrorType.UNKNOWN_ERROR,
+        code: 5000,
+        message: "Max retries exceeded",
+        originalError: null,
+        retryable: false,
+      }
+    );
   }
 
   // Recover from character-related errors
@@ -157,13 +159,15 @@ export class ErrorRecoveryManager {
         // Refresh character data
         await this.refreshCharacterData();
         break;
-      case 1004: // Character is not alive
+      case 1004: {
+        // Character is not alive
         // Update character state
         const character = this.store.getCharacter();
         if (character) {
           this.store.updateCharacter({ ...character, isAlive: false });
         }
         break;
+      }
       case 1005: // Character is in combat
         // Refresh combat state
         await this.refreshCombatState();
@@ -179,7 +183,7 @@ export class ErrorRecoveryManager {
       // Get the current player address from the store
       const state = this.store.getState();
       const playerAddress = state.playerAddress;
-      
+
       if (!playerAddress) {
         return;
       }
@@ -206,7 +210,7 @@ export class ErrorRecoveryManager {
       // Get the current player address from the store
       const state = this.store.getState();
       const playerAddress = state.playerAddress;
-      
+
       if (!playerAddress) {
         return;
       }
@@ -233,15 +237,14 @@ export class ErrorRecoveryManager {
   private calculateMenuState(character: any): any {
     return MenuStateCalculator.calculateMenuState(character, {
       operation: this.store.getOperation(),
-      healingCooldownRemaining: 0 // TODO: Get from contract
+      healingCooldownRemaining: 0, // TODO: Get from contract
     });
   }
-
 
   private async performGenericRecovery(): Promise<void> {
     // Clear error state
     this.clearError();
-    
+
     // Refresh all data
     await Promise.all([
       this.refreshCharacterData(),

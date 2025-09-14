@@ -1,50 +1,57 @@
-import React from 'react'
 import {
-  Card,
-  Text,
-  Stack,
-  Button,
-  Badge,
-  Group,
-  Grid,
-  Center,
+  type CharacterData,
+  calculateEnemyRewards,
+  calculateEnemyStats,
+  ENEMY_CONFIGS,
+  getEnemyConfig,
+  type OperationState,
+} from "@chainbrawler/core";
+import {
   Avatar,
+  Badge,
   Box,
-  ThemeIcon,
-  Tooltip,
-  Paper,
-  Title,
-  Slider,
-  SimpleGrid,
-  Transition,
+  Button,
+  Card,
+  Center,
   // Progress,
-  Divider
-} from '@mantine/core'
+  Divider,
+  Grid,
+  Group,
+  Paper,
+  SimpleGrid,
+  Slider,
+  Stack,
+  Text,
+  ThemeIcon,
+  Title,
+  Tooltip,
+  Transition,
+} from "@mantine/core";
 import {
-  IconSwords,
-  IconHeart,
-  IconShield,
-  IconSkull,
   IconBolt,
-  IconTarget,
-  IconSword,
+  // IconCrown,
+  IconClover,
+  IconFlame,
+  IconHeart,
   IconPlayerPlay,
   IconRun,
-  IconTrophy,
+  IconShield,
+  IconSkull,
   IconSparkles,
-  IconFlame,
-  // IconCrown,
-  IconClover
-} from '@tabler/icons-react'
-import { CharacterData, OperationState, ENEMY_CONFIGS, getEnemyConfig, calculateEnemyStats, calculateEnemyRewards } from '@chainbrawler/core'
+  IconSword,
+  IconSwords,
+  IconTarget,
+  IconTrophy,
+} from "@tabler/icons-react";
+import React from "react";
 
 interface MonsterArenaProps {
-  character: CharacterData | null
-  operation: OperationState | null
-  onFightEnemy: (enemyId: number, enemyLevel: number) => Promise<void>
-  onContinueFight: () => Promise<void>
-  onFleeRound: () => Promise<void>
-  isLoading: boolean
+  character: CharacterData | null;
+  operation: OperationState | null;
+  onFightEnemy: (enemyId: number, enemyLevel: number) => Promise<void>;
+  onContinueFight: () => Promise<void>;
+  onFleeRound: () => Promise<void>;
+  isLoading: boolean;
 }
 
 export function MonsterArena({
@@ -53,49 +60,54 @@ export function MonsterArena({
   onFightEnemy,
   onContinueFight,
   onFleeRound,
-  isLoading
+  isLoading,
 }: MonsterArenaProps) {
-  const [selectedEnemyId, setSelectedEnemyId] = React.useState<number | null>(null)
-  const [selectedLevel, setSelectedLevel] = React.useState<number>(1)
+  const [selectedEnemyId, setSelectedEnemyId] = React.useState<number | null>(null);
+  const [selectedLevel, setSelectedLevel] = React.useState<number>(1);
 
-  const canStartFight = character?.exists && character?.isAlive && !character?.inCombat && !isLoading
-  const inCombat = character?.inCombat
+  const canStartFight =
+    character?.exists && character?.isAlive && !character?.inCombat && !isLoading;
+  const inCombat = character?.inCombat;
 
   // Get selected enemy config and calculated stats
-  const selectedEnemy = selectedEnemyId !== null ? getEnemyConfig(selectedEnemyId) : null
-  const enemyStats = selectedEnemyId !== null ? calculateEnemyStats(selectedEnemyId, selectedLevel) : null
-  const enemyRewards = selectedEnemyId !== null ? calculateEnemyRewards(selectedEnemyId, selectedLevel) : null
+  const selectedEnemy = selectedEnemyId !== null ? getEnemyConfig(selectedEnemyId) : null;
+  const enemyStats =
+    selectedEnemyId !== null ? calculateEnemyStats(selectedEnemyId, selectedLevel) : null;
+  const enemyRewards =
+    selectedEnemyId !== null ? calculateEnemyRewards(selectedEnemyId, selectedLevel) : null;
 
   const handleFightStart = async () => {
-    console.log('MonsterArena: handleFightStart called')
-    console.log('MonsterArena: selectedEnemyId:', selectedEnemyId)
-    console.log('MonsterArena: selectedLevel:', selectedLevel)
-    console.log('MonsterArena: canStartFight:', canStartFight)
-    console.log('MonsterArena: onFightEnemy function:', typeof onFightEnemy)
-    
+    console.log("MonsterArena: handleFightStart called");
+    console.log("MonsterArena: selectedEnemyId:", selectedEnemyId);
+    console.log("MonsterArena: selectedLevel:", selectedLevel);
+    console.log("MonsterArena: canStartFight:", canStartFight);
+    console.log("MonsterArena: onFightEnemy function:", typeof onFightEnemy);
+
     if (selectedEnemyId !== null && canStartFight) {
-      console.log('MonsterArena: Calling onFightEnemy...')
+      console.log("MonsterArena: Calling onFightEnemy...");
       try {
-        await onFightEnemy(selectedEnemyId, selectedLevel)
-        console.log('MonsterArena: onFightEnemy completed')
+        await onFightEnemy(selectedEnemyId, selectedLevel);
+        console.log("MonsterArena: onFightEnemy completed");
       } catch (error) {
-        console.error('MonsterArena: onFightEnemy error:', error)
+        console.error("MonsterArena: onFightEnemy error:", error);
       }
     } else {
-      console.log('MonsterArena: Cannot start fight - conditions not met')
+      console.log("MonsterArena: Cannot start fight - conditions not met");
     }
-  }
+  };
 
   if (!character?.exists) {
     return (
-      <Card shadow="xl" padding="xl" radius="lg" h="100%" style={{ minHeight: '600px' }}>
+      <Card shadow="xl" padding="xl" radius="lg" h="100%" style={{ minHeight: "600px" }}>
         <Center h="100%">
           <Stack align="center" gap="xl">
             <Avatar size={120} color="dark" variant="filled">
               <IconTarget size={60} />
             </Avatar>
             <Stack align="center" gap="md">
-              <Title order={3} c="dimmed">Combat Arena</Title>
+              <Title order={3} c="dimmed">
+                Combat Arena
+              </Title>
               <Text size="sm" c="dimmed" ta="center" maw={300}>
                 Create a character to enter the arena and fight monsters!
               </Text>
@@ -103,28 +115,37 @@ export function MonsterArena({
           </Stack>
         </Center>
       </Card>
-    )
+    );
   }
 
   return (
-    <Card shadow="xl" padding="xl" radius="lg" h="100%" style={{ minHeight: '600px' }}>
+    <Card shadow="xl" padding="xl" radius="lg" h="100%" style={{ minHeight: "600px" }}>
       <Stack gap="lg" h="100%">
         {/* Arena Header */}
         <Group justify="space-between" align="center">
           <Group gap="xs">
-            <ThemeIcon size="xl" color="red" variant="gradient" gradient={{ from: 'red', to: 'orange', deg: 45 }}>
+            <ThemeIcon
+              size="xl"
+              color="red"
+              variant="gradient"
+              gradient={{ from: "red", to: "orange", deg: 45 }}
+            >
               <IconSwords size={28} />
             </ThemeIcon>
             <Stack gap={0}>
-              <Title order={2} c="white">Monster Arena</Title>
-              <Text size="sm" c="dimmed">Choose your battle</Text>
+              <Title order={2} c="white">
+                Monster Arena
+              </Title>
+              <Text size="sm" c="dimmed">
+                Choose your battle
+              </Text>
             </Stack>
           </Group>
 
           {inCombat && (
             <Badge
               variant="gradient"
-              gradient={{ from: 'red', to: 'orange', deg: 45 }}
+              gradient={{ from: "red", to: "orange", deg: 45 }}
               size="xl"
               leftSection={<IconFlame size={16} />}
             >
@@ -138,7 +159,7 @@ export function MonsterArena({
         {inCombat ? (
           /* Combat Interface */
           <Stack gap="lg" align="center">
-            <Paper p="xl" bg="red.9" radius="md" withBorder style={{ width: '100%' }}>
+            <Paper p="xl" bg="red.9" radius="md" withBorder style={{ width: "100%" }}>
               <Stack gap="lg" align="center">
                 <Group gap="xs">
                   <IconFlame size={24} color="orange" />
@@ -155,7 +176,7 @@ export function MonsterArena({
                 <Group justify="center" gap="md">
                   <Button
                     variant="gradient"
-                    gradient={{ from: 'red', to: 'orange', deg: 45 }}
+                    gradient={{ from: "red", to: "orange", deg: 45 }}
                     leftSection={<IconPlayerPlay size={18} />}
                     onClick={onContinueFight}
                     loading={isLoading}
@@ -185,7 +206,9 @@ export function MonsterArena({
             <Stack gap="md">
               <Group gap="xs">
                 <IconTarget size={20} />
-                <Text size="lg" fw={700} c="white">Choose Your Opponent</Text>
+                <Text size="lg" fw={700} c="white">
+                  Choose Your Opponent
+                </Text>
               </Group>
 
               <SimpleGrid cols={2} spacing="md">
@@ -194,17 +217,23 @@ export function MonsterArena({
                     {(styles) => (
                       <Paper
                         p="lg"
-                        bg={selectedEnemyId === enemy.id ? 'dark.5' : 'dark.6'}
+                        bg={selectedEnemyId === enemy.id ? "dark.5" : "dark.6"}
                         radius="md"
                         withBorder={selectedEnemyId === enemy.id}
                         style={{
                           ...styles,
-                          cursor: canStartFight ? 'pointer' : 'not-allowed',
-                          borderColor: selectedEnemyId === enemy.id ? `var(--mantine-color-${enemy.color}-6)` : undefined,
+                          cursor: canStartFight ? "pointer" : "not-allowed",
+                          borderColor:
+                            selectedEnemyId === enemy.id
+                              ? `var(--mantine-color-${enemy.color}-6)`
+                              : undefined,
                           opacity: canStartFight ? 1 : 0.6,
-                          transform: selectedEnemyId === enemy.id ? 'scale(1.02)' : 'scale(1)',
-                          transition: 'all 0.2s ease',
-                          boxShadow: selectedEnemyId === enemy.id ? `0 0 20px var(--mantine-color-${enemy.color}-9)` : 'none'
+                          transform: selectedEnemyId === enemy.id ? "scale(1.02)" : "scale(1)",
+                          transition: "all 0.2s ease",
+                          boxShadow:
+                            selectedEnemyId === enemy.id
+                              ? `0 0 20px var(--mantine-color-${enemy.color}-9)`
+                              : "none",
                         }}
                         onClick={() => canStartFight && setSelectedEnemyId(enemy.id)}
                       >
@@ -213,8 +242,11 @@ export function MonsterArena({
                             <Text
                               size="3xl"
                               style={{
-                                filter: selectedEnemyId === enemy.id ? 'drop-shadow(0 0 10px gold)' : 'none',
-                                fontSize: '3rem'
+                                filter:
+                                  selectedEnemyId === enemy.id
+                                    ? "drop-shadow(0 0 10px gold)"
+                                    : "none",
+                                fontSize: "3rem",
                               }}
                             >
                               {enemy.icon}
@@ -226,21 +258,23 @@ export function MonsterArena({
                                 right={-5}
                                 style={{
                                   background: `var(--mantine-color-${enemy.color}-6)`,
-                                  borderRadius: '50%',
+                                  borderRadius: "50%",
                                   width: 16,
                                   height: 16,
-                                  border: '3px solid white'
+                                  border: "3px solid white",
                                 }}
                               />
                             )}
                           </Box>
 
                           <Stack align="center" gap="xs">
-                            <Text size="lg" fw={700} c="white">{enemy.name}</Text>
+                            <Text size="lg" fw={700} c="white">
+                              {enemy.name}
+                            </Text>
                             <Badge
                               color={enemy.color}
                               size="md"
-                              variant={selectedEnemyId === enemy.id ? 'filled' : 'light'}
+                              variant={selectedEnemyId === enemy.id ? "filled" : "light"}
                             >
                               {enemy.difficulty}
                             </Badge>
@@ -283,19 +317,29 @@ export function MonsterArena({
               <Stack gap="md">
                 <Group gap="xs">
                   <IconTrophy size={20} />
-                  <Text size="lg" fw={700} c="white">Challenge Level</Text>
+                  <Text size="lg" fw={700} c="white">
+                    Challenge Level
+                  </Text>
                 </Group>
 
                 <Paper p="lg" bg="dark.7" radius="md" withBorder>
                   <Stack gap="md">
                     <Group justify="space-between">
-                      <Text size="md" c="white" fw={600}>Level: {selectedLevel}</Text>
+                      <Text size="md" c="white" fw={600}>
+                        Level: {selectedLevel}
+                      </Text>
                       <Badge variant="light" color="violet" size="md">
-                        {selectedLevel === 1 ? 'Beginner' :
-                         selectedLevel <= 3 ? 'Easy' :
-                         selectedLevel <= 5 ? 'Medium' :
-                         selectedLevel <= 7 ? 'Hard' :
-                         selectedLevel <= 9 ? 'Expert' : 'Master'}
+                        {selectedLevel === 1
+                          ? "Beginner"
+                          : selectedLevel <= 3
+                            ? "Easy"
+                            : selectedLevel <= 5
+                              ? "Medium"
+                              : selectedLevel <= 7
+                                ? "Hard"
+                                : selectedLevel <= 9
+                                  ? "Expert"
+                                  : "Master"}
                       </Badge>
                     </Group>
 
@@ -306,11 +350,11 @@ export function MonsterArena({
                       max={10}
                       step={1}
                       marks={[
-                        { value: 1, label: '1' },
-                        { value: 3, label: '3' },
-                        { value: 5, label: '5' },
-                        { value: 7, label: '7' },
-                        { value: 10, label: '10' }
+                        { value: 1, label: "1" },
+                        { value: 3, label: "3" },
+                        { value: 5, label: "5" },
+                        { value: 7, label: "7" },
+                        { value: 10, label: "10" },
                       ]}
                       disabled={!canStartFight}
                       color="violet"
@@ -340,33 +384,49 @@ export function MonsterArena({
                         <Group justify="space-between">
                           <Group gap="xs">
                             <IconSword size={16} color="red" />
-                            <Text size="sm" c="white">Combat Power</Text>
+                            <Text size="sm" c="white">
+                              Combat Power
+                            </Text>
                           </Group>
-                          <Text size="sm" fw={700} c="red">{enemyStats.scaledStats.combat}</Text>
+                          <Text size="sm" fw={700} c="red">
+                            {enemyStats.scaledStats.combat}
+                          </Text>
                         </Group>
 
                         <Group justify="space-between">
                           <Group gap="xs">
                             <IconShield size={16} color="blue" />
-                            <Text size="sm" c="white">Defense Rating</Text>
+                            <Text size="sm" c="white">
+                              Defense Rating
+                            </Text>
                           </Group>
-                          <Text size="sm" fw={700} c="blue">{enemyStats.scaledStats.defense}</Text>
+                          <Text size="sm" fw={700} c="blue">
+                            {enemyStats.scaledStats.defense}
+                          </Text>
                         </Group>
 
                         <Group justify="space-between">
                           <Group gap="xs">
                             <IconClover size={16} color="green" />
-                            <Text size="sm" c="white">Luck Factor</Text>
+                            <Text size="sm" c="white">
+                              Luck Factor
+                            </Text>
                           </Group>
-                          <Text size="sm" fw={700} c="green">{enemyStats.scaledStats.luck}</Text>
+                          <Text size="sm" fw={700} c="green">
+                            {enemyStats.scaledStats.luck}
+                          </Text>
                         </Group>
 
                         <Group justify="space-between">
                           <Group gap="xs">
                             <IconHeart size={16} color="pink" />
-                            <Text size="sm" c="white">Health Points</Text>
+                            <Text size="sm" c="white">
+                              Health Points
+                            </Text>
                           </Group>
-                          <Text size="sm" fw={700} c="pink">{enemyStats.scaledStats.health}</Text>
+                          <Text size="sm" fw={700} c="pink">
+                            {enemyStats.scaledStats.health}
+                          </Text>
                         </Group>
                       </Stack>
                     </Grid.Col>
@@ -376,15 +436,21 @@ export function MonsterArena({
                         <Group justify="space-between">
                           <Group gap="xs">
                             <IconBolt size={16} color="yellow" />
-                            <Text size="sm" c="white">XP Reward</Text>
+                            <Text size="sm" c="white">
+                              XP Reward
+                            </Text>
                           </Group>
-                          <Text size="sm" fw={700} c="yellow">{enemyRewards.xp}</Text>
+                          <Text size="sm" fw={700} c="yellow">
+                            {enemyRewards.xp}
+                          </Text>
                         </Group>
 
                         <Group justify="space-between">
                           <Group gap="xs">
                             <IconTrophy size={16} color="orange" />
-                            <Text size="sm" c="white">Drop Rate</Text>
+                            <Text size="sm" c="white">
+                              Drop Rate
+                            </Text>
                           </Group>
                           <Text size="sm" fw={700} c="orange">
                             {Math.round(enemyRewards.equipmentDropChance * 100)}%
@@ -394,7 +460,9 @@ export function MonsterArena({
                         <Group justify="space-between">
                           <Group gap="xs">
                             <IconSparkles size={16} color="violet" />
-                            <Text size="sm" c="white">Rare Drop</Text>
+                            <Text size="sm" c="white">
+                              Rare Drop
+                            </Text>
                           </Group>
                           <Text size="sm" fw={700} c="violet">
                             {Math.round(enemyRewards.rareDropChance * 100)}%
@@ -424,25 +492,35 @@ export function MonsterArena({
                       <Avatar size={40} color="violet" variant="light">
                         <IconSwords size={20} />
                       </Avatar>
-                      <Text size="xs" c="white" fw={600}>{character.className}</Text>
-                      <Text size="xs" c="dimmed">Lv.{character.level}</Text>
+                      <Text size="xs" c="white" fw={600}>
+                        {character.className}
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        Lv.{character.level}
+                      </Text>
                     </Stack>
 
-                    <Text size="2xl" c="red" fw={900}>VS</Text>
+                    <Text size="2xl" c="red" fw={900}>
+                      VS
+                    </Text>
 
                     <Stack align="center" gap="xs">
                       <Avatar size={40} color={selectedEnemy.color} variant="light">
                         <Text size="lg">{selectedEnemy.icon}</Text>
                       </Avatar>
-                      <Text size="xs" c="white" fw={600}>{selectedEnemy.name}</Text>
-                      <Text size="xs" c="dimmed">Lv.{selectedLevel}</Text>
+                      <Text size="xs" c="white" fw={600}>
+                        {selectedEnemy.name}
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        Lv.{selectedLevel}
+                      </Text>
                     </Stack>
                   </Group>
                 )}
 
                 <Button
                   variant="gradient"
-                  gradient={{ from: 'violet', to: 'blue', deg: 45 }}
+                  gradient={{ from: "violet", to: "blue", deg: 45 }}
                   size="xl"
                   leftSection={<IconSword size={24} />}
                   onClick={handleFightStart}
@@ -451,21 +529,22 @@ export function MonsterArena({
                   fullWidth
                   style={{
                     height: 64,
-                    fontSize: '18px',
-                    fontWeight: 700
+                    fontSize: "18px",
+                    fontWeight: 700,
                   }}
                 >
                   {selectedEnemyId !== null
                     ? `⚔️ BATTLE ${ENEMY_CONFIGS[selectedEnemyId].name.toUpperCase()} (LV.${selectedLevel}) ⚔️`
-                    : "🎯 SELECT A MONSTER TO FIGHT"
-                  }
+                    : "🎯 SELECT A MONSTER TO FIGHT"}
                 </Button>
 
                 {!character.isAlive && (
                   <Paper p="md" bg="red.9" radius="md">
                     <Group justify="center" gap="xs">
                       <IconSkull size={16} />
-                      <Text size="sm" c="white">Your character must be alive to fight</Text>
+                      <Text size="sm" c="white">
+                        Your character must be alive to fight
+                      </Text>
                     </Group>
                   </Paper>
                 )}
@@ -475,5 +554,5 @@ export function MonsterArena({
         )}
       </Stack>
     </Card>
-  )
+  );
 }

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.19;
 
-import {BitPackedCharacterLib} from "../BitPackedCharacterLib.sol";
-import {SafePacker} from "../SafePacker.sol";
-import {CombatMath} from "../CombatMath.sol";
-import {CombatState, CombatResult} from "../CombatStructs.sol";
-import {GameError} from "../Errors.sol";
+import { BitPackedCharacterLib } from "../BitPackedCharacterLib.sol";
+import { SafePacker } from "../SafePacker.sol";
+import { CombatMath } from "../CombatMath.sol";
+import { CombatState, CombatResult } from "../CombatStructs.sol";
+import { GameError } from "../Errors.sol";
 
 /**
  * @title CombatEngineLib
@@ -47,15 +47,20 @@ library CombatEngineLib {
         if (enemyBaseCombat == 0) revert GameError(1601);
 
         CombatSession memory session = _initializeCombat(
-            player, enemyId, enemyLevel, packedCharacters, combatStates,
-            enemyCombat, enemyEndurance, enemyDefense, enemyLuck
+            player,
+            enemyId,
+            enemyLevel,
+            packedCharacters,
+            combatStates,
+            enemyCombat,
+            enemyEndurance,
+            enemyDefense,
+            enemyLuck
         );
 
         _executeCombatRounds(session, allowExtraRound);
-        
-        combatResult = _finalizeCombat(
-            session, player, enemyId, enemyLevel, packedCharacters, combatStates
-        );
+
+        combatResult = _finalizeCombat(session, player, enemyId, enemyLevel, packedCharacters, combatStates);
 
         return combatResult;
     }
@@ -106,27 +111,38 @@ library CombatEngineLib {
         uint256 enemyLuck
     ) internal returns (CombatSession memory session) {
         BitPackedCharacterLib.BitPackedCharacter storage packedChar = packedCharacters[player];
-        
+
         session.coreStats = packedChar.coreStats;
         session.progressionStats = packedChar.progressionStats;
         session.coreStats = SafePacker.writeClamped(
-            session.coreStats, BitPackedCharacterLib.IN_COMBAT_SHIFT, 
-            BitPackedCharacterLib.IN_COMBAT_MASK, 1
+            session.coreStats,
+            BitPackedCharacterLib.IN_COMBAT_SHIFT,
+            BitPackedCharacterLib.IN_COMBAT_MASK,
+            1
         );
 
         session.timestamp = block.timestamp;
         session.lastEnduranceChanged = false;
 
-        session.playerCombat = ((session.coreStats >> BitPackedCharacterLib.COMBAT_SKILL_SHIFT) & BitPackedCharacterLib.COMBAT_SKILL_MASK)
-            + ((session.coreStats >> BitPackedCharacterLib.EQUIPPED_COMBAT_SHIFT) & BitPackedCharacterLib.EQUIPPED_COMBAT_MASK);
-        session.defense = ((session.coreStats >> BitPackedCharacterLib.DEFENSE_SHIFT) & BitPackedCharacterLib.DEFENSE_MASK)
-            + ((session.coreStats >> BitPackedCharacterLib.EQUIPPED_DEFENSE_SHIFT) & BitPackedCharacterLib.EQUIPPED_DEFENSE_MASK);
-        session.playerLuck = ((session.coreStats >> BitPackedCharacterLib.LUCK_SHIFT) & BitPackedCharacterLib.LUCK_MASK)
-            + ((session.coreStats >> BitPackedCharacterLib.EQUIPPED_LUCK_SHIFT) & BitPackedCharacterLib.EQUIPPED_LUCK_MASK);
+        session.playerCombat =
+            ((session.coreStats >> BitPackedCharacterLib.COMBAT_SKILL_SHIFT) &
+                BitPackedCharacterLib.COMBAT_SKILL_MASK) +
+            ((session.coreStats >> BitPackedCharacterLib.EQUIPPED_COMBAT_SHIFT) &
+                BitPackedCharacterLib.EQUIPPED_COMBAT_MASK);
+        session.defense =
+            ((session.coreStats >> BitPackedCharacterLib.DEFENSE_SHIFT) & BitPackedCharacterLib.DEFENSE_MASK) +
+            ((session.coreStats >> BitPackedCharacterLib.EQUIPPED_DEFENSE_SHIFT) &
+                BitPackedCharacterLib.EQUIPPED_DEFENSE_MASK);
+        session.playerLuck =
+            ((session.coreStats >> BitPackedCharacterLib.LUCK_SHIFT) & BitPackedCharacterLib.LUCK_MASK) +
+            ((session.coreStats >> BitPackedCharacterLib.EQUIPPED_LUCK_SHIFT) &
+                BitPackedCharacterLib.EQUIPPED_LUCK_MASK);
 
-        session.currentEndurance = ((session.coreStats >> BitPackedCharacterLib.CURRENT_ENDURANCE_SHIFT) & 
-            BitPackedCharacterLib.CURRENT_ENDURANCE_MASK) + ((session.coreStats >> 
-            BitPackedCharacterLib.EQUIPPED_ENDURANCE_SHIFT) & BitPackedCharacterLib.EQUIPPED_ENDURANCE_MASK);
+        session.currentEndurance =
+            ((session.coreStats >> BitPackedCharacterLib.CURRENT_ENDURANCE_SHIFT) &
+                BitPackedCharacterLib.CURRENT_ENDURANCE_MASK) +
+            ((session.coreStats >> BitPackedCharacterLib.EQUIPPED_ENDURANCE_SHIFT) &
+                BitPackedCharacterLib.EQUIPPED_ENDURANCE_MASK);
         session.playerStartEndurance = session.currentEndurance;
 
         session.enemyCombat = enemyCombat;
@@ -177,16 +193,20 @@ library CombatEngineLib {
     /// @param allowExtraRound Whether to allow an extra round beyond the normal limit
     function _executeCombatRounds(CombatSession memory session, bool allowExtraRound) internal pure {
         uint256 round = 1;
-        
+
         while (session.currentEndurance > 0 && session.enemyCurrentEndurance > 0 && round < 4) {
             _executeRound(session, round);
             session.roundsElapsed = round;
-            unchecked { ++round; }
+            unchecked {
+                ++round;
+            }
         }
 
         if (allowExtraRound && session.currentEndurance > 0 && session.enemyCurrentEndurance > 0) {
             _executeRound(session, session.roundsElapsed + 1);
-            unchecked { ++session.roundsElapsed; }
+            unchecked {
+                ++session.roundsElapsed;
+            }
         }
     }
 
@@ -194,23 +214,34 @@ library CombatEngineLib {
     /// @param session The combat session containing round data
     /// @param roundNumber The current round number
     function _executeRound(CombatSession memory session, uint256 roundNumber) internal pure {
-        (uint256 newPlayerEndurance, uint256 newEnemyEndurance, uint256 playerDamage, 
-         uint256 enemyDamage, , bool playerCritical, bool enemyCritical) = 
-            CombatMath.performRound(
-                session.playerCombat, session.enemyCombat, session.enemyDefense, session.defense,
-                session.currentEndurance, session.enemyCurrentEndurance,
-                session.playerLuck, session.enemyLuck
+        (
+            uint256 newPlayerEndurance,
+            uint256 newEnemyEndurance,
+            uint256 playerDamage,
+            uint256 enemyDamage,
+            ,
+            bool playerCritical,
+            bool enemyCritical
+        ) = CombatMath.performRound(
+                session.playerCombat,
+                session.enemyCombat,
+                session.enemyDefense,
+                session.defense,
+                session.currentEndurance,
+                session.enemyCurrentEndurance,
+                session.playerLuck,
+                session.enemyLuck
             );
 
         session.currentEndurance = newPlayerEndurance;
         session.enemyCurrentEndurance = newEnemyEndurance;
-        
+
         session.roundNumbers[session.roundIndex] = roundNumber;
         session.playerDamages[session.roundIndex] = playerDamage;
         session.enemyDamages[session.roundIndex] = enemyDamage;
         session.playerCriticals[session.roundIndex] = playerCritical;
         session.enemyCriticals[session.roundIndex] = enemyCritical;
-        
+
         ++session.roundIndex;
         session.lastEnduranceChanged = true;
     }
@@ -234,8 +265,12 @@ library CombatEngineLib {
         session.coreStats = BitPackedCharacterLib.setCurrentEnduranceSafe(session.coreStats, session.currentEndurance);
 
         int256 combatIndex = CombatMath.calculateCombatIndex(
-            session.playerCombat, session.defense, session.playerLuck,
-            session.enemyCombat, session.enemyDefense, session.enemyLuck
+            session.playerCombat,
+            session.defense,
+            session.playerLuck,
+            session.enemyCombat,
+            session.enemyDefense,
+            session.enemyLuck
         );
         uint256 difficultyMultiplier = CombatMath.calculateDifficultyMultiplier(combatIndex);
 
@@ -274,13 +309,17 @@ library CombatEngineLib {
                 difficultyMultiplier: difficultyMultiplier
             });
             packedCharacters[player].coreStats = SafePacker.writeClamped(
-                session.coreStats, BitPackedCharacterLib.IN_COMBAT_SHIFT, 
-                BitPackedCharacterLib.IN_COMBAT_MASK, 1
+                session.coreStats,
+                BitPackedCharacterLib.IN_COMBAT_SHIFT,
+                BitPackedCharacterLib.IN_COMBAT_MASK,
+                1
             );
         } else {
             session.coreStats = SafePacker.writeClamped(
-                session.coreStats, BitPackedCharacterLib.IN_COMBAT_SHIFT, 
-                BitPackedCharacterLib.IN_COMBAT_MASK, 0
+                session.coreStats,
+                BitPackedCharacterLib.IN_COMBAT_SHIFT,
+                BitPackedCharacterLib.IN_COMBAT_MASK,
+                0
             );
             delete combatStates[player];
         }
@@ -299,7 +338,7 @@ library CombatEngineLib {
         uint256 difficultyMultiplier
     ) internal pure returns (CombatResult memory combatResult) {
         bool victory = session.currentEndurance > 0 && session.enemyCurrentEndurance == 0;
-        
+
         combatResult.victory = victory;
         combatResult.unresolved = (session.currentEndurance > 0 && session.enemyCurrentEndurance > 0);
         combatResult.coreStats = session.coreStats;
@@ -320,7 +359,7 @@ library CombatEngineLib {
         combatResult.enemyDamages = new uint256[](session.roundIndex);
         combatResult.playerCriticals = new bool[](session.roundIndex);
         combatResult.enemyCriticals = new bool[](session.roundIndex);
-        
+
         for (uint256 i = 0; i < session.roundIndex; ++i) {
             combatResult.roundNumbers[i] = session.roundNumbers[i];
             combatResult.playerDamages[i] = session.playerDamages[i];

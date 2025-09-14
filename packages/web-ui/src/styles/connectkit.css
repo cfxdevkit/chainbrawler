@@ -2,7 +2,7 @@
 
 /* Override ConnectKit theme variables */
 :root {
-  --ck-font-family: 'Inter', system-ui, sans-serif;
+  --ck-font-family: "Inter", system-ui, sans-serif;
   --ck-font-weight: 500;
   --ck-border-radius: 12px;
   --ck-overlay-backdrop-filter: blur(10px);
@@ -61,7 +61,9 @@
   background: rgba(30, 41, 59, 0.95) !important;
   border: 1px solid rgba(59, 130, 246, 0.2) !important;
   border-radius: 16px !important;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
 }
 
 /* Wallet list styling */
@@ -105,7 +107,7 @@
     margin: 16px !important;
     max-width: calc(100vw - 32px) !important;
   }
-  
+
   [data-connectkit-wallet-list] button {
     padding: 12px !important;
     font-size: 14px !important;

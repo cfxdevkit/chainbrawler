@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect } from "react";
-import { CharacterData, MenuState, OperationState, CHARACTER_CLASSES } from "@chainbrawler/core";
+import {
+  CHARACTER_CLASSES,
+  type CharacterData,
+  type MenuState,
+  type OperationState,
+} from "@chainbrawler/core";
+import React, { useEffect, useState } from "react";
 import { EnemySelection } from "../primitives/EnemySelection";
 import { FightSummary } from "../primitives/FightSummary";
 import { OperationStatus } from "../primitives/OperationStatus";
@@ -32,90 +37,101 @@ interface CharacterDisplayProps {
   onFleeRound: () => Promise<void>;
 }
 
-export function CharacterDisplay({ 
-  character, 
-  menu, 
-  operation, 
-  onCreateCharacter, 
-  onHealCharacter, 
+export function CharacterDisplay({
+  character,
+  menu,
+  operation,
+  onCreateCharacter,
+  onHealCharacter,
   onResurrectCharacter,
   onFightEnemy,
   onContinueFight,
-  onFleeRound
+  onFleeRound,
 }: CharacterDisplayProps) {
   const [showEnemySelection, setShowEnemySelection] = useState(false);
   const [fightSummary, setFightSummary] = useState<any>(null);
   const [showFightSummary, setShowFightSummary] = useState(false);
   const [operationStatus, setOperationStatus] = useState<any>(null);
   const [isOperationInProgress, setIsOperationInProgress] = useState(false);
-  
+
   // Determine if a write operation is in progress
-  const isWriteOperationInProgress = isOperationInProgress || (operation?.isActive && operation?.isWriteOperation);
+  const isWriteOperationInProgress =
+    isOperationInProgress || (operation?.isActive && operation?.isWriteOperation);
 
   // Listen for transaction status events
   useEffect(() => {
     const handleTransactionStatus = (event: CustomEvent) => {
       setOperationStatus(event.detail);
       // Only consider write operations for UI blocking
-      const isWriteOp = event.detail.type && [
-        'createCharacter',
-        'healCharacter', 
-        'resurrectCharacter',
-        'fightEnemy',
-        'continueFight',
-        'fleeRound',
-        'claimPrize'
-      ].includes(event.detail.type);
-      
-      setIsOperationInProgress(isWriteOp && event.detail.status !== 'completed' && event.detail.status !== 'error' && event.detail.status !== 'failed');
-      
+      const isWriteOp =
+        event.detail.type &&
+        [
+          "createCharacter",
+          "healCharacter",
+          "resurrectCharacter",
+          "fightEnemy",
+          "continueFight",
+          "fleeRound",
+          "claimPrize",
+        ].includes(event.detail.type);
+
+      setIsOperationInProgress(
+        isWriteOp &&
+          event.detail.status !== "completed" &&
+          event.detail.status !== "error" &&
+          event.detail.status !== "failed"
+      );
+
       // Auto-hide operation status after completion
-      if (event.detail.status === 'completed') {
+      if (event.detail.status === "completed") {
         setTimeout(() => {
           setOperationStatus(null);
           setIsOperationInProgress(false);
         }, 2000);
       }
-      
+
       // Keep error states visible until dismissed
-      if (event.detail.status === 'error' || event.detail.status === 'failed') {
+      if (event.detail.status === "error" || event.detail.status === "failed") {
         setIsOperationInProgress(true);
       }
     };
 
     const handleFightSummary = (event: CustomEvent) => {
-      console.log('Fight summary event received:', event.detail);
+      console.log("Fight summary event received:", event.detail);
       setFightSummary(event.detail);
       setShowFightSummary(true);
     };
 
     const handleCharacterDataRefresh = (event: CustomEvent) => {
-      console.log('Character data refresh event received:', event.detail);
+      console.log("Character data refresh event received:", event.detail);
       // Force a re-render by updating a dummy state
       setOperationStatus((prev: any) => ({ ...prev, refreshTrigger: Date.now() }));
     };
 
     const handleContinueFightComplete = (event: CustomEvent) => {
-      console.log('Continue fight operation completed:', event.detail);
-      if (event.detail?.type === 'continueFight' && event.detail?.status === 'completed') {
+      console.log("Continue fight operation completed:", event.detail);
+      if (event.detail?.type === "continueFight" && event.detail?.status === "completed") {
         // Close the fight summary when continue fight completes successfully
         setShowFightSummary(false);
         setFightSummary(null);
-        console.log('Fight summary closed after continue fight completion');
+        console.log("Fight summary closed after continue fight completion");
       }
     };
 
     // Listen for real events
-    window.addEventListener('transactionStatus', handleTransactionStatus as EventListener);
-    window.addEventListener('fightSummary', handleFightSummary as EventListener);
-    window.addEventListener('characterDataRefresh', handleCharacterDataRefresh as EventListener);
-    window.addEventListener('transactionStatus', handleContinueFightComplete as EventListener);
-    
+    window.addEventListener("transactionStatus", handleTransactionStatus as EventListener);
+    window.addEventListener("fightSummary", handleFightSummary as EventListener);
+    window.addEventListener("characterDataRefresh", handleCharacterDataRefresh as EventListener);
+    window.addEventListener("transactionStatus", handleContinueFightComplete as EventListener);
+
     return () => {
-      window.removeEventListener('transactionStatus', handleTransactionStatus as EventListener);
-      window.removeEventListener('fightSummary', handleFightSummary as EventListener);
-      window.removeEventListener('characterDataRefresh', handleCharacterDataRefresh as EventListener);
-      window.removeEventListener('transactionStatus', handleContinueFightComplete as EventListener);
+      window.removeEventListener("transactionStatus", handleTransactionStatus as EventListener);
+      window.removeEventListener("fightSummary", handleFightSummary as EventListener);
+      window.removeEventListener(
+        "characterDataRefresh",
+        handleCharacterDataRefresh as EventListener
+      );
+      window.removeEventListener("transactionStatus", handleContinueFightComplete as EventListener);
     };
   }, []);
 
@@ -177,7 +193,7 @@ export function CharacterDisplay({
   return (
     <div style={{ border: "1px solid #ddd", padding: "1rem", borderRadius: "8px" }}>
       <h3>Character</h3>
-      
+
       {!character?.exists ? (
         <div>
           <p>No character created yet.</p>
@@ -210,18 +226,42 @@ export function CharacterDisplay({
         </div>
       ) : (
         <div>
-          <div style={{ background: "#f5f5f5", padding: "1rem", borderRadius: "4px", marginBottom: "1rem" }}>
+          <div
+            style={{
+              background: "#f5f5f5",
+              padding: "1rem",
+              borderRadius: "4px",
+              marginBottom: "1rem",
+            }}
+          >
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
-              <div><strong>Class:</strong> {character.className || "Unknown"}</div>
-              <div><strong>Level:</strong> {character.level || 0}</div>
-              <div><strong>Experience:</strong> {character.experience || 0}</div>
-              <div><strong>Status:</strong> {character.isAlive ? "Alive" : "Dead"}</div>
-              <div><strong>Health:</strong> {character.endurance?.current || 0} / {character.endurance?.max || 0}</div>
-              <div><strong>Combat:</strong> {character.stats?.combat || 0}</div>
-              <div><strong>Defense:</strong> {character.stats?.defense || 0}</div>
-              <div><strong>Luck:</strong> {character.stats?.luck || 0}</div>
+              <div>
+                <strong>Class:</strong> {character.className || "Unknown"}
+              </div>
+              <div>
+                <strong>Level:</strong> {character.level || 0}
+              </div>
+              <div>
+                <strong>Experience:</strong> {character.experience || 0}
+              </div>
+              <div>
+                <strong>Status:</strong> {character.isAlive ? "Alive" : "Dead"}
+              </div>
+              <div>
+                <strong>Health:</strong> {character.endurance?.current || 0} /{" "}
+                {character.endurance?.max || 0}
+              </div>
+              <div>
+                <strong>Combat:</strong> {character.stats?.combat || 0}
+              </div>
+              <div>
+                <strong>Defense:</strong> {character.stats?.defense || 0}
+              </div>
+              <div>
+                <strong>Luck:</strong> {character.stats?.luck || 0}
+              </div>
             </div>
-            
+
             {character.equipment && character.equipment.length > 0 && (
               <div style={{ marginTop: "1rem" }}>
                 <strong>Equipment:</strong>
@@ -254,7 +294,7 @@ export function CharacterDisplay({
                 Heal Character
               </button>
             )}
-            
+
             {menu?.canResurrect && !(operation?.isActive && operation?.isWriteOperation) && (
               <button
                 onClick={handleResurrectCharacter}
@@ -330,35 +370,46 @@ export function CharacterDisplay({
 
           {/* Show disabled actions with reasons */}
           {menu?.disabledActions && menu.disabledActions.length > 0 && (
-            <div style={{ 
-              marginTop: "1rem", 
-              padding: "1rem", 
-              backgroundColor: "#2a2a2a", 
-              border: "1px solid #444",
-              borderRadius: "6px" 
-            }}>
-              <h4 style={{ color: "#ccc", marginTop: 0, marginBottom: "0.5rem" }}>Unavailable Actions</h4>
-              {menu.disabledActions.map(action => (
-                <div key={action} style={{ 
-                  display: "flex", 
-                  justifyContent: "space-between", 
-                  alignItems: "center",
-                  padding: "0.25rem 0", 
-                  borderBottom: "1px solid #444" 
-                }}>
-                  <span style={{ 
-                    color: "#aaa", 
-                    textTransform: "capitalize",
-                    fontWeight: "500" 
-                  }}>
-                    {action.replace(/([A-Z])/g, ' $1').trim()}
+            <div
+              style={{
+                marginTop: "1rem",
+                padding: "1rem",
+                backgroundColor: "#2a2a2a",
+                border: "1px solid #444",
+                borderRadius: "6px",
+              }}
+            >
+              <h4 style={{ color: "#ccc", marginTop: 0, marginBottom: "0.5rem" }}>
+                Unavailable Actions
+              </h4>
+              {menu.disabledActions.map((action) => (
+                <div
+                  key={action}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "0.25rem 0",
+                    borderBottom: "1px solid #444",
+                  }}
+                >
+                  <span
+                    style={{
+                      color: "#aaa",
+                      textTransform: "capitalize",
+                      fontWeight: "500",
+                    }}
+                  >
+                    {action.replace(/([A-Z])/g, " $1").trim()}
                   </span>
-                  <span style={{ 
-                    color: "#f44336", 
-                    fontStyle: "italic",
-                    fontSize: "0.9rem" 
-                  }}>
-                    {menu.disabledReasons?.[action] || 'Not available'}
+                  <span
+                    style={{
+                      color: "#f44336",
+                      fontStyle: "italic",
+                      fontSize: "0.9rem",
+                    }}
+                  >
+                    {menu.disabledReasons?.[action] || "Not available"}
                   </span>
                 </div>
               ))}

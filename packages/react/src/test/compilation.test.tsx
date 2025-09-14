@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from "vitest";
 
 // Test that the React module compiles correctly
-describe('React Module Compilation', () => {
-  it('should compile TypeScript without errors', () => {
+describe("React Module Compilation", () => {
+  it("should compile TypeScript without errors", () => {
     // Test TypeScript compilation with various types
     interface TestConfig {
       address: string;
@@ -12,18 +12,18 @@ describe('React Module Compilation', () => {
     }
 
     const config: TestConfig = {
-      address: '0x1234567890abcdef',
-      chain: { id: 2030, name: 'ChainBrawler' },
+      address: "0x1234567890abcdef",
+      chain: { id: 2030, name: "ChainBrawler" },
       publicClient: null,
       walletClient: null,
     };
 
-    expect(config.address).toBe('0x1234567890abcdef');
+    expect(config.address).toBe("0x1234567890abcdef");
     expect(config.chain.id).toBe(2030);
-    expect(config.chain.name).toBe('ChainBrawler');
+    expect(config.chain.name).toBe("ChainBrawler");
   });
 
-  it('should handle React component types', () => {
+  it("should handle React component types", () => {
     // Test React component type definitions
     interface ComponentProps {
       children?: React.ReactNode;
@@ -39,10 +39,10 @@ describe('React Module Compilation', () => {
       );
     };
 
-    expect(typeof TestComponent).toBe('function');
+    expect(typeof TestComponent).toBe("function");
   });
 
-  it('should handle hook types', () => {
+  it("should handle hook types", () => {
     // Test React hook type definitions
     interface UseHookResult {
       data: any;
@@ -63,10 +63,10 @@ describe('React Module Compilation', () => {
     const result = useTestHook();
     expect(result.loading).toBe(false);
     expect(result.error).toBeNull();
-    expect(typeof result.refetch).toBe('function');
+    expect(typeof result.refetch).toBe("function");
   });
 
-  it('should handle context types', () => {
+  it("should handle context types", () => {
     // Test React context type definitions
     interface ContextValue {
       state: any;
@@ -78,7 +78,7 @@ describe('React Module Compilation', () => {
       return {
         state: { character: null, menu: null },
         actions: { createCharacter: () => {}, loadPools: () => {} },
-        config: { address: '0x123', chain: { id: 2030 } },
+        config: { address: "0x123", chain: { id: 2030 } },
       };
     };
 
@@ -88,7 +88,7 @@ describe('React Module Compilation', () => {
     expect(contextValue.config).toBeDefined();
   });
 
-  it('should handle async operations', async () => {
+  it("should handle async operations", async () => {
     // Test async operation types
     const asyncOperation = async (): Promise<{ success: boolean; data: any }> => {
       return new Promise((resolve) => {
@@ -103,7 +103,7 @@ describe('React Module Compilation', () => {
     expect(result.data.id).toBe(1);
   });
 
-  it('should handle error types', () => {
+  it("should handle error types", () => {
     // Test error handling types
     interface ErrorInfo {
       code: string;
@@ -115,8 +115,8 @@ describe('React Module Compilation', () => {
       return { code, message };
     };
 
-    const error = createError('TEST_ERROR', 'Test error message');
-    expect(error.code).toBe('TEST_ERROR');
-    expect(error.message).toBe('Test error message');
+    const error = createError("TEST_ERROR", "Test error message");
+    expect(error.code).toBe("TEST_ERROR");
+    expect(error.message).toBe("Test error message");
   });
 });

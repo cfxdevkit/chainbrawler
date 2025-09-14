@@ -1,19 +1,44 @@
-import { renderHook } from '@testing-library/react';
-import { usePools } from '../../hooks/usePools';
+import { renderHook } from "@testing-library/react";
+import { usePools } from "../../hooks/usePools";
 
 // Mock the context provider
-vi.mock('../../providers/ChainBrawlerProvider', () => ({
+vi.mock("../../providers/ChainBrawlerProvider", () => ({
   useChainBrawlerContext: vi.fn(),
 }));
 
-describe('usePools', () => {
+describe("usePools", () => {
   const mockPools = {
-    prizePool: { value: 1000n, formatted: '1000 ETH', description: 'Prize pool', percentage: 50 },
-    equipmentPool: { value: 500n, formatted: '500 ETH', description: 'Equipment pool', percentage: 25 },
-    gasRefundPool: { value: 200n, formatted: '200 ETH', description: 'Gas refund pool', percentage: 10 },
-    developerPool: { value: 100n, formatted: '100 ETH', description: 'Developer pool', percentage: 5 },
-    nextEpochPool: { value: 300n, formatted: '300 ETH', description: 'Next epoch pool', percentage: 15 },
-    emergencyPool: { value: 50n, formatted: '50 ETH', description: 'Emergency pool', percentage: 2.5 },
+    prizePool: { value: 1000n, formatted: "1000 ETH", description: "Prize pool", percentage: 50 },
+    equipmentPool: {
+      value: 500n,
+      formatted: "500 ETH",
+      description: "Equipment pool",
+      percentage: 25,
+    },
+    gasRefundPool: {
+      value: 200n,
+      formatted: "200 ETH",
+      description: "Gas refund pool",
+      percentage: 10,
+    },
+    developerPool: {
+      value: 100n,
+      formatted: "100 ETH",
+      description: "Developer pool",
+      percentage: 5,
+    },
+    nextEpochPool: {
+      value: 300n,
+      formatted: "300 ETH",
+      description: "Next epoch pool",
+      percentage: 15,
+    },
+    emergencyPool: {
+      value: 50n,
+      formatted: "50 ETH",
+      description: "Emergency pool",
+      percentage: 2.5,
+    },
     totalValue: 2150n,
     lastUpdated: Date.now(),
   };
@@ -38,8 +63,8 @@ describe('usePools', () => {
     vi.clearAllMocks();
   });
 
-  it('should return pools data from context', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should return pools data from context", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       pools: mockPools,
       isLoading: false,
@@ -56,8 +81,8 @@ describe('usePools', () => {
     expect(result.current.refreshPools).toBe(mockActions.refreshPools);
   });
 
-  it('should return loading state from context', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should return loading state from context", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       pools: null,
       isLoading: true,
@@ -74,12 +99,12 @@ describe('usePools', () => {
     expect(result.current.refreshPools).toBe(mockActions.refreshPools);
   });
 
-  it('should return error state from context', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should return error state from context", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       pools: null,
       isLoading: false,
-      error: 'Failed to load pools',
+      error: "Failed to load pools",
       actions: mockActions,
     });
 
@@ -87,13 +112,13 @@ describe('usePools', () => {
 
     expect(result.current.pools).toBe(null);
     expect(result.current.isLoading).toBe(false);
-    expect(result.current.error).toBe('Failed to load pools');
+    expect(result.current.error).toBe("Failed to load pools");
     expect(result.current.loadPools).toBe(mockActions.loadPools);
     expect(result.current.refreshPools).toBe(mockActions.refreshPools);
   });
 
-  it('should provide access to loadPools and refreshPools actions', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should provide access to loadPools and refreshPools actions", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       pools: mockPools,
       isLoading: false,
@@ -103,14 +128,14 @@ describe('usePools', () => {
 
     const { result } = renderHook(() => usePools());
 
-    expect(typeof result.current.loadPools).toBe('function');
-    expect(typeof result.current.refreshPools).toBe('function');
+    expect(typeof result.current.loadPools).toBe("function");
+    expect(typeof result.current.refreshPools).toBe("function");
     expect(result.current.loadPools).toBe(mockActions.loadPools);
     expect(result.current.refreshPools).toBe(mockActions.refreshPools);
   });
 
-  it('should handle null pools data', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should handle null pools data", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       pools: null,
       isLoading: false,
@@ -125,8 +150,8 @@ describe('usePools', () => {
     expect(result.current.error).toBe(null);
   });
 
-  it('should update when context changes', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should update when context changes", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     const mockContextFn = vi.mocked(useChainBrawlerContext);
 
     // Initial state
@@ -156,8 +181,8 @@ describe('usePools', () => {
     expect(result.current.isLoading).toBe(false);
   });
 
-  it('should maintain action references across re-renders', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should maintain action references across re-renders", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       pools: mockPools,
       isLoading: false,
@@ -176,8 +201,8 @@ describe('usePools', () => {
     expect(result.current.refreshPools).toBe(initialRefreshPools);
   });
 
-  it('should handle undefined actions gracefully', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should handle undefined actions gracefully", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       pools: mockPools,
       isLoading: false,

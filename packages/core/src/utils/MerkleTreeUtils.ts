@@ -1,11 +1,11 @@
 /**
  * Merkle Tree utilities for ChainBrawler leaderboard prize distribution
  * Compatible with OpenZeppelin's MerkleProof.sol
- * 
+ *
  * Ported from packages/sdk/src/merkleTree.ts
  */
 
-import { keccak256, hexToBytes, concat } from 'viem';
+import { concat, hexToBytes, keccak256 } from "viem";
 
 export interface LeaderboardEntry {
   epoch: bigint;
@@ -104,7 +104,7 @@ function buildMerkleTree(leaves: `0x${string}`[]): `0x${string}`[][] {
     for (let i = 0; i < currentLevel.length; i += 2) {
       const left = currentLevel[i];
       const right = i + 1 < currentLevel.length ? currentLevel[i + 1] : left;
-      
+
       // Hash the concatenated pair
       const combined = concat([left, right]);
       const hash = keccak256(combined);
@@ -161,7 +161,7 @@ export function verifyMerkleProof(
  * Convert bigint to 32-byte array
  */
 function toBytes32(value: bigint): Uint8Array {
-  const hex = value.toString(16).padStart(64, '0');
+  const hex = value.toString(16).padStart(64, "0");
   return hexToBytes(`0x${hex}` as `0x${string}`);
 }
 
@@ -183,8 +183,7 @@ export function generatePlayerMerkleProof(
 ): { amount: bigint; index: number; proof: `0x${string}`[] } | null {
   // Find the player's entry
   const playerEntry = leaderboardEntries.find(
-    entry => entry.account.toLowerCase() === playerAddress.toLowerCase() && 
-             entry.epoch === epoch
+    (entry) => entry.account.toLowerCase() === playerAddress.toLowerCase() && entry.epoch === epoch
   );
 
   if (!playerEntry) {
@@ -193,10 +192,10 @@ export function generatePlayerMerkleProof(
 
   // Generate the merkle tree
   const merkleTree = generateMerkleTree(leaderboardEntries);
-  
+
   // Get the proof for this player
   const proof = merkleTree.proofs[playerEntry.index];
-  
+
   if (!proof) {
     return null;
   }
@@ -204,7 +203,7 @@ export function generatePlayerMerkleProof(
   return {
     amount: playerEntry.amount,
     index: playerEntry.index,
-    proof
+    proof,
   };
 }
 

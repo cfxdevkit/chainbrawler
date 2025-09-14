@@ -1,103 +1,110 @@
-import React, { useState } from 'react'
-import { useAccount, useConnect, useDisconnect, useSwitchChain } from 'wagmi'
-import { RPCStatus } from './RPCStatus'
-import { 
-  Box, 
-  Container, 
-  Stack, 
-  Text, 
-  Button, 
-  Group, 
-  Badge, 
+import {
   Alert,
-  ThemeIcon,
+  Badge,
+  Box,
+  Button,
   Card,
+  Container,
+  Divider,
+  Group,
+  Stack,
+  Text,
+  ThemeIcon,
   Title,
-  Divider
-} from '@mantine/core'
-import { 
-  IconWallet, 
-  IconNetwork, 
-  IconCheck, 
-  IconX, 
+} from "@mantine/core";
+import {
   IconAlertCircle,
+  IconCheck,
+  IconNetwork,
   IconRocket,
-} from '@tabler/icons-react'
-import { confluxESpaceTestnet, confluxESpace } from 'viem/chains'
-import { confluxESpaceLocal } from '../config/chains'
+  IconWallet,
+  IconX,
+} from "@tabler/icons-react";
+import React, { useState } from "react";
+import { confluxESpace, confluxESpaceTestnet } from "viem/chains";
+import { useAccount, useConnect, useDisconnect, useSwitchChain } from "wagmi";
+import { confluxESpaceLocal } from "../config/chains";
+import { RPCStatus } from "./RPCStatus";
 
 // Supported chains configuration - prioritize local development
 const SUPPORTED_CHAINS = [
-  { 
+  {
     chainId: confluxESpaceLocal.id,
-    name: 'Conflux Local', 
-    color: 'violet',
-    description: 'Local development network (Chain ID: 2030)'
+    name: "Conflux Local",
+    color: "violet",
+    description: "Local development network (Chain ID: 2030)",
   },
-  { 
+  {
     chainId: confluxESpaceTestnet.id,
-    name: 'Conflux Testnet', 
-    color: 'blue',
-    description: 'Test network for development'
+    name: "Conflux Testnet",
+    color: "blue",
+    description: "Test network for development",
   },
-  { 
+  {
     chainId: confluxESpace.id,
-    name: 'Conflux Mainnet', 
-    color: 'green',
-    description: 'Production network'
-  }
-] as const
+    name: "Conflux Mainnet",
+    color: "green",
+    description: "Production network",
+  },
+] as const;
 
 export function WalletConnection() {
-  const { isConnected, address, chain, isConnecting } = useAccount()
-  const { connect, connectors, error: connectError, isPending } = useConnect()
-  const { disconnect } = useDisconnect()
-  const { switchChain, isPending: isSwitching } = useSwitchChain()
-  const [isAddingChain, setIsAddingChain] = useState(false)
-  const [connectionError, setConnectionError] = useState<string | null>(null)
+  const { isConnected, address, chain, isConnecting } = useAccount();
+  const { connect, connectors, error: connectError, isPending } = useConnect();
+  const { disconnect } = useDisconnect();
+  const { switchChain, isPending: isSwitching } = useSwitchChain();
+  const [isAddingChain, setIsAddingChain] = useState(false);
+  const [connectionError, setConnectionError] = useState<string | null>(null);
 
   // Check if current chain is supported
-  const isSupportedChain = chain?.id ? SUPPORTED_CHAINS.some(c => c.chainId === chain.id) : false
-  const currentChainInfo = chain?.id ? SUPPORTED_CHAINS.find(c => c.chainId === chain.id) : null
+  const isSupportedChain = chain?.id ? SUPPORTED_CHAINS.some((c) => c.chainId === chain.id) : false;
+  const currentChainInfo = chain?.id ? SUPPORTED_CHAINS.find((c) => c.chainId === chain.id) : null;
 
   const handleConnect = async (chainId: number) => {
-    setConnectionError(null)
-    setIsAddingChain(true)
-    
+    setConnectionError(null);
+    setIsAddingChain(true);
+
     try {
       // First, try to connect the wallet
       if (connectors[0]) {
-        await connect({ connector: connectors[0] })
+        await connect({ connector: connectors[0] });
       } else {
-        setConnectionError('No wallet connectors available')
-        return
+        setConnectionError("No wallet connectors available");
+        return;
       }
 
       // After connection, try to switch to the selected chain
       try {
-        await switchChain({ chainId })
+        await switchChain({ chainId });
       } catch (switchError) {
-        console.warn(`Failed to switch to chain ${chainId}, user may need to add network manually:`, switchError)
-        setConnectionError(`Failed to switch to network. Please add the network manually in your wallet.`)
+        console.warn(
+          `Failed to switch to chain ${chainId}, user may need to add network manually:`,
+          switchError
+        );
+        setConnectionError(
+          `Failed to switch to network. Please add the network manually in your wallet.`
+        );
       }
     } catch (error) {
-      console.error('Failed to connect wallet:', error)
-      setConnectionError(`Connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      console.error("Failed to connect wallet:", error);
+      setConnectionError(
+        `Connection failed: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
     } finally {
-      setIsAddingChain(false)
+      setIsAddingChain(false);
     }
-  }
+  };
 
   // Clear error when connection succeeds
   React.useEffect(() => {
     if (isConnected) {
-      setConnectionError(null)
+      setConnectionError(null);
     }
-  }, [isConnected])
+  }, [isConnected]);
 
   // Log connection state for debugging
   React.useEffect(() => {
-    console.log('🔗 WalletConnection state:', {
+    console.log("🔗 WalletConnection state:", {
       isConnected,
       address: address ? `${address.slice(0, 6)}...${address.slice(-4)}` : null,
       chain: chain?.name,
@@ -108,21 +115,31 @@ export function WalletConnection() {
       connectionError,
       connectorsAvailable: connectors.length,
       isSupportedChain,
-      currentChainInfo: currentChainInfo?.name
-    })
-  }, [isConnected, address, chain, isConnecting, isPending, connectError, connectionError, connectors.length, isSupportedChain, currentChainInfo])
-
+      currentChainInfo: currentChainInfo?.name,
+    });
+  }, [
+    isConnected,
+    address,
+    chain,
+    isConnecting,
+    isPending,
+    connectError,
+    connectionError,
+    connectors.length,
+    isSupportedChain,
+    currentChainInfo,
+  ]);
 
   if (isConnecting) {
     return (
       <Box
         style={{
-          minHeight: '100vh',
-          background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '2rem'
+          minHeight: "100vh",
+          background: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "2rem",
         }}
       >
         <Container size="sm">
@@ -139,19 +156,19 @@ export function WalletConnection() {
           </Stack>
         </Container>
       </Box>
-    )
+    );
   }
 
   if (!isConnected) {
     return (
       <Box
         style={{
-          minHeight: '100vh',
-          background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '2rem'
+          minHeight: "100vh",
+          background: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "2rem",
         }}
       >
         <Container size="md">
@@ -167,7 +184,7 @@ export function WalletConnection() {
               <Text size="lg" c="dimmed" ta="center" maw={600}>
                 The Ultimate Blockchain RPG Experience. Connect your wallet to start your adventure.
               </Text>
-              <RPCStatus 
+              <RPCStatus
                 confluxApiKey={(import.meta as any).env?.VITE_CONFLUX_API_KEY}
                 alchemyApiKey={(import.meta as any).env?.VITE_ALCHEMY_API_KEY}
                 infuraApiKey={(import.meta as any).env?.VITE_INFURA_API_KEY}
@@ -175,7 +192,12 @@ export function WalletConnection() {
             </Stack>
 
             {/* Network Selection */}
-            <Card withBorder radius="md" p="xl" style={{ backgroundColor: 'rgba(30, 41, 59, 0.8)' }}>
+            <Card
+              withBorder
+              radius="md"
+              p="xl"
+              style={{ backgroundColor: "rgba(30, 41, 59, 0.8)" }}
+            >
               <Stack gap="md">
                 <Text size="lg" fw={600} c="white" ta="center">
                   Choose Your Network
@@ -183,7 +205,13 @@ export function WalletConnection() {
                 <Divider />
                 <Stack gap="md">
                   {SUPPORTED_CHAINS.map((chainInfo) => (
-                    <Card key={chainInfo.chainId} withBorder radius="md" p="md" style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)' }}>
+                    <Card
+                      key={chainInfo.chainId}
+                      withBorder
+                      radius="md"
+                      p="md"
+                      style={{ backgroundColor: "rgba(15, 23, 42, 0.6)" }}
+                    >
                       <Stack gap="sm">
                         <Group justify="space-between" align="center">
                           <Stack gap={4}>
@@ -207,12 +235,12 @@ export function WalletConnection() {
                             loading={isAddingChain || isPending}
                             leftSection={<IconWallet size={20} />}
                             style={{
-                              background: `linear-gradient(135deg, ${chainInfo.color === 'blue' ? '#3b82f6 0%, #1d4ed8 100%' : '#10b981 0%, #059669 100%'})`,
-                              border: 'none',
-                              minWidth: '180px'
+                              background: `linear-gradient(135deg, ${chainInfo.color === "blue" ? "#3b82f6 0%, #1d4ed8 100%" : "#10b981 0%, #059669 100%"})`,
+                              border: "none",
+                              minWidth: "180px",
                             }}
                           >
-                            {isAddingChain ? 'Connecting...' : `Connect to ${chainInfo.name}`}
+                            {isAddingChain ? "Connecting..." : `Connect to ${chainInfo.name}`}
                           </Button>
                         </Group>
                       </Stack>
@@ -225,9 +253,7 @@ export function WalletConnection() {
             {/* Error Display */}
             {(connectError || connectionError) && (
               <Alert color="red" title="Connection Error" icon={<IconAlertCircle size={16} />}>
-                <Text size="sm">
-                  {connectError?.message || connectionError}
-                </Text>
+                <Text size="sm">{connectError?.message || connectionError}</Text>
                 {connectError && (
                   <Text size="xs" c="dimmed" mt="xs">
                     Error code: {connectError.name}
@@ -238,19 +264,19 @@ export function WalletConnection() {
           </Stack>
         </Container>
       </Box>
-    )
+    );
   }
 
   if (!isSupportedChain || !chain) {
     return (
       <Box
         style={{
-          minHeight: '100vh',
-          background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '2rem'
+          minHeight: "100vh",
+          background: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "2rem",
         }}
       >
         <Container size="sm">
@@ -263,11 +289,15 @@ export function WalletConnection() {
             </Title>
             <Text c="dimmed" ta="center" maw={500}>
               {chain ? (
-                <>You're connected to <strong>{chain.name}</strong> (Chain ID: {chain.id}), 
-                but ChainBrawler only supports Conflux networks.</>
+                <>
+                  You're connected to <strong>{chain.name}</strong> (Chain ID: {chain.id}), but
+                  ChainBrawler only supports Conflux networks.
+                </>
               ) : (
-                <>Your wallet is connected but not on a supported network. 
-                Please switch to a Conflux network to continue.</>
+                <>
+                  Your wallet is connected but not on a supported network. Please switch to a
+                  Conflux network to continue.
+                </>
               )}
             </Text>
 
@@ -286,9 +316,9 @@ export function WalletConnection() {
                     loading={isSwitching}
                     leftSection={<IconNetwork size={20} />}
                     style={{
-                      background: `linear-gradient(135deg, ${chainInfo.color === 'blue' ? '#3b82f6 0%, #1d4ed8 100%' : '#10b981 0%, #059669 100%'})`,
-                      border: 'none',
-                      minWidth: '180px'
+                      background: `linear-gradient(135deg, ${chainInfo.color === "blue" ? "#3b82f6 0%, #1d4ed8 100%" : "#10b981 0%, #059669 100%"})`,
+                      border: "none",
+                      minWidth: "180px",
                     }}
                   >
                     Switch to {chainInfo.name}
@@ -308,19 +338,19 @@ export function WalletConnection() {
           </Stack>
         </Container>
       </Box>
-    )
+    );
   }
 
   // Connected and on supported chain - show success
   return (
     <Box
       style={{
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '2rem'
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "2rem",
       }}
     >
       <Container size="sm">
@@ -343,5 +373,5 @@ export function WalletConnection() {
         </Stack>
       </Container>
     </Box>
-  )
+  );
 }

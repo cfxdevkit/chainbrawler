@@ -8,9 +8,8 @@ pragma solidity ^0.8.28;
  * @dev This interface exposes only the functions needed for UI integration
  */
 interface IChainBrawlerUI {
-    
     // ==================== Data Structures
-    
+
     struct CharacterData {
         // Base stats (without equipment)
         uint256 baseLevel;
@@ -18,24 +17,20 @@ interface IChainBrawlerUI {
         uint256 baseMaxEndurance;
         uint256 baseDefense;
         uint256 baseLuck;
-        
         // Equipment bonuses
         uint256 equipmentCombatBonus;
         uint256 equipmentEnduranceBonus;
         uint256 equipmentDefenseBonus;
         uint256 equipmentLuckBonus;
-        
         // Total stats (base + equipment)
         uint256 totalCombat;
         uint256 totalMaxEndurance;
         uint256 totalDefense;
         uint256 totalLuck;
-        
         // Current state
         uint256 currentEndurance;
         bool isAlive;
         bool inCombat;
-        
         // Progression
         uint256 experience;
         uint256 level;
@@ -44,7 +39,7 @@ interface IChainBrawlerUI {
     }
 
     // ==================== Events for UI Updates
-    
+
     /// @notice Emitted when a new character is created
     /// @param player The player address
     /// @param characterClass The character class that was created
@@ -66,7 +61,7 @@ interface IChainBrawlerUI {
     event EquipmentDropped(address indexed player, uint256[4] bonuses);
 
     // ==================== Core Game Functions
-    
+
     /**
      * @notice Create a new character
      * @param characterClass The class ID (0-3)
@@ -101,7 +96,7 @@ interface IChainBrawlerUI {
     function fleeRound() external;
 
     // ==================== UI Data Access
-    
+
     /**
      * Note: legacy, heavy single-item getters (getCharacterData, getCharacterHP,
      * getCharacterLevel, getMinimalCharacter, getCharacterClass, hasCharacter)
@@ -131,17 +126,22 @@ interface IChainBrawlerUI {
      * @return lastUpdated Timestamp of last update
      * @return difficultyMultiplier The difficulty multiplier
      */
-    function getCombatState(address player) external view returns (
-        uint256 enemyId,
-        uint256 enemyLevel,
-        uint256 enemyCurrentEndurance,
-        uint256 playerCurrentEndurance,
-        uint256 roundsElapsed,
-        uint256 playerStartEndurance,
-        uint256 enemyStartEndurance,
-        uint256 lastUpdated,
-        uint256 difficultyMultiplier
-    );
+    function getCombatState(
+        address player
+    )
+        external
+        view
+        returns (
+            uint256 enemyId,
+            uint256 enemyLevel,
+            uint256 enemyCurrentEndurance,
+            uint256 playerCurrentEndurance,
+            uint256 roundsElapsed,
+            uint256 playerStartEndurance,
+            uint256 enemyStartEndurance,
+            uint256 lastUpdated,
+            uint256 difficultyMultiplier
+        );
 
     /**
      * @notice Check if a player has a character
@@ -151,7 +151,6 @@ interface IChainBrawlerUI {
     // hasCharacter / getCharacterClass / getMinimalCharacter are intentionally omitted
     // from the production interface. Use packed getters and decode off-chain or
     // deploy the test-only subclass which re-exposes these helpers.
-
 
     // Note: low-level packed getters and on-chain unpackers are intentionally
     // kept out of the external UI interface to minimize ABI surface. Production
@@ -180,22 +179,27 @@ interface IChainBrawlerUI {
      * @return equippedLuckBonus Luck bonus from equipment
      * @return totalKills Total kills recorded
      */
-    function getCharacter(address player) external view returns (
-        uint256 characterClass,
-        uint256 level,
-        uint256 experience,
-        uint256 currentEndurance,
-        uint256 maxEndurance,
-        uint256 totalCombat,
-        uint256 totalDefense,
-        uint256 totalLuck,
-        bool aliveFlag,
-        uint256 equippedCombatBonus,
-        uint256 equippedEnduranceBonus,
-        uint256 equippedDefenseBonus,
-        uint256 equippedLuckBonus,
-        uint256 totalKills
-    );
+    function getCharacter(
+        address player
+    )
+        external
+        view
+        returns (
+            uint256 characterClass,
+            uint256 level,
+            uint256 experience,
+            uint256 currentEndurance,
+            uint256 maxEndurance,
+            uint256 totalCombat,
+            uint256 totalDefense,
+            uint256 totalLuck,
+            bool aliveFlag,
+            uint256 equippedCombatBonus,
+            uint256 equippedEnduranceBonus,
+            uint256 equippedDefenseBonus,
+            uint256 equippedLuckBonus,
+            uint256 totalKills
+        );
 
     // NOTE: Batch getters were removed from the production UI interface to
     // minimize ABI surface. Use per-player `getPackedCharacter` and decode off-chain.
@@ -214,7 +218,7 @@ interface IChainBrawlerUI {
     // production contracts expose preview helpers like `getScaledEnemyStats`.
 
     // ==================== Constants
-    
+
     /**
      * @notice Get creation fee
      * @return The creation fee in wei

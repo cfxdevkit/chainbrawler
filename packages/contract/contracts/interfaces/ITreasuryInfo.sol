@@ -17,14 +17,17 @@ interface ITreasuryInfo {
      * @return nextEpochPool Current next epoch reserve amount
      * @return emergencyPool Current emergency reserve amount
      */
-    function getAllPoolData() external view returns (
-        uint256 prizePool,
-        uint256 equipmentPool,
-        uint256 gasRefundPool,
-        uint256 developerPool,
-        uint256 nextEpochPool,
-        uint256 emergencyPool
-    );
+    function getAllPoolData()
+        external
+        view
+        returns (
+            uint256 prizePool,
+            uint256 equipmentPool,
+            uint256 gasRefundPool,
+            uint256 developerPool,
+            uint256 nextEpochPool,
+            uint256 emergencyPool
+        );
 
     /**
      * @notice Get individual pool amounts

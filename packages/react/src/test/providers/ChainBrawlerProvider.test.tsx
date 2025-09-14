@@ -1,8 +1,8 @@
-import { render, screen } from '@testing-library/react';
-import { ChainBrawlerProvider, useChainBrawlerContext } from '../../providers/ChainBrawlerProvider';
+import { render, screen } from "@testing-library/react";
+import { ChainBrawlerProvider, useChainBrawlerContext } from "../../providers/ChainBrawlerProvider";
 
 // Mock the useChainBrawler hook
-vi.mock('../../hooks/useChainBrawler', () => ({
+vi.mock("../../hooks/useChainBrawler", () => ({
   useChainBrawler: vi.fn(),
 }));
 
@@ -11,17 +11,17 @@ function TestComponent() {
   const context = useChainBrawlerContext();
   return (
     <div>
-      <div data-testid="character">{context.character ? 'Character exists' : 'No character'}</div>
+      <div data-testid="character">{context.character ? "Character exists" : "No character"}</div>
       <div data-testid="status">{context.statusMessage}</div>
-      <div data-testid="loading">{context.isLoading ? 'Loading' : 'Not loading'}</div>
-      <div data-testid="error">{context.error || 'No error'}</div>
+      <div data-testid="loading">{context.isLoading ? "Loading" : "Not loading"}</div>
+      <div data-testid="error">{context.error || "No error"}</div>
     </div>
   );
 }
 
-describe('ChainBrawlerProvider', () => {
+describe("ChainBrawlerProvider", () => {
   const mockConfig = {
-    address: '0x123',
+    address: "0x123",
     chain: { id: 2030 },
     publicClient: null,
     walletClient: null,
@@ -31,16 +31,16 @@ describe('ChainBrawlerProvider', () => {
     vi.clearAllMocks();
   });
 
-  it('should provide context values to children', async () => {
-    const { useChainBrawler } = await import('../../hooks/useChainBrawler');
+  it("should provide context values to children", async () => {
+    const { useChainBrawler } = await import("../../hooks/useChainBrawler");
     const mockChainBrawlerData = {
-      character: { exists: true, isAlive: true, class: 0, className: 'Warrior' },
+      character: { exists: true, isAlive: true, class: 0, className: "Warrior" },
       menu: { canCreateCharacter: false, canAct: true },
       operation: null,
       pools: null,
       leaderboard: null,
       claims: null,
-      statusMessage: 'Character ready',
+      statusMessage: "Character ready",
       isLoading: false,
       error: null,
       actions: {
@@ -68,14 +68,14 @@ describe('ChainBrawlerProvider', () => {
       </ChainBrawlerProvider>
     );
 
-    expect(screen.getByTestId('character')).toHaveTextContent('Character exists');
-    expect(screen.getByTestId('status')).toHaveTextContent('Character ready');
-    expect(screen.getByTestId('loading')).toHaveTextContent('Not loading');
-    expect(screen.getByTestId('error')).toHaveTextContent('No error');
+    expect(screen.getByTestId("character")).toHaveTextContent("Character exists");
+    expect(screen.getByTestId("status")).toHaveTextContent("Character ready");
+    expect(screen.getByTestId("loading")).toHaveTextContent("Not loading");
+    expect(screen.getByTestId("error")).toHaveTextContent("No error");
   });
 
-  it('should call useChainBrawler with the provided config', async () => {
-    const { useChainBrawler } = await import('../../hooks/useChainBrawler');
+  it("should call useChainBrawler with the provided config", async () => {
+    const { useChainBrawler } = await import("../../hooks/useChainBrawler");
     vi.mocked(useChainBrawler).mockReturnValue({
       character: null,
       menu: null,
@@ -83,7 +83,7 @@ describe('ChainBrawlerProvider', () => {
       pools: null,
       leaderboard: null,
       claims: null,
-      statusMessage: 'Ready',
+      statusMessage: "Ready",
       isLoading: false,
       error: null,
       actions: {},
@@ -98,8 +98,8 @@ describe('ChainBrawlerProvider', () => {
     expect(useChainBrawler).toHaveBeenCalledWith(mockConfig);
   });
 
-  it('should handle loading state', async () => {
-    const { useChainBrawler } = await import('../../hooks/useChainBrawler');
+  it("should handle loading state", async () => {
+    const { useChainBrawler } = await import("../../hooks/useChainBrawler");
     const loadingData = {
       character: null,
       menu: null,
@@ -107,7 +107,7 @@ describe('ChainBrawlerProvider', () => {
       pools: null,
       leaderboard: null,
       claims: null,
-      statusMessage: 'Loading...',
+      statusMessage: "Loading...",
       isLoading: true,
       error: null,
       actions: {},
@@ -121,18 +121,18 @@ describe('ChainBrawlerProvider', () => {
       </ChainBrawlerProvider>
     );
 
-    expect(screen.getByTestId('loading')).toHaveTextContent('Loading');
+    expect(screen.getByTestId("loading")).toHaveTextContent("Loading");
   });
 });
 
-describe('useChainBrawlerContext', () => {
-  it('should throw error when used outside provider', () => {
+describe("useChainBrawlerContext", () => {
+  it("should throw error when used outside provider", () => {
     // Suppress console.error for this test
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
     expect(() => {
       render(<TestComponent />);
-    }).toThrow('useChainBrawlerContext must be used within a ChainBrawlerProvider');
+    }).toThrow("useChainBrawlerContext must be used within a ChainBrawlerProvider");
 
     consoleSpy.mockRestore();
   });

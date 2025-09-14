@@ -1,76 +1,76 @@
-import { Stack, Loader, Text, Progress, Box, Group, ThemeIcon } from '@mantine/core'
-import { IconCheck, IconX, IconClock } from '@tabler/icons-react'
-import { designTokens } from '../../theme'
+import { Box, Group, Loader, Progress, Stack, Text, ThemeIcon } from "@mantine/core";
+import { IconCheck, IconClock, IconX } from "@tabler/icons-react";
+import { designTokens } from "../../theme";
 
 export interface LoadingStateProps {
-  variant?: 'default' | 'compact' | 'inline' | 'progress'
-  message?: string
-  progress?: number
-  status?: 'loading' | 'success' | 'error' | 'idle'
-  size?: 'xs' | 'sm' | 'md' | 'lg'
+  variant?: "default" | "compact" | "inline" | "progress";
+  message?: string;
+  progress?: number;
+  status?: "loading" | "success" | "error" | "idle";
+  size?: "xs" | "sm" | "md" | "lg";
 }
 
 export function LoadingState({
-  variant = 'default',
-  message = 'Loading...',
+  variant = "default",
+  message = "Loading...",
   progress = 0,
-  status = 'loading',
-  size = 'md'
+  status = "loading",
+  size = "md",
 }: LoadingStateProps) {
   const getIcon = () => {
     switch (status) {
-      case 'loading':
-        return <Loader size={size} color="chainbrawler-primary" />
-      case 'success':
+      case "loading":
+        return <Loader size={size} color="chainbrawler-primary" />;
+      case "success":
         return (
-          <ThemeIcon color="green" size={size === 'xs' ? 'sm' : size} variant="light">
-            <IconCheck size={size === 'xs' ? 12 : 16} />
+          <ThemeIcon color="green" size={size === "xs" ? "sm" : size} variant="light">
+            <IconCheck size={size === "xs" ? 12 : 16} />
           </ThemeIcon>
-        )
-      case 'error':
+        );
+      case "error":
         return (
-          <ThemeIcon color="red" size={size === 'xs' ? 'sm' : size} variant="light">
-            <IconX size={size === 'xs' ? 12 : 16} />
+          <ThemeIcon color="red" size={size === "xs" ? "sm" : size} variant="light">
+            <IconX size={size === "xs" ? 12 : 16} />
           </ThemeIcon>
-        )
-      case 'idle':
+        );
+      case "idle":
         return (
-          <ThemeIcon color="gray" size={size === 'xs' ? 'sm' : size} variant="light">
-            <IconClock size={size === 'xs' ? 12 : 16} />
+          <ThemeIcon color="gray" size={size === "xs" ? "sm" : size} variant="light">
+            <IconClock size={size === "xs" ? 12 : 16} />
           </ThemeIcon>
-        )
+        );
       default:
-        return <Loader size={size} color="chainbrawler-primary" />
+        return <Loader size={size} color="chainbrawler-primary" />;
     }
-  }
+  };
 
   const getMessageColor = () => {
     switch (status) {
-      case 'success':
-        return 'green'
-      case 'error':
-        return 'red'
-      case 'idle':
-        return 'dimmed'
+      case "success":
+        return "green";
+      case "error":
+        return "red";
+      case "idle":
+        return "dimmed";
       default:
-        return 'white'
+        return "white";
     }
-  }
+  };
 
   const getMessage = () => {
     switch (status) {
-      case 'success':
-        return message || 'Success!'
-      case 'error':
-        return message || 'Error occurred'
-      case 'idle':
-        return message || 'Waiting...'
+      case "success":
+        return message || "Success!";
+      case "error":
+        return message || "Error occurred";
+      case "idle":
+        return message || "Waiting...";
       default:
-        return message || 'Loading...'
+        return message || "Loading...";
     }
-  }
+  };
 
-  if (variant === 'inline') {
+  if (variant === "inline") {
     return (
       <Group gap="xs" align="center">
         {getIcon()}
@@ -78,10 +78,10 @@ export function LoadingState({
           {getMessage()}
         </Text>
       </Group>
-    )
+    );
   }
 
-  if (variant === 'compact') {
+  if (variant === "compact") {
     return (
       <Stack align="center" gap="xs">
         {getIcon()}
@@ -89,10 +89,10 @@ export function LoadingState({
           {getMessage()}
         </Text>
       </Stack>
-    )
+    );
   }
 
-  if (variant === 'progress') {
+  if (variant === "progress") {
     return (
       <Stack gap="md" align="center">
         <Group gap="sm">
@@ -102,7 +102,7 @@ export function LoadingState({
           </Text>
         </Group>
 
-        {status === 'loading' && (
+        {status === "loading" && (
           <Box w="100%" maw={300}>
             <Progress
               value={progress}
@@ -111,7 +111,7 @@ export function LoadingState({
               color="chainbrawler-primary"
               animated={progress < 100}
               style={{
-                backgroundColor: designTokens.colors.surface.tertiary
+                backgroundColor: designTokens.colors.surface.tertiary,
               }}
             />
             <Text size="xs" c="dimmed" ta="center" mt="xs">
@@ -120,7 +120,7 @@ export function LoadingState({
           </Box>
         )}
       </Stack>
-    )
+    );
   }
 
   // Default variant
@@ -131,12 +131,12 @@ export function LoadingState({
         <Text size={size} c={getMessageColor()} fw={500} ta="center">
           {getMessage()}
         </Text>
-        {status === 'loading' && (
+        {status === "loading" && (
           <Text size="sm" c="dimmed" ta="center">
             Please wait while we process your request
           </Text>
         )}
       </Stack>
     </Stack>
-  )
+  );
 }

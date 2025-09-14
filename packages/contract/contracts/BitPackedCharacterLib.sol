@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.28;
-import {GameError} from "./Errors.sol";
-import {SafePacker} from "./SafePacker.sol";
+import { GameError } from "./Errors.sol";
+import { SafePacker } from "./SafePacker.sol";
 // CombatConfig no longer read directly by this library; callers should supply base stats
 
 /**
@@ -33,16 +33,16 @@ library BitPackedCharacterLib {
 
     // Progression stats shifts/masks
     uint256 internal constant TOTAL_KILLS_SHIFT = 0;
-    uint256 internal constant TOTAL_KILLS_MASK = 0xFFFF;                    // [0-15] 16 bits
+    uint256 internal constant TOTAL_KILLS_MASK = 0xFFFF; // [0-15] 16 bits
     // Experience for level progression (resets on level up) - moved to fill points gap
     uint256 internal constant EXPERIENCE_SHIFT = 16;
-    uint256 internal constant EXPERIENCE_MASK = 0xFFFFFFFFFFFFFFFF;         // [16-79] 64 bits (moved from 64)
+    uint256 internal constant EXPERIENCE_MASK = 0xFFFFFFFFFFFFFFFF; // [16-79] 64 bits (moved from 64)
     // Last heal time for cooldown tracking - moved down
     uint256 internal constant LAST_HEAL_TIME_SHIFT = 80;
-    uint256 internal constant LAST_HEAL_TIME_MASK = 0xFFFFFFFFFFFFFFFF;     // [80-143] 64 bits (moved from 128)
+    uint256 internal constant LAST_HEAL_TIME_MASK = 0xFFFFFFFFFFFFFFFF; // [80-143] 64 bits (moved from 128)
     // Last regeneration time for passive regen tracking - moved down
     uint256 internal constant LAST_REGEN_TIME_SHIFT = 144;
-    uint256 internal constant LAST_REGEN_TIME_MASK = 0xFFFFFFFFFFFFFFFF;    // [144-207] 64 bits (moved from 192)
+    uint256 internal constant LAST_REGEN_TIME_MASK = 0xFFFFFFFFFFFFFFFF; // [144-207] 64 bits (moved from 192)
 
     // Equipped bonuses are now stored in `coreStats` to simplify storage layout.
     uint256 internal constant EQUIPPED_COMBAT_SHIFT = 96;
@@ -73,45 +73,46 @@ library BitPackedCharacterLib {
     /// @param baseLuck The base luck stat for the character class
     /// @return A new BitPackedCharacter with generated stats
     function generateNewCharacter(
-        address /*player*/, 
-        uint256 seed, 
-        uint256 baseCombat, 
-        uint256 baseEndurance, 
-        uint256 baseDefense, 
+        address /*player*/,
+        uint256 seed,
+        uint256 baseCombat,
+        uint256 baseEndurance,
+        uint256 baseDefense,
         uint256 baseLuck
     ) internal pure returns (BitPackedCharacter memory) {
         BitPackedCharacter memory c;
 
-    // Derive small variations per-stat using keccak(seed||salt).
+        // Derive small variations per-stat using keccak(seed||salt).
         uint256 varCombat = uint256(keccak256(abi.encodePacked(seed, uint256(1)))) % 5; // 0..4
         uint256 varEndurance = uint256(keccak256(abi.encodePacked(seed, uint256(2)))) % 21; // 0..20
         uint256 varDefense = uint256(keccak256(abi.encodePacked(seed, uint256(3)))) % 5; // 0..4
         uint256 varLuck = uint256(keccak256(abi.encodePacked(seed, uint256(4)))) % 5; // 0..4
 
-    uint256 finalCombat = baseCombat + varCombat;
-    uint256 finalEndurance = baseEndurance + varEndurance;
-    uint256 finalDefense = baseDefense + varDefense;
-    uint256 finalLuck = baseLuck + varLuck;
+        uint256 finalCombat = baseCombat + varCombat;
+        uint256 finalEndurance = baseEndurance + varEndurance;
+        uint256 finalDefense = baseDefense + varDefense;
+        uint256 finalLuck = baseLuck + varLuck;
 
-    // Defensive checks: ensure derived values fit into assigned bit widths
-    if (finalCombat > COMBAT_SKILL_MASK) revert GameError(2001);
-    if (finalEndurance > MAX_ENDURANCE_MASK) revert GameError(2002);
-    if (finalDefense > DEFENSE_MASK) revert GameError(2003);
-    if (finalLuck > LUCK_MASK) revert GameError(2004);
+        // Defensive checks: ensure derived values fit into assigned bit widths
+        if (finalCombat > COMBAT_SKILL_MASK) revert GameError(2001);
+        if (finalEndurance > MAX_ENDURANCE_MASK) revert GameError(2002);
+        if (finalDefense > DEFENSE_MASK) revert GameError(2003);
+        if (finalLuck > LUCK_MASK) revert GameError(2004);
 
-    // Pack into coreStats. Current endurance starts at max. Level starts at 1.
-    c.coreStats = (uint256(1) << LEVEL_SHIFT)
-            | (1 << IS_ALIVE_SHIFT)
-            | (finalEndurance << CURRENT_ENDURANCE_SHIFT)
-            | (finalEndurance << MAX_ENDURANCE_SHIFT)
-            | (finalCombat << COMBAT_SKILL_SHIFT)
-            | (finalDefense << DEFENSE_SHIFT)
-            | (finalLuck << LUCK_SHIFT)
+        // Pack into coreStats. Current endurance starts at max. Level starts at 1.
+        c.coreStats =
+            (uint256(1) << LEVEL_SHIFT) |
+            (1 << IS_ALIVE_SHIFT) |
+            (finalEndurance << CURRENT_ENDURANCE_SHIFT) |
+            (finalEndurance << MAX_ENDURANCE_SHIFT) |
+            (finalCombat << COMBAT_SKILL_SHIFT) |
+            (finalDefense << DEFENSE_SHIFT) |
+            (finalLuck << LUCK_SHIFT) |
             // equipped bonuses (currently zero)
-            | (uint256(0) << EQUIPPED_COMBAT_SHIFT)
-            | (uint256(0) << EQUIPPED_ENDURANCE_SHIFT)
-            | (uint256(0) << EQUIPPED_DEFENSE_SHIFT)
-            | (uint256(0) << EQUIPPED_LUCK_SHIFT);
+            (uint256(0) << EQUIPPED_COMBAT_SHIFT) |
+            (uint256(0) << EQUIPPED_ENDURANCE_SHIFT) |
+            (uint256(0) << EQUIPPED_DEFENSE_SHIFT) |
+            (uint256(0) << EQUIPPED_LUCK_SHIFT);
 
         c.progressionStats = 0;
         return c;
@@ -120,7 +121,7 @@ library BitPackedCharacterLib {
     // Character struct view of packed data
     struct Character {
         uint256 level;
-        uint256 experience;        // Resets on level up
+        uint256 experience; // Resets on level up
         uint256 totalKills;
         bool isAlive;
         uint256 currentEndurance;
@@ -144,12 +145,12 @@ library BitPackedCharacterLib {
         uint256 baseMaxEndurance = (coreStats >> MAX_ENDURANCE_SHIFT) & MAX_ENDURANCE_MASK;
         uint256 equippedEnduranceBonus = (coreStats >> EQUIPPED_ENDURANCE_SHIFT) & EQUIPPED_ENDURANCE_MASK;
         uint256 totalMaxEndurance = baseMaxEndurance + equippedEnduranceBonus;
-        
+
         // Cap to total max endurance (data integrity guarantee)
         if (newEndurance > totalMaxEndurance) {
             newEndurance = totalMaxEndurance;
         }
-        
+
         // Use SafePacker for additional overflow protection
         return SafePacker.writeClamped(coreStats, CURRENT_ENDURANCE_SHIFT, CURRENT_ENDURANCE_MASK, newEndurance);
     }
@@ -162,29 +163,29 @@ library BitPackedCharacterLib {
         out.level = (p.coreStats >> LEVEL_SHIFT) & LEVEL_MASK;
         out.isAlive = ((p.coreStats >> IS_ALIVE_SHIFT) & IS_ALIVE_MASK) == 1;
         out.currentEndurance = (p.coreStats >> CURRENT_ENDURANCE_SHIFT) & CURRENT_ENDURANCE_MASK;
-        
+
         // Extract base stats
         uint256 baseMaxEndurance = (p.coreStats >> MAX_ENDURANCE_SHIFT) & MAX_ENDURANCE_MASK;
         uint256 baseCombat = (p.coreStats >> COMBAT_SKILL_SHIFT) & COMBAT_SKILL_MASK;
         uint256 baseDefense = (p.coreStats >> DEFENSE_SHIFT) & DEFENSE_MASK;
         uint256 baseLuck = (p.coreStats >> LUCK_SHIFT) & LUCK_MASK;
-        
+
         // Extract equipment bonuses
         out.equippedCombatBonus = (p.coreStats >> EQUIPPED_COMBAT_SHIFT) & EQUIPPED_COMBAT_MASK;
         out.equippedEnduranceBonus = (p.coreStats >> EQUIPPED_ENDURANCE_SHIFT) & EQUIPPED_ENDURANCE_MASK;
         out.equippedDefenseBonus = (p.coreStats >> EQUIPPED_DEFENSE_SHIFT) & EQUIPPED_DEFENSE_MASK;
         out.equippedLuckBonus = (p.coreStats >> EQUIPPED_LUCK_SHIFT) & EQUIPPED_LUCK_MASK;
-        
-    // Extract progression stats from progressionStats slot
+
+        // Extract progression stats from progressionStats slot
         out.totalKills = (p.progressionStats >> TOTAL_KILLS_SHIFT) & TOTAL_KILLS_MASK;
         out.experience = (p.progressionStats >> EXPERIENCE_SHIFT) & EXPERIENCE_MASK;
-        
-    // Calculate total stats including equipment bonuses
+
+        // Calculate total stats including equipment bonuses
         out.maxEndurance = baseMaxEndurance + out.equippedEnduranceBonus;
         out.totalCombat = baseCombat + out.equippedCombatBonus;
         out.totalDefense = baseDefense + out.equippedDefenseBonus;
         out.totalLuck = baseLuck + out.equippedLuckBonus;
-        
+
         return out;
     }
 }

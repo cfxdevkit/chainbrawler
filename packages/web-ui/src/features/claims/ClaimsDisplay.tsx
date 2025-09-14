@@ -1,73 +1,73 @@
-import { 
-  Card, 
-  Title, 
-  Text, 
-  Group, 
-  Button, 
-  Stack, 
+import type { ClaimableReward, ClaimsData } from "@chainbrawler/core";
+import {
   Alert,
-  LoadingOverlay,
-  ThemeIcon,
-  Box,
   Badge,
-  Grid
-} from '@mantine/core'
-import { 
-  IconGift, 
-  IconCoins, 
-  IconRefresh,
-  IconDownload,
+  Box,
+  Button,
+  Card,
+  Grid,
+  Group,
+  LoadingOverlay,
+  Stack,
+  Text,
+  ThemeIcon,
+  Title,
+} from "@mantine/core";
+import {
   IconAlertTriangle,
-  IconCheck
-} from '@tabler/icons-react'
-import { ClaimsData, ClaimableReward } from '@chainbrawler/core'
-import { rateLimitedRead } from '../../utils/rateLimiter'
+  IconCheck,
+  IconCoins,
+  IconDownload,
+  IconGift,
+  IconRefresh,
+} from "@tabler/icons-react";
+import { rateLimitedRead } from "../../utils/rateLimiter";
 
 interface ClaimsDisplayProps {
-  claims: ClaimsData | null
-  isLoading: boolean
-  error: string | null
-  onLoadClaims: () => Promise<void>
-  onRefreshClaims: () => Promise<void>
-  onClaimPrize: (epoch: bigint, index: bigint, amount: bigint, proof: string[]) => Promise<void>
+  claims: ClaimsData | null;
+  isLoading: boolean;
+  error: string | null;
+  onLoadClaims: () => Promise<void>;
+  onRefreshClaims: () => Promise<void>;
+  onClaimPrize: (epoch: bigint, index: bigint, amount: bigint, proof: string[]) => Promise<void>;
 }
 
-export function ClaimsDisplay({ 
-  claims, 
-  isLoading, 
-  error, 
-  onLoadClaims, 
-  onRefreshClaims, 
-  onClaimPrize 
+export function ClaimsDisplay({
+  claims,
+  isLoading,
+  error,
+  onLoadClaims,
+  onRefreshClaims,
+  onClaimPrize,
 }: ClaimsDisplayProps) {
   const handleLoadClaims = async () => {
     try {
       await rateLimitedRead(
-        'claimsDisplay_loadClaims',
+        "claimsDisplay_loadClaims",
         () => onLoadClaims(),
         20000 // 20 seconds cache
-      )
+      );
     } catch (error) {
-      console.error('Failed to load claims:', error)
+      console.error("Failed to load claims:", error);
     }
-  }
+  };
 
   const handleRefreshClaims = async () => {
     try {
       await rateLimitedRead(
-        'claimsDisplay_refreshClaims',
+        "claimsDisplay_refreshClaims",
         () => onRefreshClaims(),
         10000 // 10 seconds cache
-      )
+      );
     } catch (error) {
-      console.error('Failed to refresh claims:', error)
+      console.error("Failed to refresh claims:", error);
     }
-  }
+  };
 
   const handleClaimPrize = async (reward: ClaimableReward) => {
     if (!reward.epoch || !reward.index || !reward.amount || !reward.proof) {
-      console.error('Invalid reward data for claiming')
-      return
+      console.error("Invalid reward data for claiming");
+      return;
     }
 
     try {
@@ -76,21 +76,21 @@ export function ClaimsDisplay({
         BigInt(reward.index),
         BigInt(reward.amount),
         reward.proof
-      )
+      );
     } catch (error) {
-      console.error('Failed to claim prize:', error)
+      console.error("Failed to claim prize:", error);
     }
-  }
+  };
 
   const formatAmount = (amount: bigint | number) => {
-    const value = typeof amount === 'bigint' ? Number(amount) : amount
-    return `${(value / 1e18).toFixed(4)} ETH`
-  }
+    const value = typeof amount === "bigint" ? Number(amount) : amount;
+    return `${(value / 1e18).toFixed(4)} ETH`;
+  };
 
   return (
-    <Card withBorder radius="md" p="xl" style={{ position: 'relative' }}>
-      <LoadingOverlay visible={isLoading} overlayProps={{ radius: 'md', blur: 2 }} />
-      
+    <Card withBorder radius="md" p="xl" style={{ position: "relative" }}>
+      <LoadingOverlay visible={isLoading} overlayProps={{ radius: "md", blur: 2 }} />
+
       <Group justify="space-between" mb="md">
         <Title order={3} c="white">
           Prize Claims
@@ -118,12 +118,7 @@ export function ClaimsDisplay({
       </Group>
 
       {error && (
-        <Alert
-          icon={<IconAlertTriangle size={16} />}
-          title="Error"
-          color="red"
-          mb="md"
-        >
+        <Alert icon={<IconAlertTriangle size={16} />} title="Error" color="red" mb="md">
           {error}
         </Alert>
       )}
@@ -138,19 +133,23 @@ export function ClaimsDisplay({
                   <ThemeIcon color="green" variant="light" size="sm">
                     <IconCoins size={16} />
                   </ThemeIcon>
-                  <Text fw={600} size="sm" c="dimmed">Total Claimable</Text>
+                  <Text fw={600} size="sm" c="dimmed">
+                    Total Claimable
+                  </Text>
                 </Group>
                 <Text fw={700} size="xl" c="white">
                   {formatAmount(claims.totalClaimable || 0n)}
                 </Text>
               </Grid.Col>
-              
+
               <Grid.Col span={{ base: 12, sm: 6 }}>
                 <Group gap="xs" mb="xs">
                   <ThemeIcon color="blue" variant="light" size="sm">
                     <IconGift size={16} />
                   </ThemeIcon>
-                  <Text fw={600} size="sm" c="dimmed">Available Rewards</Text>
+                  <Text fw={600} size="sm" c="dimmed">
+                    Available Rewards
+                  </Text>
                 </Group>
                 <Text fw={700} size="xl" c="white">
                   {claims.available?.length || 0}
@@ -171,25 +170,29 @@ export function ClaimsDisplay({
               <Title order={4} mb="md" c="white">
                 Available Rewards
               </Title>
-              
+
               <Stack gap="md">
                 {claims.available.map((reward, index) => (
-                  <Card 
+                  <Card
                     key={index}
-                    withBorder 
-                    radius="md" 
+                    withBorder
+                    radius="md"
                     p="md"
                     style={{
-                      backgroundColor: reward.canClaim ? 'rgba(34, 197, 94, 0.1)' : 'rgba(107, 114, 128, 0.1)',
-                      borderColor: reward.canClaim ? 'rgba(34, 197, 94, 0.3)' : 'rgba(107, 114, 128, 0.3)'
+                      backgroundColor: reward.canClaim
+                        ? "rgba(34, 197, 94, 0.1)"
+                        : "rgba(107, 114, 128, 0.1)",
+                      borderColor: reward.canClaim
+                        ? "rgba(34, 197, 94, 0.3)"
+                        : "rgba(107, 114, 128, 0.3)",
                     }}
                   >
                     <Group justify="space-between" align="flex-start">
                       <Box style={{ flex: 1 }}>
                         <Group gap="xs" mb="xs">
-                          <ThemeIcon 
-                            color={reward.canClaim ? 'green' : 'gray'} 
-                            variant="light" 
+                          <ThemeIcon
+                            color={reward.canClaim ? "green" : "gray"}
+                            variant="light"
                             size="sm"
                           >
                             {reward.canClaim ? <IconGift size={16} /> : <IconCheck size={16} />}
@@ -203,35 +206,46 @@ export function ClaimsDisplay({
                             </Badge>
                           )}
                         </Group>
-                        
+
                         <Stack gap="xs">
                           <Group gap="lg">
                             <Text size="sm" c="dimmed">
-                              <Text span fw={600}>Amount:</Text> {formatAmount(reward.amount || 0)}
+                              <Text span fw={600}>
+                                Amount:
+                              </Text>{" "}
+                              {formatAmount(reward.amount || 0)}
                             </Text>
                             {reward.epoch && (
                               <Text size="sm" c="dimmed">
-                                <Text span fw={600}>Epoch:</Text> {Number(reward.epoch)}
+                                <Text span fw={600}>
+                                  Epoch:
+                                </Text>{" "}
+                                {Number(reward.epoch)}
                               </Text>
                             )}
                             {reward.index !== undefined && reward.index !== 0n && (
                               <Text size="sm" c="dimmed">
-                                <Text span fw={600}>Index:</Text> {Number(reward.index)}
+                                <Text span fw={600}>
+                                  Index:
+                                </Text>{" "}
+                                {Number(reward.index)}
                               </Text>
                             )}
                           </Group>
                         </Stack>
                       </Box>
-                      
+
                       <Button
                         onClick={() => handleClaimPrize(reward)}
                         disabled={!reward.canClaim}
-                        leftSection={reward.canClaim ? <IconGift size={16} /> : <IconCheck size={16} />}
-                        variant={reward.canClaim ? 'filled' : 'light'}
-                        color={reward.canClaim ? 'green' : 'gray'}
+                        leftSection={
+                          reward.canClaim ? <IconGift size={16} /> : <IconCheck size={16} />
+                        }
+                        variant={reward.canClaim ? "filled" : "light"}
+                        color={reward.canClaim ? "green" : "gray"}
                         size="md"
                       >
-                        {reward.canClaim ? 'Claim' : 'Claimed'}
+                        {reward.canClaim ? "Claim" : "Claimed"}
                       </Button>
                     </Group>
                   </Card>
@@ -260,5 +274,5 @@ export function ClaimsDisplay({
         </Box>
       )}
     </Card>
-  )
+  );
 }

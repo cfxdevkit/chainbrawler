@@ -7,10 +7,17 @@
     "dev": "vite",
     "dev-simple": "vite --config vite.config-simple.ts",
     "build": "tsc && vite build",
+    "clean": "rm -rf dist",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
     "preview": "vite preview",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "debug": "node scripts/debug-runtime.cjs",
-    "debug-exports": "node scripts/debug-exports.cjs",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
+    "check": "biome check .",
+    "check:fix": "biome check --write .",
     "check-module": "node scripts/check-module.cjs"
   },
   "dependencies": {
@@ -23,26 +30,20 @@
     "@tabler/icons-react": "^2.47.0",
     "@tanstack/react-query": "^5.87.4",
     "connectkit": "^1.9.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-router-dom": "^6.0.0",
     "viem": "^2.0.0",
     "wagmi": "^2.0.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
-    "@types/puppeteer": "^7.0.4",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
-    "@typescript-eslint/eslint-plugin": "^6.10.0",
-    "@typescript-eslint/parser": "^6.10.0",
     "@vitejs/plugin-react": "^4.1.1",
-    "eslint": "^8.53.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.4",
     "playwright": "^1.55.0",
-    "puppeteer": "^24.20.0",
     "typescript": "^5.2.2",
     "vite": "^5.0.0"
-  }
+  },
+  "license": "Apache-2.0"
 }

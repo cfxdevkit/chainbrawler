@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect } from "react";
-import { ENEMY_TYPES, calculateEnemyStats, getDifficultyColor, getDifficultyLevel } from "@chainbrawler/core";
+import {
+  calculateEnemyStats,
+  ENEMY_TYPES,
+  getDifficultyColor,
+  getDifficultyLevel,
+} from "@chainbrawler/core";
+import React, { useEffect, useState } from "react";
 
 interface EnemySelectionProps {
   onFightEnemy: (enemyId: number, enemyLevel: number) => Promise<void>;
@@ -37,7 +42,7 @@ export function EnemySelection({ onFightEnemy, onClose, isVisible }: EnemySelect
 
   const handleFight = async () => {
     if (isLoading) return;
-    
+
     setIsLoading(true);
     try {
       await onFightEnemy(selectedEnemyId, selectedLevel);
@@ -52,29 +57,33 @@ export function EnemySelection({ onFightEnemy, onClose, isVisible }: EnemySelect
   if (!isVisible) return null;
 
   return (
-    <div style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: "rgba(0, 0, 0, 0.8)",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      zIndex: 1000,
-    }}>
-      <div style={{
-        backgroundColor: "white",
-        padding: "2rem",
-        borderRadius: "8px",
-        maxWidth: "600px",
-        width: "90%",
-        maxHeight: "80vh",
-        overflow: "auto",
-      }}>
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1000,
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: "2rem",
+          borderRadius: "8px",
+          maxWidth: "600px",
+          width: "90%",
+          maxHeight: "80vh",
+          overflow: "auto",
+        }}
+      >
         <h2 style={{ marginTop: 0, textAlign: "center" }}>Select Enemy</h2>
-        
+
         {/* Enemy Selection */}
         <div style={{ marginBottom: "1rem" }}>
           <div style={{ marginBottom: "0.5rem" }}>
@@ -85,14 +94,14 @@ export function EnemySelection({ onFightEnemy, onClose, isVisible }: EnemySelect
               style={{ padding: "0.5rem", minWidth: "200px" }}
               disabled={isLoading}
             >
-              {ENEMY_TYPES.map(enemy => (
+              {ENEMY_TYPES.map((enemy) => (
                 <option key={enemy.id} value={enemy.id}>
                   {enemy.name}
                 </option>
               ))}
             </select>
           </div>
-          
+
           <div style={{ marginBottom: "0.5rem" }}>
             <label style={{ fontWeight: "bold", marginRight: "1rem" }}>Level:</label>
             <input
@@ -104,24 +113,24 @@ export function EnemySelection({ onFightEnemy, onClose, isVisible }: EnemySelect
               style={{ padding: "0.5rem", width: "100px" }}
               disabled={isLoading}
             />
-            <span style={{ marginLeft: "0.5rem", color: "#666" }}>
-              (1-100)
-            </span>
+            <span style={{ marginLeft: "0.5rem", color: "#666" }}>(1-100)</span>
           </div>
         </div>
 
         {/* Enemy Stats Display */}
         {enemyStats && (
-          <div style={{
-            border: "1px solid #ddd",
-            borderRadius: "4px",
-            padding: "1rem",
-            marginBottom: "1rem",
-            backgroundColor: "#f9f9f9",
-          }}>
+          <div
+            style={{
+              border: "1px solid #ddd",
+              borderRadius: "4px",
+              padding: "1rem",
+              marginBottom: "1rem",
+              backgroundColor: "#f9f9f9",
+            }}
+          >
             <h3 style={{ marginTop: 0, color: "#333" }}>{enemyStats.name}</h3>
             <p style={{ color: "#666", marginBottom: "1rem" }}>{enemyStats.description}</p>
-            
+
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
               <div>
                 <h4 style={{ margin: "0 0 0.5rem 0" }}>Stats (Level {selectedLevel})</h4>
@@ -152,16 +161,16 @@ export function EnemySelection({ onFightEnemy, onClose, isVisible }: EnemySelect
                   </div>
                 </div>
               </div>
-              
+
               <div>
                 <h4 style={{ margin: "0 0 0.5rem 0" }}>Difficulty</h4>
                 <div style={{ marginBottom: "0.5rem" }}>
                   <span style={{ fontWeight: "bold" }}>Multiplier:</span>
-                  <span 
-                    style={{ 
+                  <span
+                    style={{
                       color: getDifficultyColor(enemyStats.difficultyMultiplier),
                       marginLeft: "0.5rem",
-                      fontWeight: "bold"
+                      fontWeight: "bold",
                     }}
                   >
                     {enemyStats.difficultyMultiplier.toFixed(2)}x
@@ -169,11 +178,11 @@ export function EnemySelection({ onFightEnemy, onClose, isVisible }: EnemySelect
                 </div>
                 <div>
                   <span style={{ fontWeight: "bold" }}>Rating:</span>
-                  <span 
-                    style={{ 
+                  <span
+                    style={{
                       color: getDifficultyColor(enemyStats.difficultyMultiplier),
                       marginLeft: "0.5rem",
-                      fontWeight: "bold"
+                      fontWeight: "bold",
                     }}
                   >
                     {getDifficultyLevel(enemyStats.difficultyMultiplier)}
@@ -203,7 +212,7 @@ export function EnemySelection({ onFightEnemy, onClose, isVisible }: EnemySelect
           >
             {isLoading ? "Fighting..." : `Fight ${enemyStats?.name || "Enemy"}`}
           </button>
-          
+
           <button
             onClick={onClose}
             disabled={isLoading}

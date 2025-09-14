@@ -21,11 +21,11 @@
  * a local Conflux node for development and contract deployment purposes.
  */
 
-import { createServer } from "@xcfx/node";
 import { promises as fs } from "node:fs";
 import { resolve } from "node:path";
-import { ConfluxNodeManager, type ConfluxNodeConfig } from "./ConfluxNodeManager";
+import { createServer } from "@xcfx/node";
 import { createLogger } from "../logging/logger";
+import { type ConfluxNodeConfig, ConfluxNodeManager } from "./ConfluxNodeManager";
 
 export interface LocalNodeOptions {
   /** Custom mnemonic to use (defaults to HARDHAT_VAR_DEPLOYER_MNEMONIC) */
@@ -76,7 +76,9 @@ export class LocalConfluxNode {
 
   constructor(options: LocalNodeOptions = {}) {
     this.options = {
-      mnemonic: process.env.HARDHAT_VAR_DEPLOYER_MNEMONIC || "test test test test test test test test test test test junk",
+      mnemonic:
+        process.env.HARDHAT_VAR_DEPLOYER_MNEMONIC ||
+        "test test test test test test test test test test test junk",
       accountCount: 10,
       configOverrides: {},
       dataMode: "auto",
@@ -96,13 +98,13 @@ export class LocalConfluxNode {
 
       // Initialize node configuration with accounts
       const config = await this.nodeManager.initializeNodeConfig(this.options.accountCount);
-      
+
       // Create server
       this.server = await createServer(config);
-      
+
       // Start server
       await this.server.start();
-      
+
       this.isRunningFlag = true;
 
       // Generate account information

@@ -25,13 +25,15 @@ export function ErrorDisplay({ error, onClear }: ErrorDisplayProps) {
   if (!error) return null;
 
   return (
-    <div style={{
-      border: "1px solid #f44336",
-      backgroundColor: "#ffebee",
-      padding: "1rem",
-      borderRadius: "8px",
-      marginBottom: "1rem"
-    }}>
+    <div
+      style={{
+        border: "1px solid #f44336",
+        backgroundColor: "#ffebee",
+        padding: "1rem",
+        borderRadius: "8px",
+        marginBottom: "1rem",
+      }}
+    >
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <div style={{ fontSize: "1.5rem" }}>⚠️</div>
@@ -49,7 +51,7 @@ export function ErrorDisplay({ error, onClear }: ErrorDisplayProps) {
             border: "none",
             borderRadius: "4px",
             cursor: "pointer",
-            fontSize: "0.8rem"
+            fontSize: "0.8rem",
           }}
         >
           Clear

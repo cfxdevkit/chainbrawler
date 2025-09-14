@@ -3,15 +3,18 @@
  * Single source of truth for all menu state logic
  */
 
-import { CharacterData, MenuState } from '../types';
+import type { CharacterData, MenuState } from "../types";
 
 // Union type to handle both CharacterData and CharacterUXData
-type CharacterLike = CharacterData | {
-  exists: boolean;
-  isAlive: boolean;
-  inCombat: boolean;
-  healingCooldownRemaining?: number;
-} | null;
+type CharacterLike =
+  | CharacterData
+  | {
+      exists: boolean;
+      isAlive: boolean;
+      inCombat: boolean;
+      healingCooldownRemaining?: number;
+    }
+  | null;
 
 export interface MenuStateCalculatorOptions {
   operation?: {
@@ -27,7 +30,7 @@ export class MenuStateCalculator {
    * This is the single source of truth for menu state logic
    */
   static calculateMenuState(
-    character: CharacterLike, 
+    character: CharacterLike,
     options: MenuStateCalculatorOptions = {}
   ): MenuState {
     const { operation, healingCooldownRemaining = 0 } = options;
@@ -45,17 +48,15 @@ export class MenuStateCalculator {
         canViewLeaderboard: true,
         canViewClaims: false,
         canClaimPrize: false,
-        availableActions: ['createCharacter'],
+        availableActions: ["createCharacter"],
         disabledActions: [],
         disabledReasons: {},
-        healingCooldownRemaining: 0
+        healingCooldownRemaining: 0,
       };
     }
 
     // Calculate healing availability based on cooldown
-    const canHeal = character.isAlive && 
-                   !character.inCombat && 
-                   healingCooldownRemaining === 0;
+    const canHeal = character.isAlive && !character.inCombat && healingCooldownRemaining === 0;
 
     return {
       canCreateCharacter: false,
@@ -69,10 +70,10 @@ export class MenuStateCalculator {
       canViewLeaderboard: true,
       canViewClaims: true,
       canClaimPrize: true,
-      availableActions: this.getAvailableActions(character),
-      disabledActions: this.getDisabledActions(character, healingCooldownRemaining),
-      disabledReasons: this.getDisabledReasons(character, healingCooldownRemaining),
-      healingCooldownRemaining
+      availableActions: MenuStateCalculator.getAvailableActions(character),
+      disabledActions: MenuStateCalculator.getDisabledActions(character, healingCooldownRemaining),
+      disabledReasons: MenuStateCalculator.getDisabledReasons(character, healingCooldownRemaining),
+      healingCooldownRemaining,
     };
   }
 
@@ -80,52 +81,58 @@ export class MenuStateCalculator {
    * Get available actions for a character
    */
   private static getAvailableActions(character: CharacterLike): string[] {
-    const actions = ['viewPools', 'viewLeaderboard', 'viewClaims'];
-    
+    const actions = ["viewPools", "viewLeaderboard", "viewClaims"];
+
     if (!character) return actions;
-    
+
     if (character.isAlive && !character.inCombat) {
-      actions.push('fight', 'heal');
+      actions.push("fight", "heal");
     }
-    
+
     if (character.inCombat) {
-      actions.push('continueFight', 'flee');
+      actions.push("continueFight", "flee");
     }
-    
+
     if (!character.isAlive) {
-      actions.push('resurrect');
+      actions.push("resurrect");
     }
-    
+
     return actions;
   }
 
   /**
    * Get disabled actions for a character
    */
-  private static getDisabledActions(character: CharacterLike, healingCooldownRemaining: number): string[] {
+  private static getDisabledActions(
+    character: CharacterLike,
+    healingCooldownRemaining: number
+  ): string[] {
     const disabled: string[] = [];
-    
+
     if (!character) return disabled;
-    
+
     if (character.isAlive && !character.inCombat && healingCooldownRemaining > 0) {
-      disabled.push('heal');
+      disabled.push("heal");
     }
-    
+
     return disabled;
   }
 
   /**
    * Get disabled reasons for a character
    */
-  private static getDisabledReasons(character: CharacterLike, healingCooldownRemaining: number): Record<string, string> {
+  private static getDisabledReasons(
+    character: CharacterLike,
+    healingCooldownRemaining: number
+  ): Record<string, string> {
     const reasons: Record<string, string> = {};
-    
+
     if (!character) return reasons;
-    
+
     if (character.isAlive && !character.inCombat && healingCooldownRemaining > 0) {
       reasons.heal = `Healing cooldown: ${healingCooldownRemaining}s remaining`;
     }
-    
+
     return reasons;
   }
 }

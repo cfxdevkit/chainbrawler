@@ -1,5 +1,5 @@
-import { ValidationRules, ValidationResult } from './ValidationRules';
-import { UXState, CharacterData, OperationState } from '../types';
+import type { CharacterData, OperationState, UXState } from "../types";
+import { type ValidationResult, ValidationRules } from "./ValidationRules";
 
 export class ValidationManager {
   constructor(private store: any) {}
@@ -7,21 +7,21 @@ export class ValidationManager {
   // Validate before starting an operation
   validateOperation(type: string, data?: any): ValidationResult {
     const state = this.store.getState();
-    
+
     // First check if we can start any operation
     const canStart = ValidationRules.canStartOperation(type, state);
     if (!canStart.valid) {
       return canStart;
     }
-    
+
     // Then validate specific input data
     switch (type) {
-      case 'createCharacter':
+      case "createCharacter":
         if (data?.classId !== undefined) {
           return ValidationRules.validateCharacterClass(data.classId);
         }
         break;
-      case 'fightEnemy':
+      case "fightEnemy":
         if (data?.enemyId !== undefined) {
           const enemyIdValidation = ValidationRules.validateEnemyId(data.enemyId);
           if (!enemyIdValidation.valid) return enemyIdValidation;
@@ -31,13 +31,13 @@ export class ValidationManager {
           if (!enemyLevelValidation.valid) return enemyLevelValidation;
         }
         break;
-      case 'getCharacter':
+      case "getCharacter":
         if (data?.playerAddress) {
           return ValidationRules.validatePlayerAddress(data.playerAddress);
         }
         break;
     }
-    
+
     return { valid: true };
   }
 
@@ -58,13 +58,13 @@ export class ValidationManager {
     if (!characterValidation.valid) {
       return characterValidation;
     }
-    
+
     // Validate operation state
     const operationValidation = this.validateOperationState(state.operation);
     if (!operationValidation.valid) {
       return operationValidation;
     }
-    
+
     // Validate menu state consistency
     if (state.menu) {
       const menuValidation = this.validateMenuState(state.menu, state.character);
@@ -72,7 +72,7 @@ export class ValidationManager {
         return menuValidation;
       }
     }
-    
+
     return { valid: true };
   }
 
@@ -80,53 +80,53 @@ export class ValidationManager {
   private validateMenuState(menu: any, character: CharacterData | null): ValidationResult {
     // Check if menu state is consistent with character state
     if (character?.exists && menu.canCreateCharacter) {
-      return { valid: false, reason: 'Menu allows character creation when character exists' };
+      return { valid: false, reason: "Menu allows character creation when character exists" };
     }
-    
+
     if (!character?.exists && (menu.canFight || menu.canHeal || menu.canResurrect)) {
-      return { valid: false, reason: 'Menu allows character actions when no character exists' };
+      return { valid: false, reason: "Menu allows character actions when no character exists" };
     }
-    
+
     if (character?.isAlive && menu.canResurrect) {
-      return { valid: false, reason: 'Menu allows resurrection when character is alive' };
+      return { valid: false, reason: "Menu allows resurrection when character is alive" };
     }
-    
+
     if (!character?.isAlive && (menu.canFight || menu.canHeal)) {
-      return { valid: false, reason: 'Menu allows actions when character is dead' };
+      return { valid: false, reason: "Menu allows actions when character is dead" };
     }
-    
+
     if (character?.inCombat && (menu.canFight || menu.canHeal || menu.canResurrect)) {
-      return { valid: false, reason: 'Menu allows actions when character is in combat' };
+      return { valid: false, reason: "Menu allows actions when character is in combat" };
     }
-    
+
     if (!character?.inCombat && (menu.canContinueFight || menu.canFlee)) {
-      return { valid: false, reason: 'Menu allows combat actions when character is not in combat' };
+      return { valid: false, reason: "Menu allows combat actions when character is not in combat" };
     }
-    
+
     return { valid: true };
   }
 
   // Get validation errors for display
   getValidationErrors(state: UXState): string[] {
     const errors: string[] = [];
-    
+
     const characterValidation = this.validateCharacterState(state.character);
     if (!characterValidation.valid && characterValidation.reason) {
       errors.push(`Character: ${characterValidation.reason}`);
     }
-    
+
     const operationValidation = this.validateOperationState(state.operation);
     if (!operationValidation.valid && operationValidation.reason) {
       errors.push(`Operation: ${operationValidation.reason}`);
     }
-    
+
     if (state.menu) {
       const menuValidation = this.validateMenuState(state.menu, state.character);
       if (!menuValidation.valid && menuValidation.reason) {
         errors.push(`Menu: ${menuValidation.reason}`);
       }
     }
-    
+
     return errors;
   }
 
@@ -140,9 +140,9 @@ export class ValidationManager {
   getValidationMessage(state: UXState): string {
     const errors = this.getValidationErrors(state);
     if (errors.length === 0) {
-      return 'System is ready';
+      return "System is ready";
     }
-    
-    return `Validation errors: ${errors.join(', ')}`;
+
+    return `Validation errors: ${errors.join(", ")}`;
   }
 }

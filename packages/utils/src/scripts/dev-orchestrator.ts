@@ -29,7 +29,10 @@ if (!process.env.LOG_MODE) {
   process.env.LOG_MODE = "pretty"; // Use pretty console output for dev orchestrator
 }
 
-import { DevelopmentOrchestrator, type OrchestratorOptions } from "../orchestrator/DevelopmentOrchestrator";
+import {
+  DevelopmentOrchestrator,
+  type OrchestratorOptions,
+} from "../orchestrator/DevelopmentOrchestrator";
 
 // CLI interface
 async function main() {
@@ -83,7 +86,7 @@ Examples:
 
     if (options.keepNodeRunning) {
       console.log("\n🔄 Node will keep running. Press Ctrl+C to stop.");
-      
+
       // Handle graceful shutdown
       process.on("SIGINT", async () => {
         console.log("\n🛑 Shutting down...");

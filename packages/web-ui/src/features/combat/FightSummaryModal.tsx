@@ -1,65 +1,67 @@
-import { 
-  Modal, 
-  Title, 
-  Text, 
-  Group, 
-  Button, 
-  Stack, 
+import type { FightSummaryData } from "@chainbrawler/core";
+import {
+  Box,
+  Button,
   Card,
   Grid,
-  ThemeIcon,
-  Box,
+  Group,
+  Modal,
   Progress,
-  ScrollArea
-} from '@mantine/core'
-import { 
-  IconTrophy, 
-  IconSkull, 
-  IconClock, 
-  IconSword, 
-  IconHeart, 
+  ScrollArea,
+  Stack,
+  Text,
+  ThemeIcon,
+  Title,
+} from "@mantine/core";
+import {
+  IconClock,
   IconGift,
+  IconHeart,
+  IconRefresh,
+  IconSkull,
+  IconSword,
+  IconTrophy,
   IconX,
-  IconRefresh
-} from '@tabler/icons-react'
-import { FightSummaryData } from '@chainbrawler/core'
+} from "@tabler/icons-react";
 
 interface FightSummaryModalProps {
-  fightSummary: FightSummaryData | null
-  onContinueFight: () => Promise<void>
-  onFleeRound: () => Promise<void>
-  onClose: () => void
-  opened: boolean
+  fightSummary: FightSummaryData | null;
+  onContinueFight: () => Promise<void>;
+  onFleeRound: () => Promise<void>;
+  onClose: () => void;
+  opened: boolean;
 }
 
-export function FightSummaryModal({ 
-  fightSummary, 
-  onContinueFight, 
-  onFleeRound, 
-  onClose, 
-  opened 
+export function FightSummaryModal({
+  fightSummary,
+  onContinueFight,
+  onFleeRound,
+  onClose,
+  opened,
 }: FightSummaryModalProps) {
-  if (!fightSummary) return null
+  if (!fightSummary) return null;
 
-  const enemyName = fightSummary.enemyName || `Enemy ${fightSummary.enemyId}`
-  
+  const enemyName = fightSummary.enemyName || `Enemy ${fightSummary.enemyId}`;
+
   // Ensure all numeric values are properly converted from BigInt
-  const playerHealth = Number(fightSummary.playerHealthRemaining)
-  const enemyHealth = Number(fightSummary.enemyHealthRemaining)
-  const playerStartHealth = Number(fightSummary.playerStartEndurance)
-  const enemyStartHealth = Number(fightSummary.enemyStartEndurance)
-  const xpGained = Number(fightSummary.xpGained)
-  const enemyLevel = Number(fightSummary.enemyLevel)
-  const roundsElapsed = Number(fightSummary.roundsElapsed)
-  
+  const playerHealth = Number(fightSummary.playerHealthRemaining);
+  const enemyHealth = Number(fightSummary.enemyHealthRemaining);
+  const playerStartHealth = Number(fightSummary.playerStartEndurance);
+  const enemyStartHealth = Number(fightSummary.enemyStartEndurance);
+  const xpGained = Number(fightSummary.xpGained);
+  const enemyLevel = Number(fightSummary.enemyLevel);
+  const roundsElapsed = Number(fightSummary.roundsElapsed);
+
   // Convert equipment drop values
-  const equipmentDrop = fightSummary.equipmentDropped ? {
-    combat: Number(fightSummary.equipmentDropped.combat),
-    endurance: Number(fightSummary.equipmentDropped.endurance),
-    defense: Number(fightSummary.equipmentDropped.defense),
-    luck: Number(fightSummary.equipmentDropped.luck)
-  } : null
-  
+  const equipmentDrop = fightSummary.equipmentDropped
+    ? {
+        combat: Number(fightSummary.equipmentDropped.combat),
+        endurance: Number(fightSummary.equipmentDropped.endurance),
+        defense: Number(fightSummary.equipmentDropped.defense),
+        luck: Number(fightSummary.equipmentDropped.luck),
+      }
+    : null;
+
   // Convert round data
   const rounds = {
     count: Number(fightSummary.rounds.count),
@@ -67,29 +69,29 @@ export function FightSummaryModal({
     playerDamages: fightSummary.rounds.playerDamages.map(Number),
     enemyDamages: fightSummary.rounds.enemyDamages.map(Number),
     playerCriticals: fightSummary.rounds.playerCriticals.map(Boolean),
-    enemyCriticals: fightSummary.rounds.enemyCriticals.map(Boolean)
-  }
-  
+    enemyCriticals: fightSummary.rounds.enemyCriticals.map(Boolean),
+  };
+
   const getOutcomeColor = () => {
-    if (fightSummary.victory) return 'green'
-    if (fightSummary.playerDied) return 'red'
-    if (fightSummary.unresolved) return 'yellow'
-    return 'gray'
-  }
+    if (fightSummary.victory) return "green";
+    if (fightSummary.playerDied) return "red";
+    if (fightSummary.unresolved) return "yellow";
+    return "gray";
+  };
 
   const getOutcomeText = () => {
-    if (fightSummary.victory) return 'VICTORY!'
-    if (fightSummary.playerDied) return 'DEFEAT'
-    if (fightSummary.unresolved) return 'UNRESOLVED'
-    return 'FIGHT ENDED'
-  }
+    if (fightSummary.victory) return "VICTORY!";
+    if (fightSummary.playerDied) return "DEFEAT";
+    if (fightSummary.unresolved) return "UNRESOLVED";
+    return "FIGHT ENDED";
+  };
 
   const getOutcomeIcon = () => {
-    if (fightSummary.victory) return <IconTrophy size={32} />
-    if (fightSummary.playerDied) return <IconSkull size={32} />
-    if (fightSummary.unresolved) return <IconClock size={32} />
-    return <IconSword size={32} />
-  }
+    if (fightSummary.victory) return <IconTrophy size={32} />;
+    if (fightSummary.playerDied) return <IconSkull size={32} />;
+    if (fightSummary.unresolved) return <IconClock size={32} />;
+    return <IconSword size={32} />;
+  };
 
   return (
     <Modal
@@ -124,21 +126,25 @@ export function FightSummaryModal({
                 <ThemeIcon color="blue" variant="light" size="sm">
                   <IconSword size={16} />
                 </ThemeIcon>
-                <Text fw={600} size="sm" c="dimmed">Rounds</Text>
+                <Text fw={600} size="sm" c="dimmed">
+                  Rounds
+                </Text>
               </Group>
               <Text fw={700} size="xl" c="white">
                 {roundsElapsed}
               </Text>
             </Card>
           </Grid.Col>
-          
+
           <Grid.Col span={6}>
             <Card withBorder radius="md" p="md" bg="dark.6">
               <Group gap="xs" mb="xs">
                 <ThemeIcon color="green" variant="light" size="sm">
                   <IconTrophy size={16} />
                 </ThemeIcon>
-                <Text fw={600} size="sm" c="dimmed">XP Gained</Text>
+                <Text fw={600} size="sm" c="dimmed">
+                  XP Gained
+                </Text>
               </Group>
               <Text fw={700} size="xl" c="green">
                 +{xpGained}
@@ -155,13 +161,15 @@ export function FightSummaryModal({
                 <ThemeIcon color="blue" variant="light" size="sm">
                   <IconHeart size={16} />
                 </ThemeIcon>
-                <Text fw={600} size="sm" c="white">Your Health</Text>
+                <Text fw={600} size="sm" c="white">
+                  Your Health
+                </Text>
               </Group>
               <Progress
                 value={(playerHealth / playerStartHealth) * 100}
                 size="lg"
                 radius="xl"
-                color={playerHealth > 0 ? 'green' : 'red'}
+                color={playerHealth > 0 ? "green" : "red"}
                 animated
               />
               <Text fw={600} c="white" mt="xs" ta="center">
@@ -169,20 +177,22 @@ export function FightSummaryModal({
               </Text>
             </Card>
           </Grid.Col>
-          
+
           <Grid.Col span={6}>
             <Card withBorder radius="md" p="md" bg="red.9">
               <Group gap="xs" mb="xs">
                 <ThemeIcon color="red" variant="light" size="sm">
                   <IconSkull size={16} />
                 </ThemeIcon>
-                <Text fw={600} size="sm" c="white">Enemy Health</Text>
+                <Text fw={600} size="sm" c="white">
+                  Enemy Health
+                </Text>
               </Group>
               <Progress
                 value={(enemyHealth / enemyStartHealth) * 100}
                 size="lg"
                 radius="xl"
-                color={enemyHealth > 0 ? 'red' : 'green'}
+                color={enemyHealth > 0 ? "red" : "green"}
                 animated
               />
               <Text fw={600} c="white" mt="xs" ta="center">
@@ -199,32 +209,50 @@ export function FightSummaryModal({
               <ThemeIcon color="yellow" variant="light" size="sm">
                 <IconGift size={16} />
               </ThemeIcon>
-              <Title order={4} c="white">🎁 Equipment Dropped!</Title>
+              <Title order={4} c="white">
+                🎁 Equipment Dropped!
+              </Title>
             </Group>
-            
+
             <Grid>
               <Grid.Col span={3}>
                 <Box ta="center">
-                  <Text fw={600} c="orange" size="sm">Combat</Text>
-                  <Text fw={700} size="xl" c="orange">+{equipmentDrop.combat}</Text>
+                  <Text fw={600} c="orange" size="sm">
+                    Combat
+                  </Text>
+                  <Text fw={700} size="xl" c="orange">
+                    +{equipmentDrop.combat}
+                  </Text>
                 </Box>
               </Grid.Col>
               <Grid.Col span={3}>
                 <Box ta="center">
-                  <Text fw={600} c="green" size="sm">Endurance</Text>
-                  <Text fw={700} size="xl" c="green">+{equipmentDrop.endurance}</Text>
+                  <Text fw={600} c="green" size="sm">
+                    Endurance
+                  </Text>
+                  <Text fw={700} size="xl" c="green">
+                    +{equipmentDrop.endurance}
+                  </Text>
                 </Box>
               </Grid.Col>
               <Grid.Col span={3}>
                 <Box ta="center">
-                  <Text fw={600} c="blue" size="sm">Defense</Text>
-                  <Text fw={700} size="xl" c="blue">+{equipmentDrop.defense}</Text>
+                  <Text fw={600} c="blue" size="sm">
+                    Defense
+                  </Text>
+                  <Text fw={700} size="xl" c="blue">
+                    +{equipmentDrop.defense}
+                  </Text>
                 </Box>
               </Grid.Col>
               <Grid.Col span={3}>
                 <Box ta="center">
-                  <Text fw={600} c="purple" size="sm">Luck</Text>
-                  <Text fw={700} size="xl" c="purple">+{equipmentDrop.luck}</Text>
+                  <Text fw={600} c="purple" size="sm">
+                    Luck
+                  </Text>
+                  <Text fw={700} size="xl" c="purple">
+                    +{equipmentDrop.luck}
+                  </Text>
                 </Box>
               </Grid.Col>
             </Grid>
@@ -237,7 +265,7 @@ export function FightSummaryModal({
             <Title order={4} c="white" mb="md">
               Round Details
             </Title>
-            
+
             <ScrollArea h={200}>
               <Stack gap="xs">
                 {rounds.numbers.map((roundNum, index) => (
@@ -253,7 +281,7 @@ export function FightSummaryModal({
                           </ThemeIcon>
                           <Text size="sm" c="green">
                             You: {rounds.playerDamages[index]} damage
-                            {rounds.playerCriticals[index] && ' 💥'}
+                            {rounds.playerCriticals[index] && " 💥"}
                           </Text>
                         </Group>
                         <Group gap="xs">
@@ -262,7 +290,7 @@ export function FightSummaryModal({
                           </ThemeIcon>
                           <Text size="sm" c="red">
                             Enemy: {rounds.enemyDamages[index]} damage
-                            {rounds.enemyCriticals[index] && ' 💥'}
+                            {rounds.enemyCriticals[index] && " 💥"}
                           </Text>
                         </Group>
                       </Group>
@@ -296,18 +324,18 @@ export function FightSummaryModal({
               </Button>
             </>
           )}
-          
+
           <Button
             onClick={onClose}
             leftSection={<IconX size={16} />}
-            variant={fightSummary.unresolved ? 'light' : 'filled'}
-            color={fightSummary.unresolved ? 'gray' : 'blue'}
+            variant={fightSummary.unresolved ? "light" : "filled"}
+            color={fightSummary.unresolved ? "gray" : "blue"}
             size="lg"
           >
-            {fightSummary.unresolved ? 'Cancel' : 'Continue'}
+            {fightSummary.unresolved ? "Cancel" : "Continue"}
           </Button>
         </Group>
       </Stack>
     </Modal>
-  )
+  );
 }

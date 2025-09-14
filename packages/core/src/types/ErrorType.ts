@@ -8,7 +8,7 @@ export enum ErrorType {
   POOL_ERROR = "Pool operation failed",
   LEADERBOARD_ERROR = "Leaderboard operation failed",
   CLAIM_ERROR = "Prize claim failed",
-  UNKNOWN_ERROR = "Unknown error occurred"
+  UNKNOWN_ERROR = "Unknown error occurred",
 }
 
 export interface ChainBrawlerError {

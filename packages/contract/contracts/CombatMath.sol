@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.28;
 
-import {CombatConfig} from "./CombatConfig.sol";
+import { CombatConfig } from "./CombatConfig.sol";
 
 /**
  * @title CombatMath
@@ -35,40 +35,65 @@ library CombatMath {
         uint256 enemyCurrentEndurance,
         uint256 playerLuck,
         uint256 enemyLuck
-    ) internal pure returns (
-        uint256 newPlayerEndurance, 
-        uint256 newEnemyEndurance, 
-        uint256 playerDamage, 
-        uint256 enemyDamage, 
-        bool playerDied, 
-        bool playerCritical, 
-        bool enemyCritical
-    ) {
+    )
+        internal
+        pure
+        returns (
+            uint256 newPlayerEndurance,
+            uint256 newEnemyEndurance,
+            uint256 playerDamage,
+            uint256 enemyDamage,
+            bool playerDied,
+            bool playerCritical,
+            bool enemyCritical
+        )
+    {
         // Calculate base damage using weighted stat differences
         (playerDamage, enemyDamage) = _calculateBaseDamage(
-            combatSkill, enemyCombat, enemyDefense, defense, 
-            currentEndurance, enemyCurrentEndurance, playerLuck, enemyLuck
+            combatSkill,
+            enemyCombat,
+            enemyDefense,
+            defense,
+            currentEndurance,
+            enemyCurrentEndurance,
+            playerLuck,
+            enemyLuck
         );
-        
+
         // Determine critical hits
         (playerCritical, enemyCritical) = _determineCriticals(
-            combatSkill, playerLuck, enemyLuck, currentEndurance, enemyCurrentEndurance
+            combatSkill,
+            playerLuck,
+            enemyLuck,
+            currentEndurance,
+            enemyCurrentEndurance
         );
-        
+
         // Apply critical hit bonuses
         (playerDamage, enemyDamage) = _applyCriticalBonuses(playerDamage, enemyDamage, playerCritical, enemyCritical);
-        
+
         // Apply damage to endurance and determine outcomes
         (newPlayerEndurance, newEnemyEndurance, playerDied) = _applyDamage(
-            currentEndurance, enemyCurrentEndurance, playerDamage, enemyDamage
+            currentEndurance,
+            enemyCurrentEndurance,
+            playerDamage,
+            enemyDamage
         );
-        
+
         // Adjust enemy damage if enemy died
         if (newEnemyEndurance == 0) {
             enemyDamage = 0;
         }
 
-        return (newPlayerEndurance, newEnemyEndurance, playerDamage, enemyDamage, playerDied, playerCritical, enemyCritical);
+        return (
+            newPlayerEndurance,
+            newEnemyEndurance,
+            playerDamage,
+            enemyDamage,
+            playerDied,
+            playerCritical,
+            enemyCritical
+        );
     }
 
     /// @notice Calculate base damage using weighted stat differences
@@ -97,15 +122,15 @@ library CombatMath {
         int256 enduranceDiff = int256(currentEndurance) - int256(enemyCurrentEndurance);
         int256 defenseDiff = int256(defense) - int256(enemyDefense);
         int256 luckDiff = int256(playerLuck) - int256(enemyLuck);
-        
-        int256 weightedSum = (int256(CombatConfig.WEIGHT_COMBAT) * combatDiff)
-            + (int256(CombatConfig.WEIGHT_ENDURANCE) * enduranceDiff)
-            + (int256(CombatConfig.WEIGHT_DEFENSE) * defenseDiff)
-            + (int256(CombatConfig.WEIGHT_LUCK) * luckDiff);
-        
+
+        int256 weightedSum = (int256(CombatConfig.WEIGHT_COMBAT) * combatDiff) +
+            (int256(CombatConfig.WEIGHT_ENDURANCE) * enduranceDiff) +
+            (int256(CombatConfig.WEIGHT_DEFENSE) * defenseDiff) +
+            (int256(CombatConfig.WEIGHT_LUCK) * luckDiff);
+
         int256 diff = weightedSum / int256(CombatConfig.WEIGHT_NORMALIZER);
         int256 idxSigned = int256(CombatConfig.DAMAGE_TABLE_CENTER) + diff;
-        
+
         // Clamp index to valid range
         if (idxSigned < 0) {
             idxSigned = 0;
@@ -142,10 +167,12 @@ library CombatMath {
         uint256 currentEndurance,
         uint256 enemyCurrentEndurance
     ) internal pure returns (bool playerCritical, bool enemyCritical) {
-        bytes32 seed = keccak256(abi.encodePacked(combatSkill, playerLuck, enemyLuck, currentEndurance, enemyCurrentEndurance));
+        bytes32 seed = keccak256(
+            abi.encodePacked(combatSkill, playerLuck, enemyLuck, currentEndurance, enemyCurrentEndurance)
+        );
         uint256 rand = uint256(seed) % 100;
         playerCritical = rand < playerLuck;
-        
+
         uint256 rand2 = uint256(keccak256(abi.encodePacked(seed, rand))) % 100;
         enemyCritical = rand2 < enemyLuck;
     }
@@ -165,7 +192,7 @@ library CombatMath {
     ) internal pure returns (uint256 newPlayerDamage, uint256 newEnemyDamage) {
         newPlayerDamage = playerDamage;
         newEnemyDamage = enemyDamage;
-        
+
         if (playerCritical) {
             newPlayerDamage = (playerDamage * 150) / 100; // 50% bonus
         }
@@ -213,7 +240,7 @@ library CombatMath {
 
     /// @notice Calculate combat difficulty index between player and enemy stats
     /// @param playerCombat Player's total combat stat
-    /// @param playerDefense Player's total defense stat  
+    /// @param playerDefense Player's total defense stat
     /// @param playerLuck Player's total luck stat
     /// @param enemyCombat Enemy's combat stat
     /// @param enemyDefense Enemy's defense stat
@@ -231,11 +258,11 @@ library CombatMath {
         int256 combatDiff = int256(playerCombat) - int256(enemyCombat);
         int256 defenseDiff = int256(playerDefense) - int256(enemyDefense);
         int256 luckDiff = int256(playerLuck) - int256(enemyLuck);
-        
-        int256 weightedSum = (int256(CombatConfig.WEIGHT_COMBAT) * combatDiff)
-            + (int256(CombatConfig.WEIGHT_DEFENSE) * defenseDiff)
-            + (int256(CombatConfig.WEIGHT_LUCK) * luckDiff);
-        
+
+        int256 weightedSum = (int256(CombatConfig.WEIGHT_COMBAT) * combatDiff) +
+            (int256(CombatConfig.WEIGHT_DEFENSE) * defenseDiff) +
+            (int256(CombatConfig.WEIGHT_LUCK) * luckDiff);
+
         combatIndex = weightedSum / int256(CombatConfig.WEIGHT_NORMALIZER);
         return combatIndex;
     }
@@ -248,13 +275,13 @@ library CombatMath {
         // Flip sign: negative index (harder fights) = better rewards
         int256 adjustedIndex = -combatIndex;
         int256 multiplier;
-        
+
         if (adjustedIndex > 14) {
             // Ultra high challenge: 500-1000% rewards
             multiplier = 50000 + ((adjustedIndex - 15) * 10000);
             if (multiplier > 100000) multiplier = 100000; // Cap at 1000%
         } else if (adjustedIndex > 4) {
-            // High challenge: 200-500% rewards  
+            // High challenge: 200-500% rewards
             multiplier = 20000 + ((adjustedIndex - 5) * 3000);
         } else if (adjustedIndex > -3) {
             // Balanced to moderate challenge: 80-200% rewards
@@ -267,7 +294,7 @@ library CombatMath {
             multiplier = 500 + ((adjustedIndex + 20) * 150);
             if (multiplier < 500) multiplier = 500; // Minimum 5%
         }
-        
+
         return uint256(multiplier);
     }
 

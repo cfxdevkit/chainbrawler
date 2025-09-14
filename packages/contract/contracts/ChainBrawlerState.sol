@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.28;
 
-import {BitPackedCharacterLib} from "./BitPackedCharacterLib.sol";
-import {CombatState} from "./CombatStructs.sol";
+import { BitPackedCharacterLib } from "./BitPackedCharacterLib.sol";
+import { CombatState } from "./CombatStructs.sol";
 
 /**
  * @title ChainBrawlerState
@@ -59,16 +59,16 @@ contract ChainBrawlerState {
     // ==================== State Variables
     /// @notice Treasury and fund management state
     TreasuryState public treasuryState;
-    
+
     /// @notice Epoch management state
     EpochState public epochState;
-    
+
     /// @notice Gas refund configuration
     GasRefundConfig public gasRefundConfig;
-    
+
     /// @notice Game data storage
     GameDataStorage internal gameDataStorage;
-    
+
     /// @notice Combat states for active fights
     mapping(address => CombatState) internal combatStates;
 
@@ -90,30 +90,30 @@ contract ChainBrawlerState {
     /// @param playerCriticals Array of whether player got critical hits each round
     /// @param enemyCriticals Array of whether enemy got critical hits each round
     event FightSummary(
-        address indexed player, 
-        uint256 enemyId, 
-        uint256 enemyLevel, 
-        uint256 roundsElapsed, 
-        uint256 playerStartEndurance, 
-        uint256 playerEndurance, 
-        uint256 enemyStartEndurance, 
-        uint256 enemyEndurance, 
-        bool victory, 
-        bool unresolved, 
-        uint256[] roundNumbers, 
-        uint256[] playerDamages, 
-        uint256[] enemyDamages, 
-        bool[] playerCriticals, 
+        address indexed player,
+        uint256 enemyId,
+        uint256 enemyLevel,
+        uint256 roundsElapsed,
+        uint256 playerStartEndurance,
+        uint256 playerEndurance,
+        uint256 enemyStartEndurance,
+        uint256 enemyEndurance,
+        bool victory,
+        bool unresolved,
+        uint256[] roundNumbers,
+        uint256[] playerDamages,
+        uint256[] enemyDamages,
+        bool[] playerCriticals,
         bool[] enemyCriticals
     );
-    
+
     /// @notice XP reward event for fight victories
     /// @param player The player who received XP
     /// @param enemyId The ID of the enemy defeated
     /// @param enemyLevel The level of the enemy defeated
     /// @param xpGained The amount of XP gained
     event FightXPReward(address indexed player, uint256 indexed enemyId, uint256 indexed enemyLevel, uint256 xpGained);
-    
+
     /// @notice Dynamic difficulty multiplier tracking
     /// @param player The player who received the multiplier
     /// @param enemyId The ID of the enemy fought
@@ -125,14 +125,14 @@ contract ChainBrawlerState {
     /// @param baseDropRate The base drop rate before multiplier
     /// @param adjustedDropRate The drop rate after applying multiplier
     event DifficultyMultiplierApplied(
-        address indexed player, 
-        uint256 indexed enemyId, 
-        uint256 indexed enemyLevel, 
-        int256 combatIndex, 
-        uint256 multiplierBP, 
-        uint256 baseXP, 
-        uint256 adjustedXP, 
-        uint256 baseDropRate, 
+        address indexed player,
+        uint256 indexed enemyId,
+        uint256 indexed enemyLevel,
+        int256 combatIndex,
+        uint256 multiplierBP,
+        uint256 baseXP,
+        uint256 adjustedXP,
+        uint256 baseDropRate,
         uint256 adjustedDropRate
     );
 
@@ -156,7 +156,13 @@ contract ChainBrawlerState {
     /// @param enemyLevel The level of the enemy fought
     /// @param isKill Whether the enemy was killed
     /// @param fightScore The score earned from the fight
-    event FightRecorded(uint256 indexed epoch, address indexed player, uint256 indexed enemyLevel, bool isKill, uint256 fightScore);
+    event FightRecorded(
+        uint256 indexed epoch,
+        address indexed player,
+        uint256 indexed enemyLevel,
+        bool isKill,
+        uint256 fightScore
+    );
     /// @notice Gas refund issued to player
     /// @param player The player who received the refund
     /// @param amount The amount of gas refund issued

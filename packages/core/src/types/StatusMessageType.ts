@@ -25,5 +25,5 @@ export enum StatusMessageType {
   CLAIM_COMPLETED = "Reward claimed successfully",
   CLAIM_FAILED = "Claim failed",
   NO_CLAIMS_AVAILABLE = "No claims available",
-  ERROR = "Error occurred"
+  ERROR = "Error occurred",
 }

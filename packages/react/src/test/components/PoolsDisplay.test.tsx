@@ -1,26 +1,56 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { PoolsDisplay } from '../../components/PoolsDisplay';
+import { fireEvent, render, screen } from "@testing-library/react";
+import { PoolsDisplay } from "../../components/PoolsDisplay";
 
 // Mock the context provider
-vi.mock('../../providers/ChainBrawlerProvider', () => ({
+vi.mock("../../providers/ChainBrawlerProvider", () => ({
   useChainBrawlerContext: vi.fn(),
 }));
 
-describe('PoolsDisplay', () => {
+describe("PoolsDisplay", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should render pools information when available', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should render pools information when available", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       pools: {
-        prizePool: { value: 1000n, formatted: '1000 ETH', description: 'Prize pool', percentage: 50 },
-        equipmentPool: { value: 500n, formatted: '500 ETH', description: 'Equipment pool', percentage: 25 },
-        gasRefundPool: { value: 200n, formatted: '200 ETH', description: 'Gas refund pool', percentage: 10 },
-        developerPool: { value: 100n, formatted: '100 ETH', description: 'Developer pool', percentage: 5 },
-        nextEpochPool: { value: 300n, formatted: '300 ETH', description: 'Next epoch pool', percentage: 15 },
-        emergencyPool: { value: 50n, formatted: '50 ETH', description: 'Emergency pool', percentage: 2.5 },
+        prizePool: {
+          value: 1000n,
+          formatted: "1000 ETH",
+          description: "Prize pool",
+          percentage: 50,
+        },
+        equipmentPool: {
+          value: 500n,
+          formatted: "500 ETH",
+          description: "Equipment pool",
+          percentage: 25,
+        },
+        gasRefundPool: {
+          value: 200n,
+          formatted: "200 ETH",
+          description: "Gas refund pool",
+          percentage: 10,
+        },
+        developerPool: {
+          value: 100n,
+          formatted: "100 ETH",
+          description: "Developer pool",
+          percentage: 5,
+        },
+        nextEpochPool: {
+          value: 300n,
+          formatted: "300 ETH",
+          description: "Next epoch pool",
+          percentage: 15,
+        },
+        emergencyPool: {
+          value: 50n,
+          formatted: "50 ETH",
+          description: "Emergency pool",
+          percentage: 2.5,
+        },
         totalValue: 2150n,
         lastUpdated: Date.now(),
       },
@@ -49,31 +79,61 @@ describe('PoolsDisplay', () => {
 
     render(<PoolsDisplay />);
 
-    expect(screen.getByText('Treasury Pools')).toBeInTheDocument();
-    expect(screen.getByText('Prize Pool')).toBeInTheDocument();
-    expect(screen.getByText('1000 ETH')).toBeInTheDocument();
-    expect(screen.getByText('50.00%')).toBeInTheDocument();
-    
-    expect(screen.getByText('Equipment Pool')).toBeInTheDocument();
-    expect(screen.getByText('500 ETH')).toBeInTheDocument();
-    expect(screen.getByText('25.00%')).toBeInTheDocument();
-    
-    expect(screen.getByText('Gas Refund Pool')).toBeInTheDocument();
-    expect(screen.getByText('200 ETH')).toBeInTheDocument();
-    expect(screen.getByText('10.00%')).toBeInTheDocument();
+    expect(screen.getByText("Treasury Pools")).toBeInTheDocument();
+    expect(screen.getByText("Prize Pool")).toBeInTheDocument();
+    expect(screen.getByText("1000 ETH")).toBeInTheDocument();
+    expect(screen.getByText("50.00%")).toBeInTheDocument();
+
+    expect(screen.getByText("Equipment Pool")).toBeInTheDocument();
+    expect(screen.getByText("500 ETH")).toBeInTheDocument();
+    expect(screen.getByText("25.00%")).toBeInTheDocument();
+
+    expect(screen.getByText("Gas Refund Pool")).toBeInTheDocument();
+    expect(screen.getByText("200 ETH")).toBeInTheDocument();
+    expect(screen.getByText("10.00%")).toBeInTheDocument();
   });
 
-  it('should call loadPools when refresh button is clicked', async () => {
+  it("should call loadPools when refresh button is clicked", async () => {
     const mockLoadPools = vi.fn();
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       pools: {
-        prizePool: { value: 1000n, formatted: '1000 ETH', description: 'Prize pool', percentage: 50 },
-        equipmentPool: { value: 500n, formatted: '500 ETH', description: 'Equipment pool', percentage: 25 },
-        gasRefundPool: { value: 200n, formatted: '200 ETH', description: 'Gas refund pool', percentage: 10 },
-        developerPool: { value: 100n, formatted: '100 ETH', description: 'Developer pool', percentage: 5 },
-        nextEpochPool: { value: 300n, formatted: '300 ETH', description: 'Next epoch pool', percentage: 15 },
-        emergencyPool: { value: 50n, formatted: '50 ETH', description: 'Emergency pool', percentage: 2.5 },
+        prizePool: {
+          value: 1000n,
+          formatted: "1000 ETH",
+          description: "Prize pool",
+          percentage: 50,
+        },
+        equipmentPool: {
+          value: 500n,
+          formatted: "500 ETH",
+          description: "Equipment pool",
+          percentage: 25,
+        },
+        gasRefundPool: {
+          value: 200n,
+          formatted: "200 ETH",
+          description: "Gas refund pool",
+          percentage: 10,
+        },
+        developerPool: {
+          value: 100n,
+          formatted: "100 ETH",
+          description: "Developer pool",
+          percentage: 5,
+        },
+        nextEpochPool: {
+          value: 300n,
+          formatted: "300 ETH",
+          description: "Next epoch pool",
+          percentage: 15,
+        },
+        emergencyPool: {
+          value: 50n,
+          formatted: "50 ETH",
+          description: "Emergency pool",
+          percentage: 2.5,
+        },
         totalValue: 2150n,
         lastUpdated: Date.now(),
       },
@@ -102,14 +162,14 @@ describe('PoolsDisplay', () => {
 
     render(<PoolsDisplay />);
 
-    const refreshButton = screen.getByText('Refresh');
+    const refreshButton = screen.getByText("Refresh");
     fireEvent.click(refreshButton);
 
     expect(mockLoadPools).toHaveBeenCalled();
   });
 
-  it('should show loading state when loading', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should show loading state when loading", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       pools: null,
       menu: {
@@ -137,11 +197,11 @@ describe('PoolsDisplay', () => {
 
     render(<PoolsDisplay />);
 
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
+    expect(screen.getByText("Loading...")).toBeInTheDocument();
   });
 
-  it('should not render when menu does not allow viewing pools', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should not render when menu does not allow viewing pools", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       pools: null,
       menu: {

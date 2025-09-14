@@ -1,7 +1,7 @@
 // Event system for ChainBrawler
 // Based on UX_STATE_MANAGEMENT_SPEC.md
 
-import { EventType, EventPayload } from '../types';
+import { type EventPayload, EventType } from "../types";
 
 export class EventEmitter {
   private listeners: Map<EventType, Set<Function>> = new Map();
@@ -32,10 +32,10 @@ export class EventEmitter {
       const payload: EventPayload = {
         type: event,
         data,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
 
-      eventListeners.forEach(listener => {
+      eventListeners.forEach((listener) => {
         try {
           listener(payload);
         } catch (error) {
@@ -50,14 +50,14 @@ export class EventEmitter {
     const unsubscribeFunctions: (() => void)[] = [];
 
     // Subscribe to all event types
-    Object.values(EventType).forEach(eventType => {
+    Object.values(EventType).forEach((eventType) => {
       const unsubscribe = this.on(eventType, listener);
       unsubscribeFunctions.push(unsubscribe);
     });
 
     // Return function to unsubscribe from all
     return () => {
-      unsubscribeFunctions.forEach(unsubscribe => unsubscribe());
+      unsubscribeFunctions.forEach((unsubscribe) => unsubscribe());
     };
   }
 

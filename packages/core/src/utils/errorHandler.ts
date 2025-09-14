@@ -1,8 +1,14 @@
 // Error handling utilities
 // Based on UX_STATE_MANAGEMENT_SPEC.md
 
-import { ChainBrawlerError, ErrorType } from '../types';
-import { getErrorMessage, extractErrorCode, isRetryableError, UNKNOWN_ERROR_CODE, DEFAULT_ERROR_CODE } from './errorCodes';
+import { type ChainBrawlerError, ErrorType } from "../types";
+import {
+  DEFAULT_ERROR_CODE,
+  extractErrorCode,
+  getErrorMessage,
+  isRetryableError,
+  UNKNOWN_ERROR_CODE,
+} from "./errorCodes";
 
 export class UXErrorHandler {
   constructor(
@@ -24,7 +30,7 @@ export class UXErrorHandler {
       message,
       originalError: error,
       retryable,
-      context
+      context,
     };
 
     // Update UX state with error
@@ -33,12 +39,12 @@ export class UXErrorHandler {
 
     // Log error for debugging
     if (this.logger) {
-      this.logger.error('Contract error occurred', {
+      this.logger.error("Contract error occurred", {
         code: chainBrawlerError.code,
         message: chainBrawlerError.message,
         type: chainBrawlerError.type,
         retryable: chainBrawlerError.retryable,
-        context
+        context,
       });
     }
 
@@ -57,7 +63,7 @@ export class UXErrorHandler {
     if (errorCode >= 1600 && errorCode < 1700) return ErrorType.CONTRACT_ERROR;
     if (errorCode >= 1700 && errorCode < 1800) return ErrorType.LEADERBOARD_ERROR;
     if (errorCode >= 2000) return ErrorType.CONTRACT_ERROR;
-    
+
     return ErrorType.UNKNOWN_ERROR;
   }
 
@@ -80,23 +86,25 @@ export class UXErrorHandler {
         return await operation();
       } catch (error) {
         lastError = this.handleContractError(error);
-        
+
         if (!lastError.retryable || attempt === maxRetries - 1) {
           throw lastError;
         }
 
         // Exponential backoff
-        const delay = baseDelay * Math.pow(2, attempt);
-        await new Promise(resolve => setTimeout(resolve, delay));
+        const delay = baseDelay * 2 ** attempt;
+        await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
 
-    throw lastError || {
-      type: ErrorType.UNKNOWN_ERROR,
-      code: UNKNOWN_ERROR_CODE,
-      message: 'Max retries exceeded',
-      originalError: null,
-      retryable: false
-    };
+    throw (
+      lastError || {
+        type: ErrorType.UNKNOWN_ERROR,
+        code: UNKNOWN_ERROR_CODE,
+        message: "Max retries exceeded",
+        originalError: null,
+        retryable: false,
+      }
+    );
   }
 }

@@ -1,1 +1,1 @@
-export { WalletActionBar } from './WalletActionBar'
+export { WalletActionBar } from "./WalletActionBar";

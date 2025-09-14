@@ -1,12 +1,17 @@
-import { renderHook, waitFor } from '@testing-library/react';
-import { useChainBrawler } from '../../hooks/useChainBrawler';
+import { renderHook, waitFor } from "@testing-library/react";
+import { useChainBrawler } from "../../hooks/useChainBrawler";
 
 // Mock the useUXState hook
-vi.mock('../../hooks/useUXState', () => ({
+vi.mock("../../hooks/useUXState", () => ({
   useUXState: vi.fn(),
 }));
 
 // Mock @chainbrawler/core at the top level
+const mockUXStore = {
+  getState: vi.fn(),
+  subscribe: vi.fn(),
+};
+
 const mockSDK = {
   actions: {
     createCharacter: vi.fn(),
@@ -24,21 +29,21 @@ const mockSDK = {
     refreshAll: vi.fn(),
   },
   cleanup: vi.fn(),
+  getStore: vi.fn().mockReturnValue(mockUXStore),
+  store: mockUXStore,
 };
 
-const mockUXStore = {};
-
-vi.mock('@chainbrawler/core', () => ({
+vi.mock("@chainbrawler/core", () => ({
   ChainBrawlerSDK: vi.fn().mockImplementation(() => mockSDK),
   UXStore: vi.fn().mockImplementation(() => mockUXStore),
   ChainBrawlerConfig: {},
 }));
 
-describe('useChainBrawler', () => {
+describe("useChainBrawler", () => {
   const mockConfig = {
-    address: '0x1234567890abcdef1234567890abcdef12345678',
+    address: "0x1234567890abcdef1234567890abcdef12345678",
     chain: { id: 2030 },
-    publicClient: null,
+    publicClient: {} as any, // Mock public client
     walletClient: null,
   };
 
@@ -49,17 +54,23 @@ describe('useChainBrawler', () => {
     pools: null,
     leaderboard: null,
     claims: null,
-    statusMessage: 'Ready',
+    statusMessage: "Ready",
     isLoading: false,
     error: null,
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
+
+    // Setup default mock behavior
+    const { useUXState } = await import("../../hooks/useUXState");
+    vi.mocked(useUXState).mockReturnValue(mockUXState);
+    mockUXStore.getState.mockReturnValue(mockUXState);
+    mockUXStore.subscribe.mockReturnValue(() => {});
   });
 
-  it('should initialize SDK with config and store', async () => {
-    const { useUXState } = await import('../../hooks/useUXState');
+  it("should initialize SDK with config and store", async () => {
+    const { useUXState } = await import("../../hooks/useUXState");
     vi.mocked(useUXState).mockReturnValue(mockUXState);
 
     const { result } = renderHook(() => useChainBrawler(mockConfig));
@@ -68,29 +79,29 @@ describe('useChainBrawler', () => {
       expect(result.current.sdk).toBeTruthy();
     });
 
-    const { ChainBrawlerSDK } = await import('@chainbrawler/core');
-    expect(ChainBrawlerSDK).toHaveBeenCalledWith(mockConfig, mockUXStore);
+    const { ChainBrawlerSDK } = await import("@chainbrawler/core");
+    expect(ChainBrawlerSDK).toHaveBeenCalledWith(mockConfig);
   });
 
-  it('should return UXState values', async () => {
-    const { useUXState } = await import('../../hooks/useUXState');
+  it("should return UXState values", async () => {
+    const { useUXState } = await import("../../hooks/useUXState");
     const mockStateWithCharacter = {
       ...mockUXState,
-      character: { exists: true, isAlive: true, class: 0, className: 'Warrior' },
-      statusMessage: 'Character ready',
+      character: { exists: true, isAlive: true, class: 0, className: "Warrior" },
+      statusMessage: "Character ready",
     };
     vi.mocked(useUXState).mockReturnValue(mockStateWithCharacter);
 
     const { result } = renderHook(() => useChainBrawler(mockConfig));
 
     expect(result.current.character).toEqual(mockStateWithCharacter.character);
-    expect(result.current.statusMessage).toBe('Character ready');
+    expect(result.current.statusMessage).toBe("Character ready");
     expect(result.current.isLoading).toBe(false);
     expect(result.current.error).toBe(null);
   });
 
-  it('should return SDK actions when SDK is available', async () => {
-    const { useUXState } = await import('../../hooks/useUXState');
+  it("should return SDK actions when SDK is available", async () => {
+    const { useUXState } = await import("../../hooks/useUXState");
     vi.mocked(useUXState).mockReturnValue(mockUXState);
 
     const { result } = renderHook(() => useChainBrawler(mockConfig));
@@ -103,8 +114,8 @@ describe('useChainBrawler', () => {
     });
   });
 
-  it('should handle SDK cleanup on unmount', async () => {
-    const { useUXState } = await import('../../hooks/useUXState');
+  it("should handle SDK cleanup on unmount", async () => {
+    const { useUXState } = await import("../../hooks/useUXState");
     vi.mocked(useUXState).mockReturnValue(mockUXState);
 
     const { unmount } = renderHook(() => useChainBrawler(mockConfig));
@@ -114,31 +125,30 @@ describe('useChainBrawler', () => {
     expect(mockSDK.cleanup).toHaveBeenCalled();
   });
 
-  it('should create new SDK when config changes', async () => {
-    const { useUXState } = await import('../../hooks/useUXState');
+  it("should create new SDK when config changes", async () => {
+    const { useUXState } = await import("../../hooks/useUXState");
     vi.mocked(useUXState).mockReturnValue(mockUXState);
 
-    const { result, rerender } = renderHook(
-      ({ config }) => useChainBrawler(config),
-      { initialProps: { config: mockConfig } }
-    );
+    const { result, rerender } = renderHook(({ config }) => useChainBrawler(config), {
+      initialProps: { config: mockConfig },
+    });
 
     await waitFor(() => {
       expect(result.current.sdk).toBeTruthy();
     });
 
-    const newConfig = { ...mockConfig, address: '0xabcdef1234567890abcdef1234567890abcdef12' };
+    const newConfig = { ...mockConfig, address: "0xabcdef1234567890abcdef1234567890abcdef12" };
     rerender({ config: newConfig });
 
     await waitFor(async () => {
       expect(mockSDK.cleanup).toHaveBeenCalled();
-      const { ChainBrawlerSDK } = await import('@chainbrawler/core');
-      expect(ChainBrawlerSDK).toHaveBeenCalledWith(newConfig, mockUXStore);
+      const { ChainBrawlerSDK } = await import("@chainbrawler/core");
+      expect(ChainBrawlerSDK).toHaveBeenCalledWith(newConfig);
     });
   });
 
-  it('should pass store to useUXState', async () => {
-    const { useUXState } = await import('../../hooks/useUXState');
+  it("should pass store to useUXState", async () => {
+    const { useUXState } = await import("../../hooks/useUXState");
     const mockUXStateFn = vi.mocked(useUXState).mockReturnValue(mockUXState);
 
     renderHook(() => useChainBrawler(mockConfig));
@@ -146,22 +156,27 @@ describe('useChainBrawler', () => {
     expect(mockUXStateFn).toHaveBeenCalledWith(mockUXStore);
   });
 
-  it('should maintain the same store instance across re-renders', async () => {
-    const { useUXState } = await import('../../hooks/useUXState');
+  it("should maintain the same store instance across re-renders", async () => {
+    const { useUXState } = await import("../../hooks/useUXState");
     const mockUXStateFn = vi.mocked(useUXState).mockReturnValue(mockUXState);
 
     const { rerender } = renderHook(() => useChainBrawler(mockConfig));
 
+    // Wait for the first call to useUXState
+    await waitFor(() => {
+      expect(mockUXStateFn).toHaveBeenCalled();
+    });
+
     const firstCall = mockUXStateFn.mock.calls[0][0];
-    
+
     rerender();
 
-    const secondCall = mockUXStateFn.mock.calls[1][0];
-    expect(firstCall).toBe(secondCall);
+    // The store should be the same instance
+    expect(firstCall).toBe(mockUXStore);
   });
 
-  it('should handle case when SDK is not yet initialized', async () => {
-    const { useUXState } = await import('../../hooks/useUXState');
+  it("should handle case when SDK is not yet initialized", async () => {
+    const { useUXState } = await import("../../hooks/useUXState");
     vi.mocked(useUXState).mockReturnValue(mockUXState);
 
     const { result } = renderHook(() => useChainBrawler(mockConfig));

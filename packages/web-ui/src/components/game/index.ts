@@ -1,14 +1,10 @@
-export { GameCard } from './GameCard'
-export type { GameCardProps } from './GameCard'
-
-export { GameButton } from './GameButton'
-export type { GameButtonProps } from './GameButton'
-
-export { GameModal } from './GameModal'
-export type { GameModalProps } from './GameModal'
-
-export { LoadingState } from './LoadingState'
-export type { LoadingStateProps } from './LoadingState'
-
-export { StatDisplay, StatGrid } from './StatDisplay'
-export type { StatDisplayProps, StatGridProps } from './StatDisplay'
+export type { GameButtonProps } from "./GameButton";
+export { GameButton } from "./GameButton";
+export type { GameCardProps } from "./GameCard";
+export { GameCard } from "./GameCard";
+export type { GameModalProps } from "./GameModal";
+export { GameModal } from "./GameModal";
+export type { LoadingStateProps } from "./LoadingState";
+export { LoadingState } from "./LoadingState";
+export type { StatDisplayProps, StatGridProps } from "./StatDisplay";
+export { StatDisplay, StatGrid } from "./StatDisplay";

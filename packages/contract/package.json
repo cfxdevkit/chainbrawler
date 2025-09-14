@@ -1,22 +1,18 @@
 {
   "name": "@chainbrawler/contract",
   "version": "0.1.0",
-  "description": "Conflux Espace Hardhat Template",
-  "homepage": "https://github.com/cfxdevkit/repository-template#readme",
-  "bugs": {
-    "url": "https://github.com/cfxdevkit/repository-template/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cfxdevkit/repository-template.git"
-  },
+  "description": "ChainBrawler Smart Contracts",
   "license": "Apache-2.0",
   "author": "SP",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
     "test": "hardhat test",
+    "test:watch": "hardhat test --watch",
+    "test:coverage": "pnpm coverage",
     "build": "hardhat compile",
+    "clean": "rm -rf artifacts cache typechain-types",
+    "dev": "hardhat node",
     "doc": "hardhat docgen",
     "coverage": "SOLIDITY_COVERAGE=true hardhat coverage",
     "lint": "solhint 'contracts/**/*.sol'",
@@ -41,17 +37,7 @@
     "prettier-plugin-solidity": "^2.1.0",
     "solhint": "^6.0.1",
     "solidity-coverage": "^0.8.16",
-    "viem": "^2.37.5",
-    "vue-loader": "^15.9.8",
-    "vue-template-compiler": "^2.7.16"
-  },
-  "optionalDependencies": {
-    "css-loader": "^7.1.2",
-    "style-loader": "^4.0.0",
-    "vue-style-loader": "^4.1.3"
-  },
-  "peerDependencies": {
-    "vue": "^2.7.0"
+    "viem": "^2.37.5"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.6"

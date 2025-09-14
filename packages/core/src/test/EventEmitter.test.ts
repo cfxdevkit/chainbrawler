@@ -1,25 +1,25 @@
 // Tests for EventEmitter
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { EventEmitter } from '../events/EventEmitter';
-import { EventType } from '../types';
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { EventEmitter } from "../events/EventEmitter";
+import { EventType } from "../types";
 
-describe('EventEmitter', () => {
+describe("EventEmitter", () => {
   let eventEmitter: EventEmitter;
 
   beforeEach(() => {
     eventEmitter = new EventEmitter();
   });
 
-  describe('Event Subscription', () => {
-    it('should subscribe to events', () => {
+  describe("Event Subscription", () => {
+    it("should subscribe to events", () => {
       const listener = vi.fn();
       const unsubscribe = eventEmitter.on(EventType.CHARACTER_CREATED, listener);
 
-      expect(typeof unsubscribe).toBe('function');
+      expect(typeof unsubscribe).toBe("function");
       expect(eventEmitter.listenerCount(EventType.CHARACTER_CREATED)).toBe(1);
     });
 
-    it('should unsubscribe from events', () => {
+    it("should unsubscribe from events", () => {
       const listener = vi.fn();
       const unsubscribe = eventEmitter.on(EventType.CHARACTER_CREATED, listener);
 
@@ -28,7 +28,7 @@ describe('EventEmitter', () => {
       expect(eventEmitter.listenerCount(EventType.CHARACTER_CREATED)).toBe(0);
     });
 
-    it('should handle multiple listeners for same event', () => {
+    it("should handle multiple listeners for same event", () => {
       const listener1 = vi.fn();
       const listener2 = vi.fn();
 
@@ -38,7 +38,7 @@ describe('EventEmitter', () => {
       expect(eventEmitter.listenerCount(EventType.CHARACTER_CREATED)).toBe(2);
     });
 
-    it('should handle multiple events', () => {
+    it("should handle multiple events", () => {
       const listener1 = vi.fn();
       const listener2 = vi.fn();
 
@@ -50,8 +50,8 @@ describe('EventEmitter', () => {
     });
   });
 
-  describe('Event Emission', () => {
-    it('should emit events to listeners', () => {
+  describe("Event Emission", () => {
+    it("should emit events to listeners", () => {
       const listener = vi.fn();
       eventEmitter.on(EventType.CHARACTER_CREATED, listener);
 
@@ -62,11 +62,11 @@ describe('EventEmitter', () => {
       expect(listener).toHaveBeenCalledWith({
         type: EventType.CHARACTER_CREATED,
         data,
-        timestamp: expect.any(Number)
+        timestamp: expect.any(Number),
       });
     });
 
-    it('should emit to multiple listeners', () => {
+    it("should emit to multiple listeners", () => {
       const listener1 = vi.fn();
       const listener2 = vi.fn();
 
@@ -79,7 +79,7 @@ describe('EventEmitter', () => {
       expect(listener2).toHaveBeenCalledTimes(1);
     });
 
-    it('should not emit to unsubscribed listeners', () => {
+    it("should not emit to unsubscribed listeners", () => {
       const listener1 = vi.fn();
       const listener2 = vi.fn();
 
@@ -93,17 +93,17 @@ describe('EventEmitter', () => {
       expect(listener2).toHaveBeenCalledTimes(1);
     });
 
-    it('should handle events with no listeners', () => {
+    it("should handle events with no listeners", () => {
       expect(() => {
         eventEmitter.emit(EventType.CHARACTER_CREATED, {});
       }).not.toThrow();
     });
   });
 
-  describe('Error Handling', () => {
-    it('should handle listener errors gracefully', () => {
+  describe("Error Handling", () => {
+    it("should handle listener errors gracefully", () => {
       const errorListener = vi.fn(() => {
-        throw new Error('Listener error');
+        throw new Error("Listener error");
       });
       const normalListener = vi.fn();
 
@@ -119,8 +119,8 @@ describe('EventEmitter', () => {
     });
   });
 
-  describe('onAny', () => {
-    it('should subscribe to all events', () => {
+  describe("onAny", () => {
+    it("should subscribe to all events", () => {
       const listener = vi.fn();
       const unsubscribe = eventEmitter.onAny(listener);
 
@@ -128,10 +128,10 @@ describe('EventEmitter', () => {
       eventEmitter.emit(EventType.FIGHT_STARTED, {});
 
       expect(listener).toHaveBeenCalledTimes(2);
-      expect(typeof unsubscribe).toBe('function');
+      expect(typeof unsubscribe).toBe("function");
     });
 
-    it('should unsubscribe from all events', () => {
+    it("should unsubscribe from all events", () => {
       const listener = vi.fn();
       const unsubscribe = eventEmitter.onAny(listener);
 
@@ -144,8 +144,8 @@ describe('EventEmitter', () => {
     });
   });
 
-  describe('removeAllListeners', () => {
-    it('should remove all listeners for specific event', () => {
+  describe("removeAllListeners", () => {
+    it("should remove all listeners for specific event", () => {
       const listener1 = vi.fn();
       const listener2 = vi.fn();
 
@@ -159,7 +159,7 @@ describe('EventEmitter', () => {
       expect(eventEmitter.listenerCount(EventType.FIGHT_STARTED)).toBe(1);
     });
 
-    it('should remove all listeners for all events', () => {
+    it("should remove all listeners for all events", () => {
       const listener1 = vi.fn();
       const listener2 = vi.fn();
 
@@ -173,8 +173,8 @@ describe('EventEmitter', () => {
     });
   });
 
-  describe('eventNames', () => {
-    it('should return event names with listeners', () => {
+  describe("eventNames", () => {
+    it("should return event names with listeners", () => {
       eventEmitter.on(EventType.CHARACTER_CREATED, vi.fn());
       eventEmitter.on(EventType.FIGHT_STARTED, vi.fn());
 
@@ -184,15 +184,15 @@ describe('EventEmitter', () => {
       expect(eventNames).toContain(EventType.FIGHT_STARTED);
     });
 
-    it('should return empty array when no listeners', () => {
+    it("should return empty array when no listeners", () => {
       const eventNames = eventEmitter.eventNames();
 
       expect(eventNames).toEqual([]);
     });
   });
 
-  describe('listenerCount', () => {
-    it('should return correct listener count', () => {
+  describe("listenerCount", () => {
+    it("should return correct listener count", () => {
       expect(eventEmitter.listenerCount(EventType.CHARACTER_CREATED)).toBe(0);
 
       eventEmitter.on(EventType.CHARACTER_CREATED, vi.fn());

@@ -20,5 +20,5 @@ export enum EventType {
   ERROR_OCCURRED = "errorOccurred",
   VALIDATION_FAILED = "validationFailed",
   TRANSACTION_STATUS = "transactionStatus",
-  CHARACTER_DATA_REFRESH = "characterDataRefresh"
+  CHARACTER_DATA_REFRESH = "characterDataRefresh",
 }

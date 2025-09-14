@@ -1,9 +1,9 @@
-import { defineChain } from 'viem'
-import { confluxESpaceTestnet, confluxESpace } from 'viem/chains'
+import { defineChain } from "viem";
+import { confluxESpace, confluxESpaceTestnet } from "viem/chains";
 
 /**
  * Conflux eSpace Local Development Chain
- * 
+ *
  * This is the local Conflux node started by the utils package
  * Chain ID: 2030
  * RPC: http://127.0.0.1:8545
@@ -11,26 +11,26 @@ import { confluxESpaceTestnet, confluxESpace } from 'viem/chains'
  */
 export const confluxESpaceLocal = defineChain({
   id: 2030,
-  name: 'Conflux eSpace Local',
+  name: "Conflux eSpace Local",
   nativeCurrency: {
     decimals: 18,
-    name: 'Conflux',
-    symbol: 'CFX',
+    name: "Conflux",
+    symbol: "CFX",
   },
   rpcUrls: {
     default: {
-      http: ['http://127.0.0.1:8545'],
-      webSocket: ['ws://127.0.0.1:8546'],
+      http: ["http://127.0.0.1:8545"],
+      webSocket: ["ws://127.0.0.1:8546"],
     },
     public: {
-      http: ['http://127.0.0.1:8545'],
-      webSocket: ['ws://127.0.0.1:8546'],
+      http: ["http://127.0.0.1:8545"],
+      webSocket: ["ws://127.0.0.1:8546"],
     },
   },
   blockExplorers: {
     default: {
-      name: 'Conflux Local Explorer',
-      url: 'http://127.0.0.1:8545',
+      name: "Conflux Local Explorer",
+      url: "http://127.0.0.1:8545",
     },
   },
   testnet: true,
@@ -42,8 +42,7 @@ export const confluxESpaceLocal = defineChain({
       fast: 5000000000n, // 5 Gwei
     },
   },
-})
+});
 
 // Re-export the standard Conflux chains for convenience
-export { confluxESpaceTestnet, confluxESpace }
-
+export { confluxESpaceTestnet, confluxESpace };

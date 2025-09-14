@@ -1,29 +1,22 @@
-import { 
-  Container, 
-  Group, 
-  Text, 
-  Stack,
-  Anchor,
-  Box
-} from '@mantine/core'
-import { 
-  IconBrandGithub, 
-  IconBrandTwitter, 
+import { Anchor, Box, Container, Group, Stack, Text } from "@mantine/core";
+import {
   IconBrandDiscord,
-  IconExternalLink
-} from '@tabler/icons-react'
+  IconBrandGithub,
+  IconBrandTwitter,
+  IconExternalLink,
+} from "@tabler/icons-react";
 
 export function AppFooter() {
   return (
     <Box
       h={80}
       px="md"
-      style={{ 
-        background: 'rgba(15, 23, 42, 0.8)',
-        backdropFilter: 'blur(10px)',
-        borderTop: '1px solid rgba(59, 130, 246, 0.2)',
-        display: 'flex',
-        alignItems: 'center'
+      style={{
+        background: "rgba(15, 23, 42, 0.8)",
+        backdropFilter: "blur(10px)",
+        borderTop: "1px solid rgba(59, 130, 246, 0.2)",
+        display: "flex",
+        alignItems: "center",
       }}
     >
       <Container size="xl" h="100%">
@@ -51,7 +44,7 @@ export function AppFooter() {
                 <IconExternalLink size={12} />
               </Group>
             </Anchor>
-            
+
             <Anchor
               href="https://twitter.com/chainbrawler"
               target="_blank"
@@ -65,7 +58,7 @@ export function AppFooter() {
                 <IconExternalLink size={12} />
               </Group>
             </Anchor>
-            
+
             <Anchor
               href="https://discord.gg/chainbrawler"
               target="_blank"
@@ -83,5 +76,5 @@ export function AppFooter() {
         </Group>
       </Container>
     </Box>
-  )
+  );
 }

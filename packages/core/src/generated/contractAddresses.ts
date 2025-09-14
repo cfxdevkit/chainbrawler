@@ -8,21 +8,11 @@ export interface ContractAddresses {
 }
 
 export const CONTRACT_ADDRESSES = {
-  "71": {
-    "chainBrawler": "0xcf9088cAA2B692D0701350312c12C92113fea2E2",
-    "leaderboardTreasury": "0x9074834D2FA6578bBB5398BD71b821A9701F4f49",
-    "leaderboardManager": "0x65D87834D46BFda6b15e8c960fF14Afbad6aFB72"
-  },
-  "1030": {
-    "chainBrawler": "0x181D7a06084Df1C71d413E94174d25f0b10ff825",
-    "leaderboardTreasury": "0xFd903EF886c5869A27aB866aa6a602BA95999dcb",
-    "leaderboardManager": "0xf976b0219982f7a060980a26b94d8B949ac4CFdf"
-  },
   "2030": {
-    "chainBrawler": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-    "leaderboardTreasury": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-    "leaderboardManager": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
-  }
+    chainBrawler: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+    leaderboardTreasury: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+    leaderboardManager: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+  },
 } as const;
 
 export function getContractAddresses(chainId: number): ContractAddresses {

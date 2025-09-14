@@ -21,7 +21,7 @@
  * Simple CLI wrapper around the TestRunner from @chainbrawler/utils
  */
 
-import { TestRunner, type TestOptions } from "../testing/TestRunner";
+import { type TestOptions, TestRunner } from "../testing/TestRunner";
 
 // CLI interface
 async function main() {

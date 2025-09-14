@@ -1,15 +1,15 @@
-import { confluxESpaceTestnet, confluxESpace } from 'viem/chains'
+import { confluxESpace, confluxESpaceTestnet } from "viem/chains";
 
 export interface AddChainParams {
-  chainId: `0x${string}`
-  chainName: string
+  chainId: `0x${string}`;
+  chainName: string;
   nativeCurrency: {
-    name: string
-    symbol: string
-    decimals: number
-  }
-  rpcUrls: string[]
-  blockExplorerUrls?: string[]
+    name: string;
+    symbol: string;
+    decimals: number;
+  };
+  rpcUrls: string[];
+  blockExplorerUrls?: string[];
 }
 
 export const confluxTestnetChainParams: AddChainParams = {
@@ -21,8 +21,10 @@ export const confluxTestnetChainParams: AddChainParams = {
     decimals: confluxESpaceTestnet.nativeCurrency.decimals,
   },
   rpcUrls: [...confluxESpaceTestnet.rpcUrls.default.http],
-  blockExplorerUrls: confluxESpaceTestnet.blockExplorers.default ? [confluxESpaceTestnet.blockExplorers.default.url] : undefined,
-}
+  blockExplorerUrls: confluxESpaceTestnet.blockExplorers.default
+    ? [confluxESpaceTestnet.blockExplorers.default.url]
+    : undefined,
+};
 
 export const confluxMainnetChainParams: AddChainParams = {
   chainId: `0x${confluxESpace.id.toString(16)}`, // Convert to hex
@@ -33,102 +35,104 @@ export const confluxMainnetChainParams: AddChainParams = {
     decimals: confluxESpace.nativeCurrency.decimals,
   },
   rpcUrls: [...confluxESpace.rpcUrls.default.http],
-  blockExplorerUrls: confluxESpace.blockExplorers.default ? [confluxESpace.blockExplorers.default.url] : undefined,
-}
+  blockExplorerUrls: confluxESpace.blockExplorers.default
+    ? [confluxESpace.blockExplorers.default.url]
+    : undefined,
+};
 
 export async function addConfluxTestnetToWallet(): Promise<boolean> {
   try {
     if (!window.ethereum) {
-      throw new Error('No wallet detected. Please install MetaMask or another Web3 wallet.')
+      throw new Error("No wallet detected. Please install MetaMask or another Web3 wallet.");
     }
 
     await window.ethereum.request({
-      method: 'wallet_addEthereumChain',
+      method: "wallet_addEthereumChain",
       params: [confluxTestnetChainParams],
-    })
+    });
 
-    return true
+    return true;
   } catch (error: any) {
-    console.error('Failed to add Conflux testnet to wallet:', error)
-    
+    console.error("Failed to add Conflux testnet to wallet:", error);
+
     if (error.code === 4902) {
       // Chain already added
-      return true
+      return true;
     }
-    
-    throw new Error(`Failed to add Conflux testnet: ${error.message}`)
+
+    throw new Error(`Failed to add Conflux testnet: ${error.message}`);
   }
 }
 
 export async function addConfluxMainnetToWallet(): Promise<boolean> {
   try {
     if (!window.ethereum) {
-      throw new Error('No wallet detected. Please install MetaMask or another Web3 wallet.')
+      throw new Error("No wallet detected. Please install MetaMask or another Web3 wallet.");
     }
 
     await window.ethereum.request({
-      method: 'wallet_addEthereumChain',
+      method: "wallet_addEthereumChain",
       params: [confluxMainnetChainParams],
-    })
+    });
 
-    return true
+    return true;
   } catch (error: any) {
-    console.error('Failed to add Conflux mainnet to wallet:', error)
-    
+    console.error("Failed to add Conflux mainnet to wallet:", error);
+
     if (error.code === 4902) {
       // Chain already added
-      return true
+      return true;
     }
-    
-    throw new Error(`Failed to add Conflux mainnet: ${error.message}`)
+
+    throw new Error(`Failed to add Conflux mainnet: ${error.message}`);
   }
 }
 
 export async function switchToConfluxTestnet(): Promise<boolean> {
   try {
     if (!window.ethereum) {
-      throw new Error('No wallet detected. Please install MetaMask or another Web3 wallet.')
+      throw new Error("No wallet detected. Please install MetaMask or another Web3 wallet.");
     }
 
     await window.ethereum.request({
-      method: 'wallet_switchEthereumChain',
+      method: "wallet_switchEthereumChain",
       params: [{ chainId: confluxTestnetChainParams.chainId }],
-    })
+    });
 
-    return true
+    return true;
   } catch (error: any) {
-    console.error('Failed to switch to Conflux testnet:', error)
-    
+    console.error("Failed to switch to Conflux testnet:", error);
+
     if (error.code === 4902) {
       // Chain not added, try to add it
-      return await addConfluxTestnetToWallet()
+      return await addConfluxTestnetToWallet();
     }
-    
-    throw new Error(`Failed to switch to Conflux testnet: ${error.message}`)
+
+    throw new Error(`Failed to switch to Conflux testnet: ${error.message}`);
   }
 }
 
 export async function switchToConfluxMainnet(): Promise<boolean> {
   try {
     if (!window.ethereum) {
-      throw new Error('No wallet detected. Please install MetaMask or another Web3 wallet.')
+      throw new Error("No wallet detected. Please install MetaMask or another Web3 wallet.");
     }
 
     await window.ethereum.request({
-      method: 'wallet_switchEthereumChain',
+      method: "wallet_switchEthereumChain",
       params: [{ chainId: confluxMainnetChainParams.chainId }],
-    })
+    });
 
-    return true
+    return true;
   } catch (error: any) {
-    console.error('Failed to switch to Conflux mainnet:', error)
-    
+    console.error("Failed to switch to Conflux mainnet:", error);
+
     if (error.code === 4902) {
       // Chain not added, try to add it
-      return await addConfluxMainnetToWallet()
+      return await addConfluxMainnetToWallet();
     }
-    
-    throw new Error(`Failed to switch to Conflux mainnet: ${error.message}`)
+
+    throw new Error(`Failed to switch to Conflux mainnet: ${error.message}`);
   }
 }
 
@@ -139,7 +143,7 @@ export function getConfluxTestnetInfo() {
     symbol: confluxESpaceTestnet.nativeCurrency.symbol,
     rpcUrl: confluxESpaceTestnet.rpcUrls.default.http[0],
     blockExplorer: confluxESpaceTestnet.blockExplorers.default?.url,
-  }
+  };
 }
 
 export function getConfluxMainnetInfo() {
@@ -149,15 +153,15 @@ export function getConfluxMainnetInfo() {
     symbol: confluxESpace.nativeCurrency.symbol,
     rpcUrl: confluxESpace.rpcUrls.default.http[0],
     blockExplorer: confluxESpace.blockExplorers.default?.url,
-  }
+  };
 }
 
 // Helper function to get chain info by chain ID
 export function getConfluxChainInfo(chainId: number) {
   if (chainId === confluxESpaceTestnet.id) {
-    return getConfluxTestnetInfo()
+    return getConfluxTestnetInfo();
   } else if (chainId === confluxESpace.id) {
-    return getConfluxMainnetInfo()
+    return getConfluxMainnetInfo();
   }
-  throw new Error(`Unsupported Conflux chain ID: ${chainId}`)
+  throw new Error(`Unsupported Conflux chain ID: ${chainId}`);
 }

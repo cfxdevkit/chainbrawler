@@ -19,7 +19,7 @@
  * This provides a bridge between the common ConfluxNodeManager and @xcfx/node
  */
 
-import { ConfluxNodeManager, type ConfluxNodeConfig } from "./ConfluxNodeManager";
+import { type ConfluxNodeConfig, ConfluxNodeManager } from "./ConfluxNodeManager";
 
 export interface ConfluxServer {
   start(): Promise<void>;

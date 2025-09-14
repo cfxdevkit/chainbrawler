@@ -1,14 +1,14 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { LeaderboardDisplay } from '../../components/LeaderboardDisplay';
+import { fireEvent, render, screen } from "@testing-library/react";
+import { LeaderboardDisplay } from "../../components/LeaderboardDisplay";
 
 // Mock the context provider
-vi.mock('../../providers/ChainBrawlerProvider', () => ({
+vi.mock("../../providers/ChainBrawlerProvider", () => ({
   useChainBrawlerContext: vi.fn(),
 }));
 
-describe('LeaderboardDisplay', () => {
+describe("LeaderboardDisplay", () => {
   const mockConfig = {
-    address: '0x1234567890abcdef1234567890abcdef12345678',
+    address: "0x1234567890abcdef1234567890abcdef12345678",
   };
 
   const mockLeaderboard = {
@@ -19,7 +19,7 @@ describe('LeaderboardDisplay', () => {
     totalPlayers: 100n,
     topPlayers: [
       {
-        address: '0xabcdef1234567890abcdef1234567890abcdef12',
+        address: "0xabcdef1234567890abcdef1234567890abcdef12",
         rank: 1n,
         score: 5000n,
         level: 25,
@@ -27,7 +27,7 @@ describe('LeaderboardDisplay', () => {
         isCurrentPlayer: false,
       },
       {
-        address: '0x1234567890abcdef1234567890abcdef12345678',
+        address: "0x1234567890abcdef1234567890abcdef12345678",
         rank: 2n,
         score: 4500n,
         level: 22,
@@ -35,7 +35,7 @@ describe('LeaderboardDisplay', () => {
         isCurrentPlayer: true,
       },
       {
-        address: '0xfedcba0987654321fedcba0987654321fedcba09',
+        address: "0xfedcba0987654321fedcba0987654321fedcba09",
         rank: 3n,
         score: 4000n,
         level: 20,
@@ -50,8 +50,8 @@ describe('LeaderboardDisplay', () => {
     vi.clearAllMocks();
   });
 
-  it('should render leaderboard information when available', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should render leaderboard information when available", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       leaderboard: mockLeaderboard,
       menu: {
@@ -67,19 +67,19 @@ describe('LeaderboardDisplay', () => {
 
     render(<LeaderboardDisplay />);
 
-    expect(screen.getByText('Leaderboard')).toBeInTheDocument();
-    expect(screen.getByText('Current Epoch: 5')).toBeInTheDocument();
-    expect(screen.getByText('Time Remaining: 3600 seconds')).toBeInTheDocument();
-    expect(screen.getByText('Rank:')).toBeInTheDocument();
-    expect(screen.getByText('#15')).toBeInTheDocument();
-    expect(screen.getByText('Score:')).toBeInTheDocument();
-    expect(screen.getByText('2500')).toBeInTheDocument();
-    expect(screen.getByText('Total Players:')).toBeInTheDocument();
-    expect(screen.getByText('100')).toBeInTheDocument();
+    expect(screen.getByText("Leaderboard")).toBeInTheDocument();
+    expect(screen.getByText("Current Epoch: 5")).toBeInTheDocument();
+    expect(screen.getByText("Time Remaining: 3600 seconds")).toBeInTheDocument();
+    expect(screen.getByText("Rank:")).toBeInTheDocument();
+    expect(screen.getByText("#15")).toBeInTheDocument();
+    expect(screen.getByText("Score:")).toBeInTheDocument();
+    expect(screen.getByText("2500")).toBeInTheDocument();
+    expect(screen.getByText("Total Players:")).toBeInTheDocument();
+    expect(screen.getByText("100")).toBeInTheDocument();
   });
 
-  it('should display top players with correct information', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should display top players with correct information", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       leaderboard: mockLeaderboard,
       menu: {
@@ -96,24 +96,24 @@ describe('LeaderboardDisplay', () => {
     render(<LeaderboardDisplay />);
 
     // Check top players section
-    expect(screen.getByText('Top Players')).toBeInTheDocument();
-    
+    expect(screen.getByText("Top Players")).toBeInTheDocument();
+
     // Check first player
-    expect(screen.getByText('#1')).toBeInTheDocument();
-    expect(screen.getByText('0xabcd...ef12')).toBeInTheDocument();
-    expect(screen.getByText('Score: 5000')).toBeInTheDocument();
-    expect(screen.getByText('Level: 25')).toBeInTheDocument();
-    expect(screen.getByText('Kills: 50')).toBeInTheDocument();
+    expect(screen.getByText("#1")).toBeInTheDocument();
+    expect(screen.getByText("0xabcd...ef12")).toBeInTheDocument();
+    expect(screen.getByText("Score: 5000")).toBeInTheDocument();
+    expect(screen.getByText("Level: 25")).toBeInTheDocument();
+    expect(screen.getByText("Kills: 50")).toBeInTheDocument();
 
     // Check current player (should have special styling)
-    expect(screen.getByText('#2')).toBeInTheDocument();
-    expect(screen.getByText('0x1234...5678')).toBeInTheDocument();
-    expect(screen.getByText('Score: 4500')).toBeInTheDocument();
+    expect(screen.getByText("#2")).toBeInTheDocument();
+    expect(screen.getByText("0x1234...5678")).toBeInTheDocument();
+    expect(screen.getByText("Score: 4500")).toBeInTheDocument();
   });
 
-  it('should call loadLeaderboard when refresh button is clicked', async () => {
+  it("should call loadLeaderboard when refresh button is clicked", async () => {
     const mockLoadLeaderboard = vi.fn();
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       leaderboard: mockLeaderboard,
       menu: {
@@ -129,14 +129,14 @@ describe('LeaderboardDisplay', () => {
 
     render(<LeaderboardDisplay />);
 
-    const refreshButton = screen.getByText('Refresh');
+    const refreshButton = screen.getByText("Refresh");
     fireEvent.click(refreshButton);
 
     expect(mockLoadLeaderboard).toHaveBeenCalledWith(mockConfig.address);
   });
 
-  it('should show loading state when loading', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should show loading state when loading", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       leaderboard: null,
       menu: {
@@ -152,12 +152,12 @@ describe('LeaderboardDisplay', () => {
 
     render(<LeaderboardDisplay />);
 
-    const refreshButton = screen.getByText('Loading...');
+    const refreshButton = screen.getByText("Loading...");
     expect(refreshButton).toBeDisabled();
   });
 
-  it('should display error message when error exists', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should display error message when error exists", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       leaderboard: null,
       menu: {
@@ -168,16 +168,16 @@ describe('LeaderboardDisplay', () => {
         loadLeaderboard: vi.fn(),
       },
       isLoading: false,
-      error: 'Failed to load leaderboard',
+      error: "Failed to load leaderboard",
     });
 
     render(<LeaderboardDisplay />);
 
-    expect(screen.getByText('Error: Failed to load leaderboard')).toBeInTheDocument();
+    expect(screen.getByText("Error: Failed to load leaderboard")).toBeInTheDocument();
   });
 
-  it('should not render when menu does not allow viewing leaderboard', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should not render when menu does not allow viewing leaderboard", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       leaderboard: mockLeaderboard,
       menu: {
@@ -195,14 +195,14 @@ describe('LeaderboardDisplay', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('should display last updated timestamp', async () => {
-    const mockDate = new Date('2024-01-15T10:30:00.000Z');
+  it("should display last updated timestamp", async () => {
+    const mockDate = new Date("2024-01-15T10:30:00.000Z");
     const mockLeaderboardWithDate = {
       ...mockLeaderboard,
       lastUpdated: mockDate.getTime(),
     };
 
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       leaderboard: mockLeaderboardWithDate,
       menu: {
@@ -221,13 +221,13 @@ describe('LeaderboardDisplay', () => {
     expect(screen.getByText(/Last updated:/)).toBeInTheDocument();
   });
 
-  it('should handle empty top players list', async () => {
+  it("should handle empty top players list", async () => {
     const emptyLeaderboard = {
       ...mockLeaderboard,
       topPlayers: [],
     };
 
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       leaderboard: emptyLeaderboard,
       menu: {
@@ -243,8 +243,8 @@ describe('LeaderboardDisplay', () => {
 
     render(<LeaderboardDisplay />);
 
-    expect(screen.getByText('Top Players')).toBeInTheDocument();
+    expect(screen.getByText("Top Players")).toBeInTheDocument();
     // Should not have any player items
-    expect(screen.queryByText('Score: 5000')).not.toBeInTheDocument();
+    expect(screen.queryByText("Score: 5000")).not.toBeInTheDocument();
   });
 });

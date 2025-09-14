@@ -3,21 +3,18 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", "artifacts/**", "cache/**"],
+      "outputs": ["dist/**", "artifacts/**", "cache/**", "typechain-types/**"],
       "env": ["HARDHAT_VAR_DEPLOYER_MNEMONIC", "HARDHAT_VAR_*"]
-    },
-    "@chainbrawler/examples#build": {
-      "dependsOn": ["@chainbrawler/common#build", "@chainbrawler/sdk#build"],
-      "outputs": []
-    },
-    "check-types": {
-      "dependsOn": ["^check-types"]
     },
     "dev": {
       "persistent": true,
       "cache": false
     },
     "clean": {
+      "cache": false
+    },
+    "test": {
+      "dependsOn": ["^build"],
       "cache": false
     },
     "format": {

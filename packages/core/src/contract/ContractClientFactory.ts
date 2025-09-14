@@ -1,14 +1,14 @@
 /**
  * Contract Client Factory
- * 
+ *
  * Factory for creating contract clients based on environment and configuration.
  * Creates real contract clients for production use.
  */
 
-import { Address, PublicClient, WalletClient } from 'viem';
-import { ContractClient } from './ContractClient';
-import { WagmiContractClient } from './WagmiContractClient';
-import { getContractAddresses } from '../generated/contractAddresses';
+import type { Address, PublicClient, WalletClient } from "viem";
+import { getContractAddresses } from "../generated/contractAddresses";
+import type { ContractClient } from "./ContractClient";
+import { WagmiContractClient } from "./WagmiContractClient";
 
 export interface ContractClientConfig {
   address: Address;
@@ -56,20 +56,22 @@ export class ContractClientFactory {
     wagmiConfig?: any
   ): ContractClient {
     // Check if we have a deployed contract for this chain
-    const hasDeployedContract = this.hasDeployedContract(chainId);
-    
+    const hasDeployedContract = ContractClientFactory.hasDeployedContract(chainId);
+
     if (!hasDeployedContract) {
-      throw new Error(`No deployed contract found for chain ${chainId}. Please deploy the contract first.`);
+      throw new Error(
+        `No deployed contract found for chain ${chainId}. Please deploy the contract first.`
+      );
     }
-    
+
     console.log(`🔧 Chain ${chainId}: Using real contract client`);
-    
-    return this.createClient({
+
+    return ContractClientFactory.createClient({
       address,
       chainId,
       publicClient,
       walletClient,
-      wagmiConfig
+      wagmiConfig,
     });
   }
 

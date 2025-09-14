@@ -23,14 +23,26 @@ export interface CharacterClass {
 }
 
 export const CHARACTER_CLASSES: CharacterClass[] = [
-  { id: 0, name: "Warrior", description: "A fierce melee combatant with high attack power and decent defense" },
-  { id: 1, name: "Guardian", description: "A defensive specialist with exceptional armor and protective abilities" },
-  { id: 2, name: "Rogue", description: "A swift and cunning fighter who relies on luck and critical strikes" },
+  {
+    id: 0,
+    name: "Warrior",
+    description: "A fierce melee combatant with high attack power and decent defense",
+  },
+  {
+    id: 1,
+    name: "Guardian",
+    description: "A defensive specialist with exceptional armor and protective abilities",
+  },
+  {
+    id: 2,
+    name: "Rogue",
+    description: "A swift and cunning fighter who relies on luck and critical strikes",
+  },
   { id: 3, name: "Mage", description: "A mystical spellcaster with balanced magical abilities" },
 ];
 
 export function getCharacterClass(classId: number): CharacterClass | undefined {
-  return CHARACTER_CLASSES.find(c => c.id === classId);
+  return CHARACTER_CLASSES.find((c) => c.id === classId);
 }
 
 export function getCharacterClassName(classId: number): string {

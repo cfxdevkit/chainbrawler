@@ -1,16 +1,16 @@
 // React hook for pools data
 // Based on REFACTORING_PLAN.md
 
-import { useChainBrawlerContext } from '../providers/ChainBrawlerProvider';
+import { useChainBrawlerContext } from "../providers/ChainBrawlerProvider";
 
 export function usePools() {
   const { pools, isLoading, error, actions } = useChainBrawlerContext();
-  
+
   return {
     pools,
     isLoading,
     error,
-    loadPools: actions?.loadPools || (() => Promise.resolve()),
-    refreshPools: actions?.refreshPools || (() => Promise.resolve())
+    loadPools: actions?.loadPools,
+    refreshPools: actions?.refreshPools,
   };
 }

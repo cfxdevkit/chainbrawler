@@ -1,15 +1,15 @@
 /**
  * UX Manager provides high-level, UI-focused character and game state management
  * It coordinates between character operations, operation tracking, and events
- * 
+ *
  * Ported from packages/sdk/src/modules/UXManager.ts
  */
 
-import type { Address } from 'viem';
-import { CharacterData, MenuState, OperationState, UXState } from '../types';
-import { FightDataNormalizer } from '../utils/FightDataNormalizer';
-import { MenuStateCalculator } from '../utils/MenuStateCalculator';
-import { EventEmitter } from '../events/EventEmitter';
+import type { Address } from "viem";
+import type { EventEmitter } from "../events/EventEmitter";
+import { type CharacterData, type MenuState, type OperationState, UXState } from "../types";
+import { FightDataNormalizer } from "../utils/FightDataNormalizer";
+import { MenuStateCalculator } from "../utils/MenuStateCalculator";
 
 export interface CharacterUXData {
   exists: boolean;
@@ -140,7 +140,7 @@ export class UXManager {
   async refreshCharacterData(player: Address) {
     try {
       const character = await this.characterOps.getCharacter(player);
-      
+
       if (character?.exists) {
         this.characterData = this.normalizeCharacterUXData(character, player);
       } else {
@@ -161,11 +161,11 @@ export class UXManager {
     try {
       const character = this.characterData;
       const operation = this.store.getOperation();
-      
+
       // Use centralized menu state calculator
       const baseMenuState = MenuStateCalculator.calculateMenuState(character, {
         operation,
-        healingCooldownRemaining: character?.healingCooldownRemaining || 0
+        healingCooldownRemaining: character?.healingCooldownRemaining || 0,
       });
 
       // Add UX-specific fields
@@ -184,7 +184,6 @@ export class UXManager {
       console.error("Failed to refresh menu state", { player, error });
     }
   }
-
 
   /**
    * Subscribe to character data changes
@@ -288,7 +287,7 @@ export class UXManager {
         current: 0,
         max: 0,
         percentage: 0,
-        color: '#ef4444',
+        color: "#ef4444",
         regenerated: 0,
         bonusFromEquipment: 0,
         effective: 0,
@@ -330,13 +329,13 @@ export class UXManager {
    */
   private setupEventListeners() {
     // Listen for character data changes
-    const unsubscribeCharacter = this.eventEmitter.on('characterDataUpdated' as any, () => {
+    const unsubscribeCharacter = this.eventEmitter.on("characterDataUpdated" as any, () => {
       // Refresh character data when it changes
       // This would need the player address, which should be passed from the SDK
     });
 
     // Listen for operation changes
-    const unsubscribeOperation = this.eventEmitter.on('operationUpdated' as any, () => {
+    const unsubscribeOperation = this.eventEmitter.on("operationUpdated" as any, () => {
       // Refresh menu state when operations change
       // This would need the player address, which should be passed from the SDK
     });
@@ -356,21 +355,21 @@ export class UXManager {
    * Notify character listeners
    */
   private notifyCharacterListeners() {
-    this.listeners.character.forEach(callback => callback(this.characterData));
+    this.listeners.character.forEach((callback) => callback(this.characterData));
   }
 
   /**
    * Notify menu listeners
    */
   private notifyMenuListeners() {
-    this.listeners.menu.forEach(callback => callback(this.menuState));
+    this.listeners.menu.forEach((callback) => callback(this.menuState));
   }
 
   /**
    * Cleanup event listeners
    */
   destroy() {
-    this.eventSubscriptions.forEach(unsubscribe => unsubscribe());
+    this.eventSubscriptions.forEach((unsubscribe) => unsubscribe());
     this.eventSubscriptions = [];
     this.listeners.character = [];
     this.listeners.menu = [];

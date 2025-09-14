@@ -1,9 +1,9 @@
 // Base operation class for all ChainBrawler operations
 // Based on UX_STATE_MANAGEMENT_SPEC.md
 
-import { OperationResult, ChainBrawlerError } from '../types';
-import { UXErrorHandler } from '../utils/errorHandler';
-import { ContractClient } from '../contract/ContractClient';
+import type { ContractClient } from "../contract/ContractClient";
+import { ChainBrawlerError, type OperationResult } from "../types";
+import { UXErrorHandler } from "../utils/errorHandler";
 
 export abstract class BaseOperation {
   protected errorHandler: UXErrorHandler;
@@ -26,18 +26,18 @@ export abstract class BaseOperation {
       return { success: true, data: result };
     } catch (error) {
       const chainBrawlerError = this.errorHandler.handleContractError(error);
-      
+
       // Log error for debugging
-      console.error('Contract call failed:', {
+      console.error("Contract call failed:", {
         code: chainBrawlerError.code,
         message: chainBrawlerError.message,
-        originalError: chainBrawlerError.originalError
+        originalError: chainBrawlerError.originalError,
       });
-      
-      return { 
-        success: false, 
+
+      return {
+        success: false,
         error: chainBrawlerError.message,
-        code: chainBrawlerError.code
+        code: chainBrawlerError.code,
       };
     }
   }
@@ -47,36 +47,39 @@ export abstract class BaseOperation {
     this.store.updateOperation({
       isActive: true,
       operationType: type,
-      status: 'pending',
+      status: "pending",
       startTime: Date.now(),
-      progress: 'Starting operation...',
+      progress: "Starting operation...",
       isWriteOperation: this.isWriteOperation(type),
-      ...data
+      ...data,
     });
   }
 
   // Determine if an operation is a write operation
   protected isWriteOperation(type: string): boolean {
     const writeOperations = [
-      'createCharacter',
-      'healCharacter', 
-      'resurrectCharacter',
-      'fightEnemy',
-      'continueFight',
-      'fleeRound',
-      'claimPrize'
+      "createCharacter",
+      "healCharacter",
+      "resurrectCharacter",
+      "fightEnemy",
+      "continueFight",
+      "fleeRound",
+      "claimPrize",
     ];
     return writeOperations.includes(type);
   }
 
   // Update operation status
-  protected updateOperationStatus(status: 'pending' | 'processing' | 'completed' | 'error', data?: any): void {
+  protected updateOperationStatus(
+    status: "pending" | "processing" | "completed" | "error",
+    data?: any
+  ): void {
     const currentOperation = this.store.getOperation();
     if (currentOperation) {
       this.store.updateOperation({
         ...currentOperation,
         status,
-        ...data
+        ...data,
       });
     }
   }
@@ -85,10 +88,10 @@ export abstract class BaseOperation {
   protected completeOperation(result?: any): void {
     this.store.updateOperation({
       isActive: false,
-      operationType: '',
-      status: 'completed',
-      progress: 'Operation completed',
-      ...result
+      operationType: "",
+      status: "completed",
+      progress: "Operation completed",
+      ...result,
     });
   }
 
@@ -96,10 +99,10 @@ export abstract class BaseOperation {
   protected failOperation(error: string): void {
     this.store.updateOperation({
       isActive: false,
-      operationType: '',
-      status: 'error',
+      operationType: "",
+      status: "error",
       error,
-      progress: 'Operation failed'
+      progress: "Operation failed",
     });
   }
 
@@ -114,15 +117,14 @@ export abstract class BaseOperation {
     const isLoading = this.store.isLoading();
     const error = this.store.getError();
 
-
     if (currentOperation?.isActive) {
       return false;
     }
-    
+
     if (isLoading) {
       return false;
     }
-    
+
     if (error) {
       return false;
     }
@@ -133,6 +135,6 @@ export abstract class BaseOperation {
   // Get operation progress
   protected getOperationProgress(): string {
     const operation = this.store.getOperation();
-    return operation?.progress || '';
+    return operation?.progress || "";
   }
 }

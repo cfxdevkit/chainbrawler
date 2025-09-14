@@ -2,7 +2,7 @@
  * Enhanced Operation Tracker for ChainBrawler
  * Tracks the current operation state for UX purposes
  * Provides a way to prevent parallel operations and show loading states
- * 
+ *
  * Ported from packages/sdk/src/modules/OperationTracker.ts
  */
 
@@ -137,9 +137,9 @@ export class OperationTracker {
       hash,
     });
 
-    console.log(`Operation hash received: ${this.currentOperation.operationType}`, { 
-      operationId: this.currentOperation.operationId, 
-      hash 
+    console.log(`Operation hash received: ${this.currentOperation.operationType}`, {
+      operationId: this.currentOperation.operationId,
+      hash,
     });
   }
 
@@ -175,9 +175,9 @@ export class OperationTracker {
       receipt,
     });
 
-    console.log(`Operation receipt received: ${this.currentOperation.operationType}`, { 
-      operationId: this.currentOperation.operationId, 
-      hash: this.currentOperation.hash 
+    console.log(`Operation receipt received: ${this.currentOperation.operationType}`, {
+      operationId: this.currentOperation.operationId,
+      hash: this.currentOperation.hash,
     });
   }
 
@@ -217,15 +217,17 @@ export class OperationTracker {
       data: this.currentOperation.data,
     });
 
-    console.log(`Operation completed: ${this.currentOperation.operationType}`, { 
-      operationId: this.currentOperation.operationId, 
-      hash: this.currentOperation.hash 
+    console.log(`Operation completed: ${this.currentOperation.operationType}`, {
+      operationId: this.currentOperation.operationId,
+      hash: this.currentOperation.hash,
     });
 
     // Trigger refresh if needed
     if (this.currentOperation.requiresRefresh && this.refreshCallback) {
-      this.refreshCallback(this.currentOperation.operationId, this.currentOperation.operationType)
-        .catch(error => console.error("Failed to refresh after operation", error));
+      this.refreshCallback(
+        this.currentOperation.operationId,
+        this.currentOperation.operationType
+      ).catch((error) => console.error("Failed to refresh after operation", error));
     }
 
     // Clear current operation after a short delay
@@ -246,7 +248,7 @@ export class OperationTracker {
 
     this.currentOperation.status = status;
     this.currentOperation.isActive = false;
-    this.currentOperation.isCompleted = (status === "completed");
+    this.currentOperation.isCompleted = status === "completed";
     if (data) {
       this.currentOperation.data = data;
     }
@@ -274,9 +276,9 @@ export class OperationTracker {
         data: this.currentOperation.data,
       });
 
-      console.error(`Operation failed: ${this.currentOperation.operationType}`, { 
-        operationId: this.currentOperation.operationId, 
-        error: reason 
+      console.error(`Operation failed: ${this.currentOperation.operationType}`, {
+        operationId: this.currentOperation.operationId,
+        error: reason,
       });
     }
 
@@ -303,7 +305,9 @@ export class OperationTracker {
    * Check if a specific operation type is active
    */
   isOperationTypeActive(operationType: string): boolean {
-    return Boolean(this.currentOperation?.isActive && this.currentOperation.operationType === operationType);
+    return Boolean(
+      this.currentOperation?.isActive && this.currentOperation.operationType === operationType
+    );
   }
 
   /**
@@ -341,7 +345,7 @@ export class OperationTracker {
    */
   private addToHistory(operation: OperationStatus) {
     this.operationHistory.push(operation);
-    
+
     // Keep only the last maxHistorySize operations
     if (this.operationHistory.length > this.maxHistorySize) {
       this.operationHistory = this.operationHistory.slice(-this.maxHistorySize);
@@ -352,6 +356,6 @@ export class OperationTracker {
    * Notify listeners
    */
   private notifyListeners() {
-    this.listeners.forEach(callback => callback(this.currentOperation));
+    this.listeners.forEach((callback) => callback(this.currentOperation));
   }
 }

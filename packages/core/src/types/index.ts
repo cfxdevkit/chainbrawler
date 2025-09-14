@@ -118,39 +118,39 @@ export interface Achievement {
 
 // Enums
 export enum Difficulty {
-  EASY = 'easy',
-  NORMAL = 'normal',
-  HARD = 'hard',
-  NIGHTMARE = 'nightmare'
+  EASY = "easy",
+  NORMAL = "normal",
+  HARD = "hard",
+  NIGHTMARE = "nightmare",
 }
 
 export enum Rarity {
-  COMMON = 'common',
-  UNCOMMON = 'uncommon',
-  RARE = 'rare',
-  EPIC = 'epic',
-  LEGENDARY = 'legendary'
+  COMMON = "common",
+  UNCOMMON = "uncommon",
+  RARE = "rare",
+  EPIC = "epic",
+  LEGENDARY = "legendary",
 }
 
 export enum EquipmentType {
-  WEAPON = 'weapon',
-  ARMOR = 'armor',
-  ACCESSORY = 'accessory',
-  SHIELD = 'shield'
+  WEAPON = "weapon",
+  ARMOR = "armor",
+  ACCESSORY = "accessory",
+  SHIELD = "shield",
 }
 
 export enum ItemType {
-  CONSUMABLE = 'consumable',
-  EQUIPMENT = 'equipment',
-  QUEST = 'quest',
-  MATERIAL = 'material'
+  CONSUMABLE = "consumable",
+  EQUIPMENT = "equipment",
+  QUEST = "quest",
+  MATERIAL = "material",
 }
 
 export enum SkillType {
-  ACTIVE = 'active',
-  PASSIVE = 'passive',
-  BUFF = 'buff',
-  DEBUFF = 'debuff'
+  ACTIVE = "active",
+  PASSIVE = "passive",
+  BUFF = "buff",
+  DEBUFF = "debuff",
 }
 
 export interface CombatState {
@@ -186,7 +186,7 @@ export interface MenuState {
 export interface OperationState {
   isActive: boolean;
   operationType: string;
-  status: 'pending' | 'processing' | 'completed' | 'error';
+  status: "pending" | "processing" | "completed" | "error";
   hash?: string;
   startTime: number;
   progress?: string;
@@ -250,30 +250,30 @@ export interface ClaimsData {
 export interface UXState {
   // Player data
   playerAddress: string | null;
-  
+
   // Character data
   character: CharacterData | null;
-  
+
   // Menu state
   menu: MenuState | null;
-  
+
   // Operation state
   operation: OperationState | null;
-  
+
   // Pool data
   pools: PoolsData | null;
-  
+
   // Leaderboard data
   leaderboard: LeaderboardData | null;
-  
+
   // Claims data
   claims: ClaimsData | null;
-  
+
   // UI state
   statusMessage: string;
   isLoading: boolean;
   error: string | null;
-  
+
   // Event data
   lastFightSummary?: FightSummaryData;
   lastEquipmentDropped?: EquipmentDropData;
@@ -354,7 +354,7 @@ export enum ErrorType {
   POOL_ERROR = "Pool operation failed",
   LEADERBOARD_ERROR = "Leaderboard operation failed",
   CLAIM_ERROR = "Prize claim failed",
-  UNKNOWN_ERROR = "Unknown error occurred"
+  UNKNOWN_ERROR = "Unknown error occurred",
 }
 
 export interface ChainBrawlerError {
@@ -389,7 +389,7 @@ export enum EventType {
   ERROR_OCCURRED = "errorOccurred",
   VALIDATION_FAILED = "validationFailed",
   TRANSACTION_STATUS = "transactionStatus",
-  CHARACTER_DATA_REFRESH = "characterDataRefresh"
+  CHARACTER_DATA_REFRESH = "characterDataRefresh",
 }
 
 export interface EventPayload {

@@ -14,39 +14,39 @@
  * limitations under the License.
  */
 
+import type { Chain } from "viem";
 import { defineChain } from "viem";
 import { confluxESpace, confluxESpaceTestnet } from "viem/chains";
-import type { Chain } from "viem";
 
 // Local development chain configuration
 export const chainBrawlerLocal = defineChain({
   id: 2030,
   name: "ChainBrawler Local",
   nativeCurrency: { decimals: 18, name: "CFX", symbol: "CFX" },
-  rpcUrls: { 
+  rpcUrls: {
     default: { http: ["http://127.0.0.1:8545"] },
-    public: { http: ["http://127.0.0.1:8545"] }
+    public: { http: ["http://127.0.0.1:8545"] },
   },
   testnet: true,
   // Add block explorer for better debugging
   blockExplorers: {
-    default: { name: "Local Explorer", url: "http://127.0.0.1:8545" }
+    default: { name: "Local Explorer", url: "http://127.0.0.1:8545" },
   },
   // Add gas configuration to help wallets with local development
   fees: {
-    baseFeeMultiplier: 1.2, // Add 20% buffer like CLI  
+    baseFeeMultiplier: 1.2, // Add 20% buffer like CLI
     defaultPriorityFee: BigInt(1000000000), // 1 gwei default priority fee
   },
   // Custom serializers to help with gas estimation
   serializers: {
     transaction: (transaction: any) => {
       // Add gas buffer if not present
-      if (transaction.gas && typeof transaction.gas === 'bigint') {
-        transaction.gas = transaction.gas * 12n / 10n; // Add 20% buffer
+      if (transaction.gas && typeof transaction.gas === "bigint") {
+        transaction.gas = (transaction.gas * 12n) / 10n; // Add 20% buffer
       }
       return transaction;
-    }
-  }
+    },
+  },
 });
 
 // Network environment type

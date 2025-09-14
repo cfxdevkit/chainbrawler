@@ -1,37 +1,37 @@
-import { renderHook } from '@testing-library/react';
-import { useClaims } from '../../hooks/useClaims';
+import { renderHook } from "@testing-library/react";
+import { useClaims } from "../../hooks/useClaims";
 
 // Mock the context provider
-vi.mock('../../providers/ChainBrawlerProvider', () => ({
+vi.mock("../../providers/ChainBrawlerProvider", () => ({
   useChainBrawlerContext: vi.fn(),
 }));
 
-describe('useClaims', () => {
+describe("useClaims", () => {
   const mockClaims = {
     totalClaimable: 1500n,
     available: [
       {
-        description: 'Prize Pool Reward - Epoch 3',
+        description: "Prize Pool Reward - Epoch 3",
         amount: 1000n,
-        type: 'PRIZE_POOL',
+        type: "PRIZE_POOL",
         epoch: 3,
         index: 0,
         canClaim: true,
-        proof: ['0xabcd1234...'],
+        proof: ["0xabcd1234..."],
       },
       {
-        description: 'Equipment Pool Reward',
+        description: "Equipment Pool Reward",
         amount: 500n,
-        type: 'EQUIPMENT_POOL',
+        type: "EQUIPMENT_POOL",
         epoch: 2,
         index: 1,
         canClaim: true,
-        proof: ['0xefgh5678...'],
+        proof: ["0xefgh5678..."],
       },
       {
-        description: 'Expired Reward',
+        description: "Expired Reward",
         amount: 200n,
-        type: 'PRIZE_POOL',
+        type: "PRIZE_POOL",
         epoch: 1,
         index: 2,
         canClaim: false,
@@ -61,8 +61,8 @@ describe('useClaims', () => {
     vi.clearAllMocks();
   });
 
-  it('should return claims data from context', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should return claims data from context", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       claims: mockClaims,
       isLoading: false,
@@ -80,8 +80,8 @@ describe('useClaims', () => {
     expect(result.current.claimPrize).toBe(mockActions.claimPrize);
   });
 
-  it('should return loading state from context', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should return loading state from context", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       claims: null,
       isLoading: true,
@@ -99,12 +99,12 @@ describe('useClaims', () => {
     expect(result.current.claimPrize).toBe(mockActions.claimPrize);
   });
 
-  it('should return error state from context', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should return error state from context", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       claims: null,
       isLoading: false,
-      error: 'Failed to load claims',
+      error: "Failed to load claims",
       actions: mockActions,
     });
 
@@ -112,14 +112,14 @@ describe('useClaims', () => {
 
     expect(result.current.claims).toBe(null);
     expect(result.current.isLoading).toBe(false);
-    expect(result.current.error).toBe('Failed to load claims');
+    expect(result.current.error).toBe("Failed to load claims");
     expect(result.current.loadClaims).toBe(mockActions.loadClaims);
     expect(result.current.refreshClaims).toBe(mockActions.refreshClaims);
     expect(result.current.claimPrize).toBe(mockActions.claimPrize);
   });
 
-  it('should provide access to all claims-related actions', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should provide access to all claims-related actions", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       claims: mockClaims,
       isLoading: false,
@@ -129,16 +129,16 @@ describe('useClaims', () => {
 
     const { result } = renderHook(() => useClaims());
 
-    expect(typeof result.current.loadClaims).toBe('function');
-    expect(typeof result.current.refreshClaims).toBe('function');
-    expect(typeof result.current.claimPrize).toBe('function');
+    expect(typeof result.current.loadClaims).toBe("function");
+    expect(typeof result.current.refreshClaims).toBe("function");
+    expect(typeof result.current.claimPrize).toBe("function");
     expect(result.current.loadClaims).toBe(mockActions.loadClaims);
     expect(result.current.refreshClaims).toBe(mockActions.refreshClaims);
     expect(result.current.claimPrize).toBe(mockActions.claimPrize);
   });
 
-  it('should handle null claims data', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should handle null claims data", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       claims: null,
       isLoading: false,
@@ -153,8 +153,8 @@ describe('useClaims', () => {
     expect(result.current.error).toBe(null);
   });
 
-  it('should update when context changes', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should update when context changes", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     const mockContextFn = vi.mocked(useChainBrawlerContext);
 
     // Initial state
@@ -184,8 +184,8 @@ describe('useClaims', () => {
     expect(result.current.isLoading).toBe(false);
   });
 
-  it('should maintain action references across re-renders', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should maintain action references across re-renders", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       claims: mockClaims,
       isLoading: false,
@@ -206,14 +206,14 @@ describe('useClaims', () => {
     expect(result.current.claimPrize).toBe(initialClaimPrize);
   });
 
-  it('should handle empty claims data', async () => {
+  it("should handle empty claims data", async () => {
     const emptyClaims = {
       totalClaimable: 0n,
       available: [],
       lastChecked: Date.now(),
     };
 
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       claims: emptyClaims,
       isLoading: false,
@@ -228,25 +228,25 @@ describe('useClaims', () => {
     expect(result.current.claims.available).toHaveLength(0);
   });
 
-  it('should handle complex claims data structures', async () => {
+  it("should handle complex claims data structures", async () => {
     const complexClaims = {
       ...mockClaims,
       available: [
         ...mockClaims.available,
         {
-          description: 'Special Event Reward',
+          description: "Special Event Reward",
           amount: 2000n,
-          type: 'SPECIAL_EVENT',
+          type: "SPECIAL_EVENT",
           epoch: 4,
           index: 3,
           canClaim: true,
-          proof: ['0xijk9012...', '0xlmn3456...'],
+          proof: ["0xijk9012...", "0xlmn3456..."],
         },
       ],
       totalClaimable: 3700n,
     };
 
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       claims: complexClaims,
       isLoading: false,
@@ -259,11 +259,11 @@ describe('useClaims', () => {
     expect(result.current.claims).toEqual(complexClaims);
     expect(result.current.claims.available).toHaveLength(4);
     expect(result.current.claims.totalClaimable).toBe(3700n);
-    expect(result.current.claims.available[3].type).toBe('SPECIAL_EVENT');
+    expect(result.current.claims.available[3].type).toBe("SPECIAL_EVENT");
   });
 
-  it('should handle undefined actions gracefully', async () => {
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+  it("should handle undefined actions gracefully", async () => {
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       claims: mockClaims,
       isLoading: false,
@@ -279,41 +279,41 @@ describe('useClaims', () => {
     expect(result.current.claimPrize).toBeUndefined();
   });
 
-  it('should handle claims with mixed claimable status', async () => {
+  it("should handle claims with mixed claimable status", async () => {
     const mixedClaims = {
       totalClaimable: 1000n,
       available: [
         {
-          description: 'Claimable Reward 1',
+          description: "Claimable Reward 1",
           amount: 500n,
-          type: 'PRIZE_POOL',
+          type: "PRIZE_POOL",
           epoch: 3,
           index: 0,
           canClaim: true,
-          proof: ['0xabcd...'],
+          proof: ["0xabcd..."],
         },
         {
-          description: 'Claimable Reward 2',
+          description: "Claimable Reward 2",
           amount: 500n,
-          type: 'EQUIPMENT_POOL',
+          type: "EQUIPMENT_POOL",
           epoch: 3,
           index: 1,
           canClaim: true,
-          proof: ['0xefgh...'],
+          proof: ["0xefgh..."],
         },
         {
-          description: 'Non-Claimable Reward 1',
+          description: "Non-Claimable Reward 1",
           amount: 300n,
-          type: 'PRIZE_POOL',
+          type: "PRIZE_POOL",
           epoch: 2,
           index: 2,
           canClaim: false,
           proof: null,
         },
         {
-          description: 'Non-Claimable Reward 2',
+          description: "Non-Claimable Reward 2",
           amount: 200n,
-          type: 'EQUIPMENT_POOL',
+          type: "EQUIPMENT_POOL",
           epoch: 1,
           index: 3,
           canClaim: false,
@@ -323,7 +323,7 @@ describe('useClaims', () => {
       lastChecked: Date.now(),
     };
 
-    const { useChainBrawlerContext } = await import('../../providers/ChainBrawlerProvider');
+    const { useChainBrawlerContext } = await import("../../providers/ChainBrawlerProvider");
     vi.mocked(useChainBrawlerContext).mockReturnValue({
       claims: mixedClaims,
       isLoading: false,
@@ -334,11 +334,13 @@ describe('useClaims', () => {
     const { result } = renderHook(() => useClaims());
 
     expect(result.current.claims).toEqual(mixedClaims);
-    
+
     // Verify claimable vs non-claimable rewards
-    const claimableRewards = result.current.claims.available.filter(reward => reward.canClaim);
-    const nonClaimableRewards = result.current.claims.available.filter(reward => !reward.canClaim);
-    
+    const claimableRewards = result.current.claims.available.filter((reward) => reward.canClaim);
+    const nonClaimableRewards = result.current.claims.available.filter(
+      (reward) => !reward.canClaim
+    );
+
     expect(claimableRewards).toHaveLength(2);
     expect(nonClaimableRewards).toHaveLength(2);
     expect(result.current.claims.totalClaimable).toBe(1000n);

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { useState, useCallback } from 'react';
-import { getChainConfig, detectWalletType } from '@chainbrawler/core';
+import { detectWalletType, getChainConfig } from "@chainbrawler/core";
+import { useCallback, useState } from "react";
 
 export interface WalletManagerHook {
   isConnecting: boolean;
@@ -32,7 +32,7 @@ export function useWalletManager(): WalletManagerHook {
 
   const addAndSwitchToChain = useCallback(async (chainId: number) => {
     if (!window.ethereum) {
-      throw new Error('No wallet found');
+      throw new Error("No wallet found");
     }
 
     const chainConfig = getChainConfig(chainId);
@@ -45,32 +45,36 @@ export function useWalletManager(): WalletManagerHook {
     try {
       // First try to switch to the chain
       await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
+        method: "wallet_switchEthereumChain",
         params: [{ chainId: chainConfig.chainId }],
       });
     } catch (switchError: any) {
       // If the chain isn't added (error code 4902), try to add it
       if (switchError.code === 4902) {
-        
         // For Rabby and some other wallets, programmatic addition might not work
-        if (walletType === 'rabby') {
-          throw new Error(`RABBY_WALLET_MANUAL_ADD: Please manually add the network to Rabby Wallet. Network details: ${JSON.stringify(chainConfig, null, 2)}`);
+        if (walletType === "rabby") {
+          throw new Error(
+            `RABBY_WALLET_MANUAL_ADD: Please manually add the network to Rabby Wallet. Network details: ${JSON.stringify(chainConfig, null, 2)}`
+          );
         }
-        
+
         try {
           await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
+            method: "wallet_addEthereumChain",
             params: [chainConfig],
           });
         } catch (addError: any) {
-          
           // If it's a user rejection, provide helpful message
           if (addError.code === 4001) {
-            throw new Error('User rejected network addition. Please try again and approve the network addition.');
+            throw new Error(
+              "User rejected network addition. Please try again and approve the network addition."
+            );
           }
-          
+
           // For other wallets that don't support programmatic addition
-          throw new Error(`WALLET_MANUAL_ADD: Please manually add the network to your wallet. Network details: ${JSON.stringify(chainConfig, null, 2)}`);
+          throw new Error(
+            `WALLET_MANUAL_ADD: Please manually add the network to your wallet. Network details: ${JSON.stringify(chainConfig, null, 2)}`
+          );
         }
       } else {
         throw switchError;
@@ -78,32 +82,37 @@ export function useWalletManager(): WalletManagerHook {
     }
   }, []);
 
-  const connectWithChain = useCallback(async (connector: any, chainId: number) => {
-    setIsConnecting(true);
-    try {
-      // First add/switch to the selected chain
-      await addAndSwitchToChain(chainId);
-      
-      // Then connect the wallet
-      await connector.connect();
-    } catch (error: any) {
-      
-      let errorMessage = 'Connection failed: ';
-      
-      if (error.message.includes('RABBY_WALLET_MANUAL_ADD') || error.message.includes('WALLET_MANUAL_ADD')) {
-        const chainConfig = getChainConfig(chainId);
-        setNetworkDetails(chainConfig);
-        setShowNetworkDetails(true);
-        errorMessage = 'Manual network addition required. See details below.';
-      } else {
-        errorMessage += error.message || 'Unknown error';
+  const connectWithChain = useCallback(
+    async (connector: any, chainId: number) => {
+      setIsConnecting(true);
+      try {
+        // First add/switch to the selected chain
+        await addAndSwitchToChain(chainId);
+
+        // Then connect the wallet
+        await connector.connect();
+      } catch (error: any) {
+        let errorMessage = "Connection failed: ";
+
+        if (
+          error.message.includes("RABBY_WALLET_MANUAL_ADD") ||
+          error.message.includes("WALLET_MANUAL_ADD")
+        ) {
+          const chainConfig = getChainConfig(chainId);
+          setNetworkDetails(chainConfig);
+          setShowNetworkDetails(true);
+          errorMessage = "Manual network addition required. See details below.";
+        } else {
+          errorMessage += error.message || "Unknown error";
+        }
+
+        throw new Error(errorMessage);
+      } finally {
+        setIsConnecting(false);
       }
-      
-      throw new Error(errorMessage);
-    } finally {
-      setIsConnecting(false);
-    }
-  }, [addAndSwitchToChain]);
+    },
+    [addAndSwitchToChain]
+  );
 
   return {
     isConnecting,

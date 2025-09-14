@@ -37,71 +37,71 @@ export interface ChainConfig {
 export const SUPPORTED_CHAINS: SupportedChain[] = [
   { id: 2030, name: "ChainBrawler Local", hasContract: true },
   { id: 71, name: "Conflux eSpace Testnet", hasContract: true },
-  { id: 1030, name: "Conflux eSpace", hasContract: true }
+  { id: 1030, name: "Conflux eSpace", hasContract: true },
 ];
 
 export function isSupportedChain(chainId: number): boolean {
-  return SUPPORTED_CHAINS.some(chain => chain.id === chainId);
+  return SUPPORTED_CHAINS.some((chain) => chain.id === chainId);
 }
 
 export function getChainConfig(chainId: number): ChainConfig | null {
   switch (chainId) {
     case 2030:
       return {
-        chainId: '0x7ee', // 2030 in hex
-        chainName: 'ChainBrawler Local',
+        chainId: "0x7ee", // 2030 in hex
+        chainName: "ChainBrawler Local",
         nativeCurrency: {
-          name: 'CFX',
-          symbol: 'CFX',
+          name: "CFX",
+          symbol: "CFX",
           decimals: 18,
         },
-        rpcUrls: ['http://127.0.0.1:8545'],
-        blockExplorerUrls: ['http://127.0.0.1:8545'],
+        rpcUrls: ["http://127.0.0.1:8545"],
+        blockExplorerUrls: ["http://127.0.0.1:8545"],
       };
     case 71:
       return {
-        chainId: '0x47', // 71 in hex
-        chainName: 'Conflux eSpace Testnet',
+        chainId: "0x47", // 71 in hex
+        chainName: "Conflux eSpace Testnet",
         nativeCurrency: {
-          name: 'CFX',
-          symbol: 'CFX',
+          name: "CFX",
+          symbol: "CFX",
           decimals: 18,
         },
-        rpcUrls: ['https://evmtestnet.confluxrpc.com'],
-        blockExplorerUrls: ['https://evmtestnet.confluxscan.org'],
+        rpcUrls: ["https://evmtestnet.confluxrpc.com"],
+        blockExplorerUrls: ["https://evmtestnet.confluxscan.org"],
       };
     case 1030:
       return {
-        chainId: '0x406', // 1030 in hex
-        chainName: 'Conflux eSpace',
+        chainId: "0x406", // 1030 in hex
+        chainName: "Conflux eSpace",
         nativeCurrency: {
-          name: 'CFX',
-          symbol: 'CFX',
+          name: "CFX",
+          symbol: "CFX",
           decimals: 18,
         },
-        rpcUrls: ['https://evm.confluxrpc.com'],
-        blockExplorerUrls: ['https://evm.confluxscan.org'],
+        rpcUrls: ["https://evm.confluxrpc.com"],
+        blockExplorerUrls: ["https://evm.confluxscan.org"],
       };
     default:
       return null;
   }
 }
 
-export type WalletType = 'rabby' | 'metamask' | 'coinbase' | 'brave' | 'other' | 'unknown';
+export type WalletType = "rabby" | "metamask" | "coinbase" | "brave" | "other" | "unknown";
 
 export function detectWalletType(): WalletType {
-  if (typeof window === 'undefined' || !window.ethereum) return 'unknown';
-  
-  if (window.ethereum.isRabby) return 'rabby';
-  if (window.ethereum.isMetaMask) return 'metamask';
-  if (window.ethereum.isCoinbaseWallet) return 'coinbase';
-  if (window.ethereum.isBraveWallet) return 'brave';
-  
-  return 'other';
+  if (typeof window === "undefined" || !window.ethereum) return "unknown";
+
+  if (window.ethereum.isRabby) return "rabby";
+  if (window.ethereum.isMetaMask) return "metamask";
+  if (window.ethereum.isCoinbaseWallet) return "coinbase";
+  if (window.ethereum.isBraveWallet) return "brave";
+
+  return "other";
 }
 
 export function getSupportedChainById(chainId: number): SupportedChain | undefined {
-  return SUPPORTED_CHAINS.find(chain => chain.id === chainId);
+  return SUPPORTED_CHAINS.find((chain) => chain.id === chainId);
 }
 
 export function hasContractDeployed(chainId: number): boolean {
