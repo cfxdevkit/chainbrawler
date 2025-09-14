@@ -44,9 +44,9 @@
   "license": "Apache-2.0",
   "packageManager": "pnpm@9.1.0",
   "devDependencies": {
-    "@biomejs/biome": "^2.2.3",
+    "@biomejs/biome": "^2.2.4",
     "@types/chai": "^5.2.2",
-    "@types/node": "^20.19.13",
+    "@types/node": "^20.19.14",
     "tsx": "^4.20.5",
     "turbo": "^2.5.6"
   },
