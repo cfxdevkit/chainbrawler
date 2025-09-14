@@ -27,7 +27,7 @@
     "check:fix": "hardhat compile && pnpm lint:fix && prettier --write 'contracts/**/*.sol'"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-ignition-viem": "^0.15.8",
+    "@nomicfoundation/hardhat-ignition-viem": "^3.0.3",
     "@nomicfoundation/hardhat-toolbox-viem": "^3.0.0",
     "@nomicfoundation/hardhat-verify": "^2.1.0",
     "@nomicfoundation/hardhat-viem": "^2.1.0",
