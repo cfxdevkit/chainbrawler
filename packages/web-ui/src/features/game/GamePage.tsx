@@ -453,6 +453,7 @@ export function GamePage() {
                     <CharacterDetailCard
                       character={character}
                       menu={menu}
+                      leaderboard={leaderboard}
                       onHealCharacter={handleHealCharacter}
                       onResurrectCharacter={handleResurrectCharacter}
                       onFightEnemy={async () => setShowEnemySelection(true)}

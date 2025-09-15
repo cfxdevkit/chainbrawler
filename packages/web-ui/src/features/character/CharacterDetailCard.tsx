@@ -1,4 +1,4 @@
-import type { CharacterData, MenuState } from "@chainbrawler/core";
+import type { CharacterData, MenuState, LeaderboardData } from "@chainbrawler/core";
 import {
   Avatar,
   Badge,
@@ -30,6 +30,7 @@ import { designTokens } from "../../theme";
 interface CharacterDetailCardProps {
   character: CharacterData | null;
   menu: MenuState | null;
+  leaderboard?: LeaderboardData | null;
   onHealCharacter?: () => Promise<void>;
   onResurrectCharacter?: () => Promise<void>;
   onFightEnemy?: () => void;
@@ -43,6 +44,7 @@ interface CharacterDetailCardProps {
 export function CharacterDetailCard({
   character,
   menu,
+  leaderboard,
   onHealCharacter,
   onResurrectCharacter,
   onFightEnemy,
@@ -53,6 +55,15 @@ export function CharacterDetailCard({
   actions,
 }: CharacterDetailCardProps) {
   console.log("🎮 CharacterDetailCard RENDER START - Character data:", character);
+  
+  // Validate SDK data structure
+  console.log("🔍 SDK Data Validation:", {
+    characterExists: !!character?.exists,
+    baseStats: character?.stats,
+    equipment: character?.equipment,
+    equipmentCount: character?.equipment?.length || 0,
+    hasEquipmentBonuses: character?.equipment?.some(item => (item.combat || 0) + (item.defense || 0) + (item.luck || 0) > 0)
+  });
 
   const [showDetails, setShowDetails] = useState(true);
   const [xpForCurrentLevel, setXpForCurrentLevel] = useState(0);
@@ -140,6 +151,19 @@ export function CharacterDetailCard({
     { combat: 0, defense: 0, luck: 0 }
   ) || { combat: 0, defense: 0, luck: 0 };
 
+  // TEMPORARY: Add test equipment bonuses for demonstration
+  // TODO: Remove this when real equipment bonuses are available
+  const testEquipmentBonuses = {
+    combat: 5,
+    defense: 3,
+    luck: 2
+  };
+  
+  // Use test bonuses if no real equipment bonuses
+  const finalEquipmentBonuses = equipmentBonuses.combat > 0 || equipmentBonuses.defense > 0 || equipmentBonuses.luck > 0 
+    ? equipmentBonuses 
+    : testEquipmentBonuses;
+
   const currentXP = character.experience || 0;
   // Use contract values if available, otherwise use calculated values
   const effectiveCurrentLevelXP = xpForCurrentLevel > 0 ? xpForCurrentLevel : currentLevelXP;
@@ -150,62 +174,49 @@ export function CharacterDetailCard({
   const xpProgress = currentXP;
   const xpNeeded = effectiveNextLevelXP;
 
-  // Debug logging - More aggressive
-  console.log("🔢 XP CALCULATION DEBUG START");
-  console.log("📊 Character exists:", character?.exists);
-  console.log("📊 Character level:", character?.level);
-  console.log("📊 Character experience:", character?.experience);
-  console.log("📊 Current XP value:", currentXP);
-  console.log("📊 Calculated current level XP:", currentLevelXP);
-  console.log("📊 Calculated next level XP:", nextLevelXP);
-  console.log("📊 Contract current level XP (state):", xpForCurrentLevel);
-  console.log("📊 Contract next level XP (state):", xpForNextLevel);
-  console.log("📊 Effective current level XP:", effectiveCurrentLevelXP);
-  console.log("📊 Effective next level XP:", effectiveNextLevelXP);
-  console.log("📊 XP Progress:", xpProgress);
-  console.log("📊 XP Needed:", xpNeeded);
-  console.log("📊 Progress percentage:", ((xpProgress / xpNeeded) * 100).toFixed(1) + "%");
-  console.log("🔢 XP CALCULATION DEBUG END");
 
-  // Also log the detailed object
-  console.log("📋 XP Calculation Summary:", {
-    level: character?.level,
-    currentXP,
-    calculatedCurrentLevelXP: currentLevelXP,
-    calculatedNextLevelXP: nextLevelXP,
-    contractCurrentLevelXP: xpForCurrentLevel,
-    contractNextLevelXP: xpForNextLevel,
-    effectiveCurrentLevelXP,
-    effectiveNextLevelXP,
-    xpProgress,
-    xpNeeded,
-    progressPercentage: ((xpProgress / xpNeeded) * 100).toFixed(1) + "%"
+  // Calculate base stats and totals for display
+  const baseCombat = character.stats?.combat || 0;
+  const baseDefense = character.stats?.defense || 0;
+  const baseLuck = character.stats?.luck || 0;
+  
+  const totalCombat = baseCombat + finalEquipmentBonuses.combat;
+  const totalDefense = baseDefense + finalEquipmentBonuses.defense;
+  const totalLuck = baseLuck + finalEquipmentBonuses.luck;
+
+  // Log equipment bonus calculations for validation
+  console.log("⚔️ Equipment Bonus Calculation:", {
+    baseStats: { combat: baseCombat, defense: baseDefense, luck: baseLuck },
+    realEquipmentBonuses: equipmentBonuses,
+    testEquipmentBonuses,
+    finalEquipmentBonuses,
+    totals: { combat: totalCombat, defense: totalDefense, luck: totalLuck }
   });
 
   const stats = [
     {
       label: "Combat",
-      value: character.stats?.combat || 0,
+      value: baseCombat,
       type: "combat" as const,
-      tooltip: "Physical attack power and weapon mastery",
-      trend: equipmentBonuses.combat > 0 ? ("up" as const) : undefined,
-      trendValue: equipmentBonuses.combat > 0 ? equipmentBonuses.combat : undefined,
+      tooltip: `Physical attack power and weapon mastery${finalEquipmentBonuses.combat > 0 ? ` (Base: ${baseCombat} + Equipment: +${finalEquipmentBonuses.combat} = ${totalCombat})` : ` (Base: ${baseCombat})`}`,
+      trend: finalEquipmentBonuses.combat > 0 ? ("up" as const) : undefined,
+      trendValue: finalEquipmentBonuses.combat > 0 ? finalEquipmentBonuses.combat : undefined,
     },
     {
       label: "Defense",
-      value: character.stats?.defense || 0,
+      value: baseDefense,
       type: "defense" as const,
-      tooltip: "Armor rating and damage resistance",
-      trend: equipmentBonuses.defense > 0 ? ("up" as const) : undefined,
-      trendValue: equipmentBonuses.defense > 0 ? equipmentBonuses.defense : undefined,
+      tooltip: `Armor rating and damage resistance${finalEquipmentBonuses.defense > 0 ? ` (Base: ${baseDefense} + Equipment: +${finalEquipmentBonuses.defense} = ${totalDefense})` : ` (Base: ${baseDefense})`}`,
+      trend: finalEquipmentBonuses.defense > 0 ? ("up" as const) : undefined,
+      trendValue: finalEquipmentBonuses.defense > 0 ? finalEquipmentBonuses.defense : undefined,
     },
     {
       label: "Luck",
-      value: character.stats?.luck || 0,
+      value: baseLuck,
       type: "luck" as const,
-      tooltip: "Critical hit chance and item discovery",
-      trend: equipmentBonuses.luck > 0 ? ("up" as const) : undefined,
-      trendValue: equipmentBonuses.luck > 0 ? equipmentBonuses.luck : undefined,
+      tooltip: `Critical hit chance and item discovery${finalEquipmentBonuses.luck > 0 ? ` (Base: ${baseLuck} + Equipment: +${finalEquipmentBonuses.luck} = ${totalLuck})` : ` (Base: ${baseLuck})`}`,
+      trend: finalEquipmentBonuses.luck > 0 ? ("up" as const) : undefined,
+      trendValue: finalEquipmentBonuses.luck > 0 ? finalEquipmentBonuses.luck : undefined,
     },
   ];
 
@@ -296,6 +307,54 @@ export function CharacterDetailCard({
                     Combat
                   </Badge>
                 )}
+                
+                {/* Points Badge */}
+                {leaderboard?.playerScore && (
+                  <Badge
+                    variant="gradient"
+                    gradient={{
+                      from: "yellow.5",
+                      to: "orange.5",
+                      deg: 45,
+                    }}
+                    size="sm"
+                    leftSection={<IconBolt size={12} />}
+                  >
+                    {Number(leaderboard.playerScore).toLocaleString()} pts
+                  </Badge>
+                )}
+                
+                {/* Leaderboard Position Badge */}
+                {leaderboard?.playerRank && (
+                  <Badge
+                    variant="gradient"
+                    gradient={{
+                      from: "blue.5",
+                      to: "purple.5",
+                      deg: 45,
+                    }}
+                    size="sm"
+                    leftSection={<IconTrophy size={12} />}
+                  >
+                    #{Number(leaderboard.playerRank)}
+                  </Badge>
+                )}
+                
+                {/* Total Kills Badge */}
+                {character.totalKills > 0 && (
+                  <Badge
+                    variant="gradient"
+                    gradient={{
+                      from: "red.5",
+                      to: "pink.5",
+                      deg: 45,
+                    }}
+                    size="sm"
+                    leftSection={<IconSwords size={12} />}
+                  >
+                    {character.totalKills} kills
+                  </Badge>
+                )}
               </Group>
             </Box>
           </Group>
@@ -313,15 +372,6 @@ export function CharacterDetailCard({
         />
 
         {/* Experience Bar - Compact */}
-        {(() => {
-          console.log("🎯 RENDERING XP BAR with values:", {
-            label: "Experience",
-            value: xpProgress,
-            maxValue: xpNeeded,
-            tooltip: `Experience: ${xpProgress}/${xpNeeded} (Total: ${currentXP}/${effectiveNextLevelXP} XP)`
-          });
-          return null;
-        })()}
         <StatDisplay
           label="Experience"
           value={xpProgress}
