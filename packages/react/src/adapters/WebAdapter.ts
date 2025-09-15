@@ -216,7 +216,8 @@ export class WebAdapter {
   }
 
   async getXPRequiredForLevel(level: number): Promise<number> {
-    const xpRequired = await this.contractClient.getXPRequiredForLevel(level);
+    const contractClient = (this.sdk as any).contractClient;
+    const xpRequired = await contractClient.getXPRequiredForLevel(level);
     return Number(xpRequired);
   }
 
