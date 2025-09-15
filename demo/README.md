@@ -15,12 +15,12 @@ demo/
 │   ├── fight_report_continue.jpg
 │   └── fight_report_drop.jpg
 │   └── fighting.jpg
-│   └── leaderboard.JPG
+│   └── leaderboard.jpg
 │   └── logo_large.png
 │   └── mobile_detail.jpg
-│   └── mobile_landing.JPG
-│   └── team.JPG
-│   └── treasury.JPG
+│   └── mobile_landing.jpg
+│   └── team.jpg
+│   └── treasury.jpg
 └── presentation/             # Presentation materials
 ```
 
@@ -39,7 +39,6 @@ demo/
 
 ### Game Interface
 - [Character stats and equipment](screenshots/character_detail.png)
-- [Action buttons and menu]
 
 ### Combat System
 - [Enemy selection modal](screenshots/enemy_select.jpg)
