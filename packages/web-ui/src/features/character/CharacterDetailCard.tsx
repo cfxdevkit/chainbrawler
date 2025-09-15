@@ -52,35 +52,48 @@ export function CharacterDetailCard({
   isWriteOperationInProgress = false,
   actions,
 }: CharacterDetailCardProps) {
+  console.log("🎮 CharacterDetailCard RENDER START - Character data:", character);
+
   const [showDetails, setShowDetails] = useState(true);
   const [xpForCurrentLevel, setXpForCurrentLevel] = useState(0);
   const [xpForNextLevel, setXpForNextLevel] = useState(0);
 
-  // Load XP requirements from contract when character level changes
+  // Calculate XP requirements using triangular progression (matches contract formula)
+  const getXPRequiredForLevel = (level: number): number => {
+    if (level < 2) return 0;
+    return (100 * (level - 1) * level) / 2;
+  };
+
+  const currentLevel = character?.level || 1;
+  const currentLevelXP = getXPRequiredForLevel(currentLevel);
+  const nextLevelXP = getXPRequiredForLevel(currentLevel + 1);
+
+  // Try to enhance with contract values if available (optional)
   useEffect(() => {
+    console.log("🔄 XP useEffect triggered - Level:", character?.level, "Actions available:", !!actions?.getXPRequiredForLevel);
+
     if (character?.level && actions?.getXPRequiredForLevel) {
+      console.log("🔄 Starting contract XP lookup for level", currentLevel);
       const loadXPRequirements = async () => {
         try {
-          const currentLevel = character.level || 1;
-          const [currentXP, nextXP] = await Promise.all([
+          console.log("📞 Calling contract.getXPRequiredForLevel for levels", currentLevel, "and", currentLevel + 1);
+          const [contractCurrent, contractNext] = await Promise.all([
             actions.getXPRequiredForLevel(currentLevel),
             actions.getXPRequiredForLevel(currentLevel + 1)
           ]);
-          setXpForCurrentLevel(currentXP);
-          setXpForNextLevel(nextXP);
+          console.log("✅ Contract XP values received:", { level: currentLevel, current: contractCurrent, next: contractNext });
+          setXpForCurrentLevel(contractCurrent);
+          setXpForNextLevel(contractNext);
+          console.log("✅ XP state updated with contract values");
         } catch (error) {
-          console.error("Failed to load XP requirements:", error);
-          // Fallback to local calculation
-          const currentLevel = character.level || 1;
-          const fallbackCurrent = currentLevel < 2 ? 0 : (100 * (currentLevel - 1) * currentLevel) / 2;
-          const fallbackNext = (100 * currentLevel * (currentLevel + 1)) / 2;
-          setXpForCurrentLevel(fallbackCurrent);
-          setXpForNextLevel(fallbackNext);
+          console.warn("❌ Contract XP lookup failed, using calculated values:", error);
         }
       };
       loadXPRequirements();
+    } else {
+      console.log("⚠️ Contract XP lookup skipped - Level:", character?.level, "Actions:", !!actions?.getXPRequiredForLevel);
     }
-  }, [character?.level, actions]);
+  }, [character?.level, actions, currentLevel]);
 
   if (!character?.exists) {
     return (
@@ -128,8 +141,46 @@ export function CharacterDetailCard({
   ) || { combat: 0, defense: 0, luck: 0 };
 
   const currentXP = character.experience || 0;
-  const xpProgress = Math.max(0, currentXP - xpForCurrentLevel);
-  const xpNeeded = xpForNextLevel - xpForCurrentLevel;
+  // Use contract values if available, otherwise use calculated values
+  const effectiveCurrentLevelXP = xpForCurrentLevel > 0 ? xpForCurrentLevel : currentLevelXP;
+  const effectiveNextLevelXP = xpForNextLevel > 0 ? xpForNextLevel : nextLevelXP;
+
+  // XP bar should show: current total XP / XP needed for next level
+  // This matches the tooltip format and shows clear progress
+  const xpProgress = currentXP;
+  const xpNeeded = effectiveNextLevelXP;
+
+  // Debug logging - More aggressive
+  console.log("🔢 XP CALCULATION DEBUG START");
+  console.log("📊 Character exists:", character?.exists);
+  console.log("📊 Character level:", character?.level);
+  console.log("📊 Character experience:", character?.experience);
+  console.log("📊 Current XP value:", currentXP);
+  console.log("📊 Calculated current level XP:", currentLevelXP);
+  console.log("📊 Calculated next level XP:", nextLevelXP);
+  console.log("📊 Contract current level XP (state):", xpForCurrentLevel);
+  console.log("📊 Contract next level XP (state):", xpForNextLevel);
+  console.log("📊 Effective current level XP:", effectiveCurrentLevelXP);
+  console.log("📊 Effective next level XP:", effectiveNextLevelXP);
+  console.log("📊 XP Progress:", xpProgress);
+  console.log("📊 XP Needed:", xpNeeded);
+  console.log("📊 Progress percentage:", ((xpProgress / xpNeeded) * 100).toFixed(1) + "%");
+  console.log("🔢 XP CALCULATION DEBUG END");
+
+  // Also log the detailed object
+  console.log("📋 XP Calculation Summary:", {
+    level: character?.level,
+    currentXP,
+    calculatedCurrentLevelXP: currentLevelXP,
+    calculatedNextLevelXP: nextLevelXP,
+    contractCurrentLevelXP: xpForCurrentLevel,
+    contractNextLevelXP: xpForNextLevel,
+    effectiveCurrentLevelXP,
+    effectiveNextLevelXP,
+    xpProgress,
+    xpNeeded,
+    progressPercentage: ((xpProgress / xpNeeded) * 100).toFixed(1) + "%"
+  });
 
   const stats = [
     {
@@ -262,6 +313,15 @@ export function CharacterDetailCard({
         />
 
         {/* Experience Bar - Compact */}
+        {(() => {
+          console.log("🎯 RENDERING XP BAR with values:", {
+            label: "Experience",
+            value: xpProgress,
+            maxValue: xpNeeded,
+            tooltip: `Experience: ${xpProgress}/${xpNeeded} (Total: ${currentXP}/${effectiveNextLevelXP} XP)`
+          });
+          return null;
+        })()}
         <StatDisplay
           label="Experience"
           value={xpProgress}
@@ -269,7 +329,7 @@ export function CharacterDetailCard({
           type="experience"
           variant="progress"
           showProgress={true}
-          tooltip={`Experience: ${xpProgress}/${xpNeeded} (Total: ${currentXP}/${xpForNextLevel} XP)`}
+          tooltip={`Experience: ${xpProgress}/${xpNeeded} XP toward level ${currentLevel + 1}`}
         />
 
         {/* Combat Actions - Mobile Optimized */}
