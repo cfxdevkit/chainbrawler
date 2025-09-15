@@ -23,7 +23,7 @@ import {
   IconTrophy,
   IconUser,
 } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GameButton, GameCard, LoadingState, StatDisplay, StatGrid } from "../../components/game";
 import { designTokens } from "../../theme";
 
@@ -37,6 +37,7 @@ interface CharacterDetailCardProps {
   onFleeRound?: () => Promise<void>;
   isLoading?: boolean;
   isWriteOperationInProgress?: boolean;
+  actions?: any;
 }
 
 export function CharacterDetailCard({
@@ -49,8 +50,37 @@ export function CharacterDetailCard({
   onFleeRound,
   isLoading = false,
   isWriteOperationInProgress = false,
+  actions,
 }: CharacterDetailCardProps) {
   const [showDetails, setShowDetails] = useState(true);
+  const [xpForCurrentLevel, setXpForCurrentLevel] = useState(0);
+  const [xpForNextLevel, setXpForNextLevel] = useState(0);
+
+  // Load XP requirements from contract when character level changes
+  useEffect(() => {
+    if (character?.level && actions?.getXPRequiredForLevel) {
+      const loadXPRequirements = async () => {
+        try {
+          const currentLevel = character.level || 1;
+          const [currentXP, nextXP] = await Promise.all([
+            actions.getXPRequiredForLevel(currentLevel),
+            actions.getXPRequiredForLevel(currentLevel + 1)
+          ]);
+          setXpForCurrentLevel(currentXP);
+          setXpForNextLevel(nextXP);
+        } catch (error) {
+          console.error("Failed to load XP requirements:", error);
+          // Fallback to local calculation
+          const currentLevel = character.level || 1;
+          const fallbackCurrent = currentLevel < 2 ? 0 : (100 * (currentLevel - 1) * currentLevel) / 2;
+          const fallbackNext = (100 * currentLevel * (currentLevel + 1)) / 2;
+          setXpForCurrentLevel(fallbackCurrent);
+          setXpForNextLevel(fallbackNext);
+        }
+      };
+      loadXPRequirements();
+    }
+  }, [character?.level, actions]);
 
   if (!character?.exists) {
     return (
@@ -97,15 +127,6 @@ export function CharacterDetailCard({
     { combat: 0, defense: 0, luck: 0 }
   ) || { combat: 0, defense: 0, luck: 0 };
 
-  // Calculate experience for next level using triangular progression (matches contract)
-  const getXPRequiredForLevel = (level: number): number => {
-    if (level < 2) return 0;
-    return (100 * (level - 1) * level) / 2;
-  };
-
-  const currentLevel = character.level || 1;
-  const xpForCurrentLevel = getXPRequiredForLevel(currentLevel);
-  const xpForNextLevel = getXPRequiredForLevel(currentLevel + 1);
   const currentXP = character.experience || 0;
   const xpProgress = Math.max(0, currentXP - xpForCurrentLevel);
   const xpNeeded = xpForNextLevel - xpForCurrentLevel;

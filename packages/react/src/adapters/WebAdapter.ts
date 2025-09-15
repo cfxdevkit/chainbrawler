@@ -215,6 +215,11 @@ export class WebAdapter {
     store.setError(null);
   }
 
+  async getXPRequiredForLevel(level: number): Promise<number> {
+    const xpRequired = await this.contractClient.getXPRequiredForLevel(level);
+    return Number(xpRequired);
+  }
+
   async refreshAll() {
     // Refresh all data by calling individual refresh methods
     const playerAddress = (this.sdk as any).playerAddress;

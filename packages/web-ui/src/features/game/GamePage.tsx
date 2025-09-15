@@ -460,6 +460,7 @@ export function GamePage() {
                       onFleeRound={handleFleeRound}
                       isLoading={isLoading}
                       isWriteOperationInProgress={isWriteOperationInProgress}
+                      actions={actions}
                     />
                   </Tabs.Panel>
 

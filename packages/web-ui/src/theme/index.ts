@@ -67,6 +67,19 @@ const luckColor: MantineColorsTuple = [
   designTokens.colors.game.luckDark,
 ];
 
+const experienceColor: MantineColorsTuple = [
+  designTokens.colors.game.experienceLight,
+  "#f3e8ff",
+  "#e9d5ff",
+  "#d8b4fe",
+  "#c084fc",
+  designTokens.colors.game.experience,
+  "#7c3aed",
+  "#6b21a8",
+  "#581c87",
+  designTokens.colors.game.experienceDark,
+];
+
 export const theme = createTheme({
   primaryColor: "chainbrawler-primary",
   fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -97,6 +110,7 @@ export const theme = createTheme({
     "game-combat": combatColor,
     "game-defense": defenseColor,
     "game-luck": luckColor,
+    "game-experience": experienceColor,
   },
   shadows: {
     xs: designTokens.shadows.sm,

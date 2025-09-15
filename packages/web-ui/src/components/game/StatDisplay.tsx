@@ -69,7 +69,7 @@ export function StatDisplay({
       case "health":
         return "orange";
       case "experience":
-        return "chainbrawler-secondary";
+        return "game-experience";
       default:
         return "chainbrawler-primary";
     }
