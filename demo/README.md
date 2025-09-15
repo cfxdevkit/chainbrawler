@@ -8,93 +8,58 @@ This folder contains all the demo materials for the ChainBrawler hackathon submi
 demo/
 ├── README.md                 # This file
 ├── screenshots/              # UI screenshots
-│   ├── character-creation.png
-│   ├── game-interface.png
-│   ├── combat-system.png
-│   ├── leaderboard.png
-│   ├── treasury-pools.png
-│   ├── claims-system.png
-│   └── mobile-view.png
-├── videos/                   # Demo videos
-│   ├── demo-video.mp4       # Main demo video (3-5 minutes)
-│   └── technical-demo.mp4   # Technical implementation demo
+│   ├── character_detail.png
+│   ├── class_selection.png
+│   ├── cli.png
+│   ├── enemy_select.jpg
+│   ├── fight_report_continue.jpg
+│   └── fight_report_drop.jpg
+│   └── fighting.jpg
+│   └── leaderboard.JPG
+│   └── logo_large.png
+│   └── mobile_detail.jpg
+│   └── mobile_landing.JPG
+│   └── team.JPG
+│   └── treasury.JPG
 └── presentation/             # Presentation materials
-    ├── hackathon-slides.pdf # Presentation slides
-    └── architecture-diagram.png
 ```
 
-## 🎥 Demo Video Script
+## 🎥 Demo Video Link
+- [ChainBrawler Demo](https://youtu.be/_Grwq2CXCH8)
 
-### Main Demo Video (3-5 minutes)
+## 🎥 Demo Pitch deck Link
+- [ChainBrawler Pitch Deck](https://docs.google.com/presentation/d/1wpYL8ziODw1NqakB9IFvjQ9NhDISX-XwojFwWPGVDIU/edit?usp=sharing)
 
-**1. Introduction (30 seconds)**
-- "Hi, I'm SP, and this is ChainBrawler - a blockchain RPG game built on Conflux eSpace"
-- "We're participating in the Code Without Borders SummerHackfest 2025"
-- "ChainBrawler brings traditional RPG mechanics to the blockchain with true ownership and transparency"
 
-**2. Solution Overview (60 seconds)**
-- "Traditional RPG games have centralized control and no true ownership"
-- "ChainBrawler solves this by putting all game logic on-chain using Conflux eSpace"
-- "Players own their characters, equipment, and achievements as blockchain assets"
-- "We leverage Conflux's low gas costs and fast transactions for seamless gameplay"
-
-**3. Live Demo (2-3 minutes)**
-- **Wallet Connection**: Show ConnectKit integration and wallet connection
-- **Character Creation**: Demonstrate the 4 character classes and creation process
-- **Combat System**: Show enemy selection, combat mechanics, and equipment drops
-- **Treasury System**: Display pool information and reward distribution
-- **Leaderboard**: Show rankings and competitive features
-- **Claims System**: Demonstrate prize claiming with Merkle proofs
-- **Mobile View**: Show responsive design on mobile device
-
-**4. Technical Implementation (60 seconds)**
-- "Built with a modular monorepo architecture"
-- "Smart contracts handle all game logic with gas optimization"
-- "React frontend with TypeScript for type safety"
-- "Multi-chain support with Conflux as primary network"
-- "Comprehensive testing with 90%+ coverage"
-
-**5. Conclusion (30 seconds)**
-- "ChainBrawler demonstrates the potential of blockchain gaming on Conflux"
-- "Future plans include mobile app, cross-chain support, and advanced features"
-- "Thank you for watching, and check out our GitHub repository"
-
-## 📸 Screenshots Required
+## 📸 Screenshots
 
 ### Character Creation
-- Character class selection screen
-- Character creation form with stats
-- Character detail card after creation
+- [Character class selection screen](screenshots/)
+- [Character creation form with stats](screenshots/class_selection.png)
 
 ### Game Interface
-- Main game dashboard
-- Character stats and equipment
-- Action buttons and menu
+- [Character stats and equipment](screenshots/character_detail.png)
+- [Action buttons and menu]
 
 ### Combat System
-- Enemy selection modal
-- Combat interface during fight
-- Fight summary with results
+- [Enemy selection modal](screenshots/enemy_select.jpg)
+- [Combat interface during fight](screenshots/fighting.jpg)
+- [Combat interface continue](screenshots/fight_report_continue.jpg)
+- [Fight summary with results](screenshots/fight_report_drop.jpg)
 
-### Treasury System
+### [Treasury System](screenshots/treasury.jpg)
 - Pool information display
 - Pool statistics and values
 - Reward distribution interface
 
-### Leaderboard
+### [Leaderboard](screenshots/leaderboard.jpg)
 - Player rankings display
 - Epoch information
 - Player statistics
 
-### Claims System
-- Claimable prizes list
-- Claim history
-- Proof verification process
-
 ### Mobile View
-- Mobile navigation
-- Responsive character cards
-- Touch-friendly interface
+- [Mobile landing](screenshots/mobile_landing.jpg)
+- [Mobile character detail](screenshots/mobile_detail.jpg)
 
 ## 🎯 Key Demo Points
 
@@ -134,10 +99,10 @@ demo/
 - [x] Known issues and future improvements
 
 ### Demo Materials
-- [ ] Demo video (3-5 minutes)
-- [ ] Live demo link (when deployed)
-- [ ] Screenshots of key features
-- [ ] Presentation slides (if applicable)
+- [x] Demo video (3-5 minutes)
+- [x] Live demo link (when deployed)
+- [x] Screenshots of key features
+- [x] Presentation slides (if applicable)
 
 ### Technical Requirements
 - [x] Project is functional
@@ -146,17 +111,7 @@ demo/
 - [x] Original work
 - [x] Team size compliant (2 members)
 
-## 🚀 Next Steps
-
-1. **Record Demo Video**: Create the main demo video following the script
-2. **Take Screenshots**: Capture all required UI screenshots
-3. **Deploy Live Demo**: Deploy to Vercel or similar platform
-4. **Create Presentation**: Prepare slides for finalist presentation
-5. **Submit to Hackathon**: Follow submission process
-
 ## 📞 Contact
 
 For questions about the demo materials or submission:
-- **GitHub**: [@sp](https://github.com/sp)
-- **Discord**: sp#1234
-- **Email**: sp@chainbrawler-web-ui.vercel.app
+- **GitHub**: [@cfxdevkit](https://github.com/cfxdevkit)
