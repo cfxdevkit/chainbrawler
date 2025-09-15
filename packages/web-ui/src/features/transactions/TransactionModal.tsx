@@ -1,4 +1,4 @@
-import { Alert, Box, Group, Loader, Stack, Text } from "@mantine/core";
+import { Alert, Box, Loader, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle, IconCheck, IconClock, IconX } from "@tabler/icons-react";
 import { GameButton, GameModal, LoadingState } from "../../components/game";
 import { designTokens } from "../../theme";
@@ -82,12 +82,12 @@ export function TransactionModal({
       opened={opened}
       onClose={canClose ? onClose : () => {}}
       title={
-        <Group gap="sm">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {getStatusIcon()}
           <Text fw={700} c={getStatusColor()}>
             {operationType}
           </Text>
-        </Group>
+        </div>
       }
       variant="compact"
       showCloseButton={canClose}

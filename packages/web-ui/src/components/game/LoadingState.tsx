@@ -1,4 +1,4 @@
-import { Box, Group, Loader, Progress, Stack, Text, ThemeIcon } from "@mantine/core";
+import { Box, Group, Progress, Stack, Text, ThemeIcon } from "@mantine/core";
 import { IconCheck, IconClock, IconX } from "@tabler/icons-react";
 import { designTokens } from "../../theme";
 
@@ -20,7 +20,7 @@ export function LoadingState({
   const getIcon = () => {
     switch (status) {
       case "loading":
-        return <Loader size={size} color="chainbrawler-primary" />;
+        return null; // No icon for loading state - spinner is handled in title
       case "success":
         return (
           <ThemeIcon color="green" size={size === "xs" ? "sm" : size} variant="light">
@@ -40,7 +40,7 @@ export function LoadingState({
           </ThemeIcon>
         );
       default:
-        return <Loader size={size} color="chainbrawler-primary" />;
+        return null; // No icon for loading state - spinner is handled in title
     }
   };
 
@@ -73,7 +73,7 @@ export function LoadingState({
   if (variant === "inline") {
     return (
       <Group gap="xs" align="center">
-        {getIcon()}
+        {getIcon() && getIcon()}
         <Text size={size} c={getMessageColor()} fw={500}>
           {getMessage()}
         </Text>
@@ -84,7 +84,7 @@ export function LoadingState({
   if (variant === "compact") {
     return (
       <Stack align="center" gap="xs">
-        {getIcon()}
+        {getIcon() && getIcon()}
         <Text size={size} c={getMessageColor()} fw={500} ta="center">
           {getMessage()}
         </Text>
@@ -96,7 +96,7 @@ export function LoadingState({
     return (
       <Stack gap="md" align="center">
         <Group gap="sm">
-          {getIcon()}
+          {getIcon() && getIcon()}
           <Text size={size} c={getMessageColor()} fw={500}>
             {getMessage()}
           </Text>
@@ -126,7 +126,7 @@ export function LoadingState({
   // Default variant
   return (
     <Stack align="center" gap="lg">
-      {getIcon()}
+      {getIcon() && getIcon()}
       <Stack align="center" gap="xs">
         <Text size={size} c={getMessageColor()} fw={500} ta="center">
           {getMessage()}

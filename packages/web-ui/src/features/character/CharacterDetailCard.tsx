@@ -66,7 +66,6 @@ export function CharacterDetailCard({
   });
 
   const [showDetails, setShowDetails] = useState(true);
-  const [xpForCurrentLevel, setXpForCurrentLevel] = useState(0);
   const [xpForNextLevel, setXpForNextLevel] = useState(0);
 
   // Calculate XP requirements using triangular progression (matches contract formula)
@@ -76,33 +75,20 @@ export function CharacterDetailCard({
   };
 
   const currentLevel = character?.level || 1;
-  const currentLevelXP = getXPRequiredForLevel(currentLevel);
   const nextLevelXP = getXPRequiredForLevel(currentLevel + 1);
 
   // Try to enhance with contract values if available (optional)
   useEffect(() => {
-    console.log("🔄 XP useEffect triggered - Level:", character?.level, "Actions available:", !!actions?.getXPRequiredForLevel);
-
     if (character?.level && actions?.getXPRequiredForLevel) {
-      console.log("🔄 Starting contract XP lookup for level", currentLevel);
       const loadXPRequirements = async () => {
         try {
-          console.log("📞 Calling contract.getXPRequiredForLevel for levels", currentLevel, "and", currentLevel + 1);
-          const [contractCurrent, contractNext] = await Promise.all([
-            actions.getXPRequiredForLevel(currentLevel),
-            actions.getXPRequiredForLevel(currentLevel + 1)
-          ]);
-          console.log("✅ Contract XP values received:", { level: currentLevel, current: contractCurrent, next: contractNext });
-          setXpForCurrentLevel(contractCurrent);
+          const contractNext = await actions.getXPRequiredForLevel(currentLevel + 1);
           setXpForNextLevel(contractNext);
-          console.log("✅ XP state updated with contract values");
         } catch (error) {
-          console.warn("❌ Contract XP lookup failed, using calculated values:", error);
+          // Contract XP lookup failed, using calculated values
         }
       };
       loadXPRequirements();
-    } else {
-      console.log("⚠️ Contract XP lookup skipped - Level:", character?.level, "Actions:", !!actions?.getXPRequiredForLevel);
     }
   }, [character?.level, actions, currentLevel]);
 
@@ -166,7 +152,6 @@ export function CharacterDetailCard({
 
   const currentXP = character.experience || 0;
   // Use contract values if available, otherwise use calculated values
-  const effectiveCurrentLevelXP = xpForCurrentLevel > 0 ? xpForCurrentLevel : currentLevelXP;
   const effectiveNextLevelXP = xpForNextLevel > 0 ? xpForNextLevel : nextLevelXP;
 
   // XP bar should show: current total XP / XP needed for next level
@@ -309,7 +294,7 @@ export function CharacterDetailCard({
                 )}
                 
                 {/* Points Badge */}
-                {leaderboard?.playerScore && (
+                {leaderboard?.playerScore && Number(leaderboard.playerScore) > 0 ? (
                   <Badge
                     variant="gradient"
                     gradient={{
@@ -322,10 +307,10 @@ export function CharacterDetailCard({
                   >
                     {Number(leaderboard.playerScore).toLocaleString()} pts
                   </Badge>
-                )}
+                ) : null}
                 
                 {/* Leaderboard Position Badge */}
-                {leaderboard?.playerRank && (
+                {leaderboard?.playerRank && Number(leaderboard.playerRank) > 0 ? (
                   <Badge
                     variant="gradient"
                     gradient={{
@@ -338,7 +323,7 @@ export function CharacterDetailCard({
                   >
                     #{Number(leaderboard.playerRank)}
                   </Badge>
-                )}
+                ) : null}
                 
                 {/* Total Kills Badge */}
                 {character.totalKills > 0 && (
