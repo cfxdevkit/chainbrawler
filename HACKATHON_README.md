@@ -1,13 +1,15 @@
 # ChainBrawler
 
 ## Overview
-ChainBrawler is a comprehensive blockchain-based RPG game that brings traditional role-playing game mechanics to the Conflux blockchain. Players create characters, engage in combat, earn rewards, and compete on leaderboards - all while leveraging the power and efficiency of Conflux eSpace for fast, low-cost transactions.
+ChainBrawler is a comprehensive blockchain-based RPG game that brings traditional role-playing game mechanics to the Conflux blockchain. 
+Players create characters, engage in combat, earn rewards, and compete on leaderboards - all while leveraging the power and efficiency of Conflux eSpace for fast, low-cost transactions.
 
 ## Hackathon
 Code Without Borders - SummerHackfest 2025 (August 18 – September 22, 2025)
 
 ## Team
-- **SP** (GitHub: @sp, Discord: sp#1234) - Lead Developer & Smart Contract Architect
+- **CFXDEVKIT** (GitHub: @cfxdevkit) - Lead Developer & Smart Contract Architect
+- **GLM** (GitHub: @simulacrumb-glm, Discord: glm2888) - QA Support & User Experience
 - **AI Assistant** (GitHub: @ai-assistant, Discord: ai-assistant#5678) - Development Support & Documentation
 
 ## Problem Statement
@@ -30,10 +32,10 @@ ChainBrawler addresses these issues by creating a fully decentralized RPG experi
 ## Conflux Integration
 ChainBrawler extensively uses Conflux features:
 - [x] **eSpace**: Primary deployment on Conflux eSpace for EVM compatibility
-- [x] **Core Space**: Future integration for advanced features
-- [x] **Cross-Space Bridge**: Planned for multi-chain character portability
+- [ ] **Core Space**: Future integration for advanced features
+- [ ] **Cross-Space Bridge**: Planned for multi-chain character portability
 - [x] **Gas Sponsorship**: Implemented for user-friendly transactions
-- [x] **Built-in Contracts**: Utilizing Conflux's efficient consensus mechanism
+- [ ] **Built-in Contracts**: Utilizing Conflux's efficient consensus mechanism
 - [x] **Partner Integrations**: ConnectKit integration for wallet connectivity
 
 ## Features
