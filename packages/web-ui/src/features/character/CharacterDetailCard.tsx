@@ -97,10 +97,15 @@ export function CharacterDetailCard({
     { combat: 0, defense: 0, luck: 0 }
   ) || { combat: 0, defense: 0, luck: 0 };
 
-  // Calculate experience for next level (assuming 100 XP per level)
+  // Calculate experience for next level using triangular progression (matches contract)
+  const getXPRequiredForLevel = (level: number): number => {
+    if (level < 2) return 0;
+    return (100 * (level - 1) * level) / 2;
+  };
+
   const currentLevel = character.level || 1;
-  const xpForCurrentLevel = (currentLevel - 1) * 100;
-  const xpForNextLevel = currentLevel * 100;
+  const xpForCurrentLevel = getXPRequiredForLevel(currentLevel);
+  const xpForNextLevel = getXPRequiredForLevel(currentLevel + 1);
   const currentXP = character.experience || 0;
   const xpProgress = Math.max(0, currentXP - xpForCurrentLevel);
   const xpNeeded = xpForNextLevel - xpForCurrentLevel;

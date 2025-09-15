@@ -159,4 +159,4 @@ demo/
 For questions about the demo materials or submission:
 - **GitHub**: [@sp](https://github.com/sp)
 - **Discord**: sp#1234
-- **Email**: sp@chainbrawler.com
+- **Email**: sp@chainbrawler-web-ui.vercel.app

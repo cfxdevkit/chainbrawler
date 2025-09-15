@@ -18,8 +18,8 @@ export const conservativeConnectors = [
     // Conservative settings for MetaMask
     dappMetadata: {
       name: "ChainBrawler",
-      url: "https://chainbrawler.com",
-      iconUrl: "https://chainbrawler.com/logo.png",
+      url: "https://chainbrawler-web-ui.vercel.app",
+      iconUrl: "https://chainbrawler-web-ui.vercel.app/logo.png",
     },
   }),
 ];

@@ -118,15 +118,15 @@ export const config = createConfig(
     // Required App Info
     appName: "ChainBrawler",
     appDescription: "The Ultimate Blockchain RPG Experience",
-    appUrl: "https://chainbrawler.com",
-    appIcon: "https://chainbrawler.com/logo.png",
+    appUrl: "https://chainbrawler-web-ui.vercel.app",
+    appIcon: "https://chainbrawler-web-ui.vercel.app/logo.png",
     // Conservative connector configuration - limit to MetaMask only
     connectors: [
       metaMask({
         dappMetadata: {
           name: "ChainBrawler",
-          url: "https://chainbrawler.com",
-          iconUrl: "https://chainbrawler.com/logo.png",
+          url: "https://chainbrawler-web-ui.vercel.app",
+          iconUrl: "https://chainbrawler-web-ui.vercel.app/logo.png",
         },
       }),
     ],

@@ -291,7 +291,7 @@ For deployment issues:
 
 - **GitHub Issues**: [Create an issue](https://github.com/chainbrawler/chainbrawler/issues)
 - **Discord**: [ChainBrawler Discord](https://discord.gg/chainbrawler)
-- **Email**: sp@chainbrawler.com
+- **Email**: sp@chainbrawler-web-ui.vercel.app
 
 ---
 

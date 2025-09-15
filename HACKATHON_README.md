@@ -284,7 +284,7 @@ This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENS
 - **GitHub**: [https://github.com/chainbrawler/chainbrawler](https://github.com/chainbrawler/chainbrawler)
 - **Discord**: [ChainBrawler Discord](https://discord.gg/chainbrawler)
 - **Twitter**: [@ChainBrawlerGame](https://twitter.com/ChainBrawlerGame)
-- **Website**: [https://chainbrawler.com](https://chainbrawler.com)
+- **Website**: [https://chainbrawler-web-ui.vercel.app](https://chainbrawler-web-ui.vercel.app)
 
 ---
 
