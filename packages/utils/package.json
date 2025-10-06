@@ -33,14 +33,14 @@
     "bip32": "^4.0.0",
     "bip39": "^3.0.4",
     "cive": "^0.8.1",
-    "pino": "^9.12.0",
+    "pino": "^9.13.1",
     "pino-pretty": "^13.1.1",
     "tiny-secp256k1": "^2.2.1",
-    "viem": "^2.37.9"
+    "viem": "^2.37.12"
   },
   "devDependencies": {
-    "@types/node": "^20.19.17",
-    "typescript": "^5.9.2",
+    "@types/node": "^20.19.19",
+    "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   },
   "license": "Apache-2.0"
