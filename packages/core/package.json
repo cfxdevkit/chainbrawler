@@ -23,19 +23,19 @@
     "generate:all": "npm run generate && npm run generate:addresses && npm run generate:errors"
   },
   "dependencies": {
-    "viem": "^2.38.4",
+    "viem": "^2.38.6",
     "zustand": "^4.4.0"
   },
   "devDependencies": {
     "typescript": "^5.9.3",
     "vitest": "^3.2.4",
     "@wagmi/cli": "^2.7.1",
-    "wagmi": "^2.18.2",
+    "wagmi": "^2.19.2",
     "tsx": "^4.20.6",
-    "@types/node": "^20.19.23"
+    "@types/node": "^20.19.24"
   },
   "peerDependencies": {
-    "viem": "^2.38.4"
+    "viem": "^2.38.6"
   },
   "license": "Apache-2.0"
 }
