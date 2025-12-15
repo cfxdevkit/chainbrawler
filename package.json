@@ -46,7 +46,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.3.8",
     "@types/chai": "^5.2.2",
-    "@types/node": "^20.19.25",
+    "@types/node": "^20.19.27",
     "tsx": "^4.21.0",
     "turbo": "^2.6.3"
   },
