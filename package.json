@@ -46,9 +46,9 @@
   "devDependencies": {
     "@biomejs/biome": "^2.3.11",
     "@types/chai": "^5.2.2",
-    "@types/node": "^20.19.28",
+    "@types/node": "^20.19.30",
     "tsx": "^4.21.0",
-    "turbo": "^2.7.4"
+    "turbo": "^2.7.5"
   },
   "dependencies": {
     "postcss": "^8.3.3"
