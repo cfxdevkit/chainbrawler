@@ -37,7 +37,7 @@
     "prettier-plugin-solidity": "^2.2.1",
     "solhint": "^6.0.3",
     "solidity-coverage": "^0.8.17",
-    "viem": "^2.46.0"
+    "viem": "^2.46.2"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.6"
