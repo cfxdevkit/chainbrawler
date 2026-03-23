@@ -23,7 +23,7 @@
     "generate:all": "npm run generate && npm run generate:addresses && npm run generate:errors"
   },
   "dependencies": {
-    "viem": "^2.47.4",
+    "viem": "^2.47.6",
     "zustand": "^4.4.0"
   },
   "devDependencies": {
@@ -35,7 +35,7 @@
     "@types/node": "^20.19.37"
   },
   "peerDependencies": {
-    "viem": "^2.47.4"
+    "viem": "^2.47.6"
   },
   "license": "Apache-2.0"
 }
