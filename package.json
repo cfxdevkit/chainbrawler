@@ -44,11 +44,11 @@
   "license": "Apache-2.0",
   "packageManager": "pnpm@9.1.0",
   "devDependencies": {
-    "@biomejs/biome": "^2.4.9",
+    "@biomejs/biome": "^2.4.10",
     "@types/chai": "^5.2.2",
-    "@types/node": "^20.19.37",
+    "@types/node": "^20.19.39",
     "tsx": "^4.21.0",
-    "turbo": "^2.8.21"
+    "turbo": "^2.9.4"
   },
   "dependencies": {
     "postcss": "^8.5.8"
