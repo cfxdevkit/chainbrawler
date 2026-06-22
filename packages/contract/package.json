@@ -35,9 +35,9 @@
     "hardhat-gas-reporter": "^2.3.0",
     "prettier": "^3.8.4",
     "prettier-plugin-solidity": "^2.3.1",
-    "solhint": "^6.2.1",
+    "solhint": "^6.2.3",
     "solidity-coverage": "^0.8.17",
-    "viem": "^2.52.2"
+    "viem": "^2.53.1"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.6"
