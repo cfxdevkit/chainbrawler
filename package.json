@@ -47,8 +47,8 @@
     "@biomejs/biome": "^2.5.14",
     "@types/chai": "^5.2.2",
     "@types/node": "^20.19.43",
-    "tsx": "^4.23.13",
-    "turbo": "^2.10.13"
+    "tsx": "^4.23.15",
+    "turbo": "^2.11.4"
   },
   "dependencies": {
     "postcss": "^8.5.28"
