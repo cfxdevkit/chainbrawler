@@ -31,12 +31,12 @@
     "@chainbrawler/core": "workspace:*",
     "@xcfx/node": "^0.8.0",
     "bip32": "^4.0.0",
-    "bip39": "^3.0.4",
+    "bip39": "^3.1.2",
     "cive": "^0.8.1",
     "pino": "^9.14.0",
     "pino-pretty": "^13.2.0",
     "tiny-secp256k1": "^2.2.1",
-    "viem": "^2.57.4"
+    "viem": "^2.57.7"
   },
   "devDependencies": {
     "@types/node": "^20.19.43",

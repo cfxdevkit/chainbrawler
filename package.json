@@ -48,9 +48,9 @@
     "@types/chai": "^5.2.2",
     "@types/node": "^20.19.43",
     "tsx": "^4.23.15",
-    "turbo": "^2.11.7"
+    "turbo": "^2.11.8"
   },
   "dependencies": {
-    "postcss": "^8.5.29"
+    "postcss": "^8.5.30"
   }
 }
